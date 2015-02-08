@@ -86,21 +86,24 @@ define('Scene',
   function updateActors (data) {
     var actor = findActor(data.playerId);
     if (actor) {
-      // TODO: Handle direction
-      console.log(actor);
-      actor.player.p.x = data.x;
-      actor.player.p.y = data.y;
-      actor.player.p.update = true;
+      actor.player.updateState(data);
     } else {
       // New actor
       addActor(data);
     }
   }
 
+  function actorFire (data) {
+    console.log('actor.fire');
+    var actor = findActor(data.playerId);
+    actor.player.shoot();
+  }
+
   return {
     addPlayer: addPlayer,
     addActor: addActor,
     removeActor: removeActor,
-    updateActors: updateActors
+    updateActors: updateActors,
+    actorFire: actorFire
   };
 });

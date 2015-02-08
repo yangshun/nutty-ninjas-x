@@ -25,6 +25,10 @@ io.on('connection', function (socket) {
   socket.on('player.update', function (data) {
     socket.broadcast.emit('player.updated', data);
   });
+
+  socket.on('player.shoot', function (data) {
+    socket.broadcast.emit('player.shoot', data);
+  });
 });
 
 server.listen(port, function () {

@@ -10,6 +10,9 @@ define('Config', [], function () {
       asset: 'player.png',
       jumpSpeed: -380
     },
+    bullet: {
+      speed: 1000
+    },
     map: {
       tile: {
         width: 70,

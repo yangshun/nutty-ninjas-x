@@ -18,4 +18,8 @@ define('Socket', ['Scene'], function (Scene) {
     Scene.updateActors(data);
   });
 
+  socket.on('player.shoot', function (data) {
+    Scene.actorFire(data);
+  });
+
 });
