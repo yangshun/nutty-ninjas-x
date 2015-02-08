@@ -1,0 +1,9 @@
+{
+  "name": "Warp",
+  "private": true,
+  "dependencies": {
+    "quintus": "~0.1.5",
+    "requirejs": "~2.1.15"
+  },
+  "devDependencies": {}
+}
