@@ -30,7 +30,8 @@ define(['Q', 'Config', 'Actor'], function (Q, Config) {
         playerId: this.p.playerId,
         x: this.p.x, 
         y: this.p.y,
-        direction: this.p.direction
+        direction: this.p.direction,
+        landed: this.p.landed
       });
     }
   });

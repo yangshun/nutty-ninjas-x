@@ -18,6 +18,7 @@ define(['Q', 'Config', 'Bullet'], function (Q, Config, Bullet) {
       this.p.direction = data.direction;
       this.p.flip = this.p.direction === 'left' ? 'x' : false;
       this.p.update = true;
+      this.p.gravity = data.landed < 0 ? 0 : 1;
     },
     shoot: function () {
       var p = this.p;
