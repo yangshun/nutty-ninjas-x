@@ -11,7 +11,7 @@ define('Config', [], function () {
       jumpSpeed: -380
     },
     bullet: {
-      speed: 1000
+      speed: 500
     },
     map: {
       tile: {

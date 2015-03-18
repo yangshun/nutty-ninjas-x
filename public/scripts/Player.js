@@ -26,14 +26,18 @@ define(['Q', 'Config', 'Actor'], function (Q, Config) {
       this._super();
     },
     step: function (dt) {
-      this.p.socket.emit('player.update', { 
+      var data = { 
         playerId: this.p.playerId,
         name: this.p.name,
         x: this.p.x, 
         y: this.p.y,
         direction: this.p.direction,
-        landed: this.p.landed
-      });
+        landed: this.p.landed,
+        hp: this.p.hp
+      };
+
+      this.p.socket.emit('player.update', data);
+      PubSub.publish('updateSelf', data);
     }
   });
 

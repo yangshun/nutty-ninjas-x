@@ -4,11 +4,11 @@ define(['Socket'], function (Socket) {
     $scope.players = {};
     $scope.playerName = '';
 
-    PubSub.subscribe('setPlayerName', function (event, data) {
+    PubSub.subscribe('updateSelf', function (event, data) {
       $scope.playerName = data.name;
       $scope.players[data.playerId] = {
         name: data.name,
-        hp: 100
+        hp: data.hp
       };
       $scope.$apply();
     });
@@ -16,7 +16,7 @@ define(['Socket'], function (Socket) {
     PubSub.subscribe('updatePlayer', function (event, data) {
       $scope.players[data.playerId] = {
         name: data.name,
-        hp: 100
+        hp: data.hp
       };
       $scope.$apply();
     });

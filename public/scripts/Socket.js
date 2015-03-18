@@ -17,8 +17,6 @@ define('Socket', ['Scene'], function (Scene) {
   
   socket.on('player.connected.self', function (data) {
     Scene.addPlayer(data, socket);
-    console.log(data);
-    PubSub.publish('setPlayerName', data);
   });
 
   // socket.on('player.connected.new', function (data) {

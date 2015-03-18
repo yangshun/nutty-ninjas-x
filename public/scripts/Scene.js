@@ -40,7 +40,8 @@ define('Scene',
         name: data.name,
         x: 110,
         y: 50,
-        socket: socket
+        socket: socket,
+        hp: 100
       });
       player = newPlayer;
       gameStage.insert(player);
@@ -95,7 +96,6 @@ define('Scene',
   }
 
   function actorFire (data) {
-    console.log('actor.fire');
     var actor = findActor(data.playerId);
     actor.player.shoot();
   }
