@@ -1,5 +1,5 @@
 requirejs.config({ 
-  baseUrl: 'scripts',
+  baseUrl: '/scripts',
   paths: {
     bower: '../bower_components'
   }
