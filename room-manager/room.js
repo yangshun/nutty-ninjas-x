@@ -1,5 +1,3 @@
-'use strict';
-
 function Room (name, io) {
   var roomId = name;
   var roomCon = io.of('/' + roomId);
@@ -8,14 +6,17 @@ function Room (name, io) {
   var playerId = 0;
 
   roomCon.on('connection', function (socket) {
-    console.log('Player', playerId, 'connected to', roomId);
-    var player = { playerId: playerId };
+    var Player = require('./player');
+    
+    var player = new Player('Name', playerId, socket);
 
-    socket.emit('player.connected.self', player);
-    socket.broadcast.emit('player.connected.new', player);
+    console.log('Player', playerId, 'connected to', roomId);
+
+    socket.emit('player.connected.self', player.getState());
+    socket.broadcast.emit('player.connected.new', player.getState());
 
     socket.on('disconnect', function () {
-      socket.broadcast.emit('player.disconnected', player);
+      socket.broadcast.emit('player.disconnected', player.getState());
     });
 
     socket.on('player.update', function (data) {

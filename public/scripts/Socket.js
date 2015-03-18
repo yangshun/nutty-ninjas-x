@@ -35,4 +35,8 @@ define('Socket', ['Scene'], function (Scene) {
     Scene.actorFire(data);
   });
 
+  socket.on('connection.rtt.toclient', function () {
+    socket.emit('connection.rtt.fromclient');
+  });
+
 });
