@@ -17,11 +17,13 @@ define('Socket', ['Scene'], function (Scene) {
   
   socket.on('player.connected.self', function (data) {
     Scene.addPlayer(data, socket);
+    console.log(data);
+    PubSub.publish('setPlayerName', data);
   });
 
-  socket.on('player.connected.new', function (data) {
-    Scene.addActor(data);
-  });
+  // socket.on('player.connected.new', function (data) {
+  //   Scene.addActor(data);
+  // });
 
   socket.on('player.disconnected', function (data) {
     Scene.removeActor(data);
@@ -29,6 +31,7 @@ define('Socket', ['Scene'], function (Scene) {
 
   socket.on('player.updated', function (data) {
     Scene.updateActors(data);
+    PubSub.publish('updatePlayer', data);
   });
 
   socket.on('player.shoot', function (data) {
@@ -39,4 +42,5 @@ define('Socket', ['Scene'], function (Scene) {
     socket.emit('connection.rtt.fromclient');
   });
 
+  return socket;
 });

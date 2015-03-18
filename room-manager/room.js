@@ -8,7 +8,7 @@ function Room (name, io) {
   roomCon.on('connection', function (socket) {
     var Player = require('./player');
     
-    var player = new Player('Name', playerId, socket);
+    var player = new Player(playerId, playerId, socket);
 
     console.log('Player', playerId, 'connected to', roomId);
 

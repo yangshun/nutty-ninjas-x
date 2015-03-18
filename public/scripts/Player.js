@@ -28,6 +28,7 @@ define(['Q', 'Config', 'Actor'], function (Q, Config) {
     step: function (dt) {
       this.p.socket.emit('player.update', { 
         playerId: this.p.playerId,
+        name: this.p.name,
         x: this.p.x, 
         y: this.p.y,
         direction: this.p.direction,

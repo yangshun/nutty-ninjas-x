@@ -37,6 +37,7 @@ define('Scene',
     if (!player) {
       var newPlayer = new Q.Player({
         playerId: data.playerId,
+        name: data.name,
         x: 110,
         y: 50,
         socket: socket

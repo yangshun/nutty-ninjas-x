@@ -12,7 +12,8 @@ requirejs.config({
       'Config',
       'Q',
       'Scene',
-      'Player'
+      'Player',
+      'NuttyNinjasXApp'
     ], 
     function (Config, Q, Scene, Player) {
 
@@ -24,5 +25,7 @@ requirejs.config({
       });
       Q.stageScene('arena');
     });
+
+    angular.bootstrap(document, ['NuttyNinjasX']);
   });
 })();
