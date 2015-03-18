@@ -27,6 +27,7 @@ define('Socket', ['Scene'], function (Scene) {
 
   socket.on('player.disconnected', function (data) {
     Scene.removeActor(data);
+    PubSub.publish('removePlayer', data);
   });
 
   socket.on('player.updated', function (data) {

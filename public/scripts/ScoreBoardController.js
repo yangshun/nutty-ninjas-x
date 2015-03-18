@@ -20,6 +20,11 @@ define(['Socket'], function (Socket) {
       };
       $scope.$apply();
     });
+
+    PubSub.subscribe('removePlayer', function (event, data) {
+      delete $scope.players[data.playerId];
+      $scope.$apply();
+    });
   }
 
   return ScoreBoardController;
