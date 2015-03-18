@@ -2,14 +2,13 @@
 
 function Room (name, io) {
   var roomId = name;
-  // var roomCon = io.of('/' + roomId);
-  var roomCon = io;
+  var roomCon = io.of('/' + roomId);
   console.log('Created room', roomId);
   var connections = {};
   var playerId = 0;
 
   roomCon.on('connection', function (socket) {
-    console.log('Someone connected', playerId);
+    console.log('Player', playerId, 'connected to', roomId);
     var player = { playerId: playerId };
 
     socket.emit('player.connected.self', player);

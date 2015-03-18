@@ -13,7 +13,7 @@ define('Socket', ['Scene'], function (Scene) {
   }
 
   var roomId = getQueryVariable('room');
-  var socket = io();
+  var socket = io(window.location.host + '/' + roomId);
   
   socket.on('player.connected.self', function (data) {
     Scene.addPlayer(data, socket);
