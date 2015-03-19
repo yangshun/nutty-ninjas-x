@@ -19,7 +19,7 @@ define('Config', [], function () {
         height: 40
       }
     },
-    levelName: 'arena2.tmx',
+    levelName: 'level1.tmx',
     assets: {
       tile: {
         width: 40,

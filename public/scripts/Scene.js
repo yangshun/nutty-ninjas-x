@@ -8,7 +8,7 @@ define('Scene',
   var background;
   var collisionLayer;
   
-  Q.scene('arena', function (stage) { 
+  Q.scene('level1', function (stage) { 
     gameStage = stage;
     background = new Q.TileLayer({ 
       dataAsset: Config.levelName, 
