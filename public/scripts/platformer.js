@@ -6,7 +6,7 @@ var Config = {
   },
   player: {
     asset: 'player.png',
-    jumpSpeed: -380
+    jumpSpeed: -700
   },
   bullet: {
     speed: 500
@@ -37,7 +37,6 @@ var Q = window.Q = Quintus({audioSupported: [ 'wav','mp3','ogg' ]})
 
 // Load and init audio files.
 
-
 Q.SPRITE_PLAYER = 1;
 Q.SPRITE_COLLECTABLE = 2;
 Q.SPRITE_ENEMY = 4;
@@ -50,9 +49,7 @@ Q.Sprite.extend('Actor', {
       sheet: "player",  // Setting a sprite sheet sets sprite width and height
       sprite: "player",
       jumpSpeed: Config.player.jumpSpeed,
-      speed: 300,
-      strength: 100,
-      score: 0,
+      speed: 1500,
       bulletSpeed: 1000,
       update: true,
       type: Q.SPRITE_PLAYER,
@@ -285,13 +282,8 @@ Q.Actor.extend("Player",{
     this.p.door = false;
     this.p.checkDoor = false;
 
-
-    if(this.p.y > 1000) {
-      this.stage.unfollow();
-    }
-
-    if(this.p.y > 2000) {
-      this.resetLevel();
+    if (this.p.y > 2000) {
+      this.p.y = 0;
     }
     this.play(animationState);
 
@@ -513,14 +505,19 @@ Q.scene("level1",function(stage) {
     }
 
     var roomId = getQueryVariable('room');
-    var socket = io(window.location.host + '/' + roomId);
+    var socket = io(window.location.host + '/game');
+
+    var names = ['John', 'Mary', 'Jane', 'Peter', 'Bob', 'Karen'];
+    socket.on('connect', function () {
+      socket.emit('player.join', {
+        name: names[Math.floor(Math.random() * 6)] + Math.floor(Math.random() * 1000),
+        roomId: roomId
+      });
+    });
+
     socket.on('player.connected.self', function (data) {
       GameState.addPlayer(data, socket);
     });
-
-    // socket.on('player.connected.new', function (data) {
-    //   Scene.addActor(data);
-    // });
 
     socket.on('player.disconnected', function (data) {
       GameState.removeActor(data);
@@ -543,21 +540,6 @@ Q.scene("level1",function(stage) {
 
 });
 
-Q.scene('hud',function(stage) {
-  var container = stage.insert(new Q.UI.Container({
-    x: 50, y: 0
-  }));
-
-  var label = container.insert(new Q.UI.Text({x:200, y: 20,
-    label: "Score: " + stage.options.score, color: "white" }));
-
-  var strength = container.insert(new Q.UI.Text({x:50, y: 20,
-    label: "Health: " + stage.options.strength + '%', color: "white" }));
-
-  container.fit(20);
-});
-
-
 var GameState = {
   player: null,
   actors: [],
@@ -568,7 +550,7 @@ var GameState = {
         playerId: data.playerId,
         name: data.name,
         x: 110,
-        y: 10,
+        y: 400,
         socket: socket,
         hp: 100
       });

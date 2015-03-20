@@ -1,5 +1,6 @@
-function Player (name, playerId, socket) {
+function Player (name, roomId, playerId, socket) {
   this.name = name;
+  this.roomId = roomId;
   this.playerId = playerId;
   this.socket = socket;
   this.startMeasuringLatency();

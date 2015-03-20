@@ -14,9 +14,11 @@ app.use(app.router);
 
 // Routing
 app.get('/play', function (req, res) {
-  var room = req.query.room;
-  roomManager.newPlayerJoinsRoom(room);
   res.sendfile(__dirname + '/public/index.html');
+});
+
+app.get('/lobby', function (req, res) {
+  res.sendfile(__dirname + '/public/lobby.html');
 });
 
 server.listen(port, function () {
