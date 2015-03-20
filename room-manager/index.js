@@ -37,7 +37,11 @@ function RoomManager (server) {
 
     socket.on('disconnect', function () {
       socket.broadcast.to(roomId).emit('player.disconnected', player.getState());
-      delete rooms[player.roomId][player.playerId];
+      var room = rooms[player.roomId];
+      delete room[player.playerId];
+      if (Object.keys(room).length === 0) {
+        delete rooms[player.roomId];
+      }
       lobbyCon.emit('lobby.state', rooms);
     });
 

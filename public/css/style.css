@@ -1,5 +1,32 @@
-body {
-  font-family: arial, sans-serif;
+body, 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Carter One', arial, sans-serif;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+.nn-theme-color {
+  color: #fed61b;
+}
+
+.nn-logo {
+  display: block;
+  margin: 30px auto;
+}
+
+.nn-lobby-button {
+  float: right;
+}
+
+.nn-num-players {
+  color: #999;
 }
 
 .nn-scoreboard {

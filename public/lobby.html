@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="/socket.io/socket.io.js"></script>
+        <link href="http://fonts.googleapis.com/css?family=Carter+One" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="css/flatly.css"/>
+        <link rel="stylesheet" href="css/style.css"/>
+    </head>
+    <body>
+        <div class="container" ng-controller="LobbyController">
+          <div class="row">
+            <div class="col-sm-4 col-sm-offset-4">
+              <img class="nn-logo img-responsive" src="/images/logo.png">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+              <div class="panel panel-default">
+                <!-- Default panel contents -->
+                <div class="panel-heading">
+                  <h2>
+                    <a class="btn-sm btn-info nn-lobby-button" href="/play?room={{ roomName }}">Create Room</a>
+                    Game Lobby
+                  </h1>
+                </div>
+                <!-- List group -->
+                <ul class="list-group">
+                  <li ng-repeat="(roomName, players) in rooms" class="list-group-item">
+                    <h3>
+                      <a class="btn-sm btn-warning nn-lobby-button" href="/play?room={{ roomName }}">Join Game</a>
+                      {{ roomName }}
+                    </h3>
+                    <p class="nn-num-players">{{ players | keylength }} player<span ng-show="(players | keylength) != 1">s</span> in game</p>
+                    <p>Current Players: <span class="nn-theme-color" ng-repeat="(id, player) in players">{{ player.name }}<span ng-show="!$last">,</span> </span></p>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        <div>
+        <script src="/bower_components/angular/angular.js"></script>
+        <script src="/scripts/LobbyController.js"></script>
+    </body>
+</html>
