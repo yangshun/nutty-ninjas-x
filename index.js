@@ -13,8 +13,12 @@ app.use(express.bodyParser());
 app.use(app.router);
 
 // Routing
-app.get('/play', function (req, res) {
+app.get('/', function (req, res) {
   res.sendfile(__dirname + '/public/index.html');
+});
+
+app.get('/play', function (req, res) {
+  res.sendfile(__dirname + '/public/play.html');
 });
 
 app.get('/lobby', function (req, res) {

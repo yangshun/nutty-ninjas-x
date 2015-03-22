@@ -1,3 +1,10 @@
+html, 
+body { 
+  height: 100%;
+  margin: 0;
+  width: 100%;
+}
+
 body, 
 h1,
 h2,
@@ -9,16 +16,72 @@ h6 {
 }
 
 a:hover {
+  color: #fed61b;
   text-decoration: none;
+}
+
+.nn-landing-container { 
+  background-image: url('../images/osaka-castle.jpg'); 
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  height: 100%;
+  position: relative; 
+  width: 100%; 
+}
+
+.nn-play-button {
+  color: #fff;
+  font-size: 24px;
 }
 
 .nn-theme-color {
   color: #fed61b;
 }
 
-.nn-logo {
+.nn-logo,
+.nn-logo-container {
   display: block;
   margin: 30px auto;
+  position: relative;
+}
+
+.nn-logo-bg-element-container {
+  position: relative;
+}
+
+.nn-logo-container .nn-logo-bg-element {
+  position: absolute;
+  top: 0;
+}
+
+@-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
+@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+@keyframes spin { 100% { transform:rotate(360deg); } }
+
+@-webkit-keyframes spin-ccw {
+  from { -webkit-transform: rotate(0deg); }
+  to { -webkit-transform: rotate(-360deg); }
+}
+@-moz-keyframes spin-ccw {
+  from { -moz-transform: rotate(0deg); }
+  to { -moz-transform: rotate(-360deg); }
+}
+@-keyframes spin-ccw {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
+.nn-spin {
+  -webkit-animation: spin 2s linear infinite;
+  -moz-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+
+.nn-spin-ccw {
+  -webkit-animation: spin-ccw 2s linear infinite;
+  -moz-animation: spin-ccw 2s linear infinite;
+  animation: spin-ccw 2s linear infinite;
 }
 
 .nn-lobby-button {

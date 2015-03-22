@@ -4,41 +4,40 @@
         <title></title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <script src="/socket.io/socket.io.js"></script>
-        <!-- <script src="/scripts/lib/quintus.js"></script> -->
-        <script src="/lib/quintus.js"></script>
-        <script src="/lib/quintus_sprites.js"></script>
-        <script src="/lib/quintus_scenes.js"></script>
-        <script src="/lib/quintus_input.js"></script>
-        <script src="/lib/quintus_anim.js"></script>
-        <script src="/lib/quintus_2d.js"></script>
-        <script src="/lib/quintus_touch.js"></script>
-        <script src="/lib/quintus_ui.js"></script>
-        <script src="/lib/quintus_tmx.js"></script>
-        <script src="/lib/quintus_audio.js"></script>
-
         <link href="http://fonts.googleapis.com/css?family=Carter+One" rel="stylesheet" type="text/css">
-        <link rel="stylesheet" href="css/style.css"/>
+        <link rel="stylesheet" href="/css/flatly.css"/>
+        <link rel="stylesheet" href="/bower_components/animate.css/animate.min.css"/>
+        <link rel="stylesheet" href="/css/style.css"/>
     </head>
-    <body>
-        <div ng-controller="ScoreBoardController" class="nn-scoreboard">
-          <table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>HP</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr ng-repeat="player in players">
-                <td>{{ player.name }}</td>
-                <td>{{ player.hp }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+    <body class="nn-landing-container">
+        <div class="container" ng-controller="LobbyController">
+          <div class="row">
+            <div class="col-sm-6 col-sm-offset-3">
+              <div class="nn-logo-container">                
+                <img class="nn-logo img-responsive" src="/images/logo-placeholder.png">
+                <img class="nn-logo-swirls nn-logo-bg-element img-responsive" src="/images/swirls.png">
+                <img class="nn-logo-shuriken nn-logo-bg-element img-responsive" src="/images/shuriken.png">
+                <img class="nn-logo-bg-element img-responsive" src="/images/logo.png">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 col-md-offset-3 text-center">
+              <a class="btn btn-default btn-large nn-play-button" href="/lobby">Play Game</a>
+            </div>
+          </div>
+        <div>
+        <script src="/bower_components/jquery/dist/jquery.min.js"></script>
         <script src="/bower_components/angular/angular.js"></script>
-        <script src="/bower_components/pubsub-js/src/pubsub.js"></script>
-        <script src="/scripts/ScoreBoardController.js"></script>
-        <script src="/scripts/platformer.js"></script>
+        <script>
+          $(function () {
+            $('.nn-logo-container').addClass('animated bounceInDown');
+            $('.nn-logo-container').on('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+                $('.nn-logo-bg-element').addClass('animated infinite pulse');
+              });
+            $('.nn-logo-shuriken').addClass('nn-spin');
+            $('.nn-logo-swirls').addClass('nn-spin-ccw');
+          });
+        </script>
     </body>
 </html>

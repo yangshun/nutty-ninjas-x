@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="/socket.io/socket.io.js"></script>
+        <!-- <script src="/scripts/lib/quintus.js"></script> -->
+        <script src="/lib/quintus.js"></script>
+        <script src="/lib/quintus_sprites.js"></script>
+        <script src="/lib/quintus_scenes.js"></script>
+        <script src="/lib/quintus_input.js"></script>
+        <script src="/lib/quintus_anim.js"></script>
+        <script src="/lib/quintus_2d.js"></script>
+        <script src="/lib/quintus_touch.js"></script>
+        <script src="/lib/quintus_ui.js"></script>
+        <script src="/lib/quintus_tmx.js"></script>
+        <script src="/lib/quintus_audio.js"></script>
+
+        <link href="http://fonts.googleapis.com/css?family=Carter+One" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="css/style.css"/>
+    </head>
+    <body>
+        <div ng-controller="ScoreBoardController" class="nn-scoreboard">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>HP</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="player in players">
+                <td>{{ player.name }}</td>
+                <td>{{ player.hp }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <script src="/bower_components/angular/angular.js"></script>
+        <script src="/bower_components/pubsub-js/src/pubsub.js"></script>
+        <script src="/scripts/ScoreBoardController.js"></script>
+        <script src="/scripts/platformer.js"></script>
+    </body>
+</html>
