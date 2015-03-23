@@ -16,6 +16,10 @@ function LobbyController ($scope) {
     $scope.rooms = data;
     $scope.$apply();
   });
+
+  $scope.createGame = function () {
+    window.location.href = '/play?room=' + $scope.gameName + '&playerName=' + $scope.playerName;
+  }
 }
 
 app.controller('LobbyController', LobbyController);
