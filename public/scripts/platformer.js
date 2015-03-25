@@ -6,7 +6,7 @@ var Config = {
   },
   player: {
     asset: 'player.png',
-    jumpSpeed: -700
+    jumpSpeed: -500
   },
   bullet: {
     speed: 500
@@ -49,7 +49,7 @@ Q.Sprite.extend('Actor', {
       sheet: "player",  // Setting a sprite sheet sets sprite width and height
       sprite: "player",
       jumpSpeed: Config.player.jumpSpeed,
-      speed: 1500,
+      speed: 300,
       bulletSpeed: 1000,
       update: true,
       type: Q.SPRITE_PLAYER,
@@ -506,11 +506,15 @@ Q.scene("level1",function(stage) {
 
     var roomId = getQueryVariable('room');
     var socket = io(window.location.host + '/game');
-
     var names = ['John', 'Mary', 'Jane', 'Peter', 'Bob', 'Karen'];
+    var playerName = getQueryVariable('playerName');
+    if (!playerName) {
+      playerName = names[Math.floor(Math.random() * 6)] + Math.floor(Math.random() * 1000);
+    }
+
     socket.on('connect', function () {
       socket.emit('player.join', {
-        name: names[Math.floor(Math.random() * 6)] + Math.floor(Math.random() * 1000),
+        name: playerName,
         roomId: roomId
       });
     });
