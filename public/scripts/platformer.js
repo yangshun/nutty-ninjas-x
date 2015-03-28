@@ -69,6 +69,17 @@ Q.Sprite.extend('Actor', {
     this.p.gravity = data.landed < 0 ? 0 : 1;
     this.p.animationState = data.animationState;
   },
+
+  shoot: function(data) {
+    var p = this.p;
+    var shuriken = new Q.Shuriken({ 
+                    x: p.x + (dx * (p.w/2 + 20)),
+                    y: p.y,
+                    vx: dx * Config.bullet.speed,
+                    vy: 0});
+    this.stage.insert(shuriken);
+  }, 
+
   shoot: function () {
     var p = this.p;
     var dx = p.direction === 'right' ? 1 : -1;
@@ -78,7 +89,14 @@ Q.Sprite.extend('Actor', {
                     vx: dx * Config.bullet.speed,
                     vy: 0
                   });
-    this.stage.insert(bullet);
+    //this.stage.insert(bullet);
+
+    var shuriken = new Q.Shuriken({ 
+                    x: p.x + (dx * (p.w/2 + 20)),
+                    y: p.y,
+                    vx: dx * Config.bullet.speed,
+                    vy: 0});
+    this.stage.insert(shuriken);
   },
   step: function (dt) {
     this.play(this.p.animationState);
@@ -110,10 +128,16 @@ Q.Actor.extend("Player",{
   },
 
   shoot: function () {
-    this.p.socket.emit('player.shoot', { 
-      playerId: this.p.playerId,
-    });
+    var dx = this.p.direction === 'right' ? 1 : -1;
+    var myObj = { 
+      playerId: this.p.playerId, 
+      x: this.p.x.toString(), 
+      y: this.p.y.toString(), 
+      dx: dx.toString()
+    };
+    this.p.socket.emit('player.shoot', myObj);
     this._super();
+    //this.actor.shoot(myObj);
   },
 
   jump: function(obj) {
@@ -409,13 +433,66 @@ Q.Sprite.extend('Bullet',{
       col.obj.p.hp -= this.p.damage;
     }
   },
-  draw: function (ctx) {
-    ctx.fillStyle = '#f00';
-    ctx.fillRect(-this.p.cx, -this.p.cy, this.p.w, this.p.h);
-  },
+  //draw: function (ctx) {
+  //  ctx.fillStyle = '#f00';
+  //  ctx.fillRect(-this.p.cx, -this.p.cy, this.p.w, this.p.h);
+  //},
 
   step: function (dt) {
 
+  }
+});
+
+Q.Sprite.extend('Shuriken', {
+  init: function (p) {
+    this._super(p, { 
+      w: 0,
+      h: 0,
+      asset: "shuriken.png",
+      scale: 0.05,
+      gravity: 0.00,
+      damage: 20
+    });
+        
+    this.add('2d');
+    this.on('bump.left', this, 'collisionLeft');
+    this.on('bump.right', this, 'collisionRight');
+  },
+  collisionLeft: function (col) {
+    this.handleCollision(col, 'left');
+  },
+  collisionRight: function (col) {
+    this.handleCollision(col, 'right');
+  },
+  handleCollision: function (col, dir) {
+    console.log('handleCollision');
+    this.destroy();
+    if (col.obj.isA('Player')) {
+      var knockBack = 200 * (dir === 'left' ? 1 : -1 );
+      col.obj.p.vy = -100;
+      col.obj.p.hp -= this.p.damage;
+    }
+  },
+
+  step: function (dt) {
+    this.p.angle += dt * 4 * 360;
+  }
+});
+
+Q.Bullet.extend('Shurikenxx', {
+  init: function (p) {
+    this._super(p, { 
+      w: 0,
+      h: 0,
+      asset: "shuriken.png",
+      scale: 0.05,
+      gravity: 0.00,
+      damage: 20
+    });
+  },
+
+  step: function (dt) {
+    this.p.angle += dt * 4 * 360;
   }
 });
 
@@ -594,7 +671,7 @@ var GameState = {
   updateActors: function (data) {
     var actor = this.findActor(data.playerId);
     if (actor) {
-      console.log(data.animationState);
+      //console.log(data.animationState);
       actor.player.updateState(data);
     } else {
       // New actor
@@ -603,11 +680,11 @@ var GameState = {
   },
   actorFire: function (data) {
     var actor = this.findActor(data.playerId);
-    actor.player.shoot();
+    actor.player.shoot(data);
   }
 };
 
-Q.loadTMX("level1.tmx, collectables.json, doors.json, enemies.json, fire.mp3, jump.mp3, heart.mp3, hit.mp3, coin.mp3, player.json, player.png", function() {
+Q.loadTMX("level1.tmx, collectables.json, doors.json, enemies.json, fire.mp3, jump.mp3, heart.mp3, hit.mp3, coin.mp3, player.json, player.png, shuriken.png", function() {
   Q.compileSheets("player.png","player.json");
   Q.compileSheets("collectables.png","collectables.json");
   Q.compileSheets("enemies.png","enemies.json");
