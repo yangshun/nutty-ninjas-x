@@ -15,8 +15,7 @@ Player.prototype.startMeasuringLatency = function () {
     lastSentRttResponseReceived = true;
     var currentTime = new Date().getTime();
     that.latency = currentTime - lastSentTime;
-    // console.log('Player', that.playerId, 'latency', that.latency);
-    lastSentTime = currentTime;
+    console.log('Player', that.playerId, 'latency', that.latency);
   });
 
   var rttMeasure = setInterval(function () {
