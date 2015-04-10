@@ -90,30 +90,33 @@ Q.Sprite.extend('Actor', {
     this.stage.insert(shuriken);
   },
 
-  shoot_with_data: function(data)   {
+  shootWithData: function(data)   {
 
-    console.log('actor.shoot_with_data');
+    console.log('actor.shootWithData');
     console.log('latency = ' + data.latency);
     //simulate latency
     //data.latency = 500;
 
     //find out which x-direction the bullet is traveling towards
-    var bullet_x_direction = data.target_x - data.start_x;
-    bullet_x_direction = bullet_x_direction / Math.abs(bullet_x_direction);
-    var bullet_y_direction = data.target_y - data.start_y;
-    bullet_y_direction = bullet_y_direction / Math.abs(bullet_y_direction);
+    var bulletXDirection = data.targetX - data.startX;
+    bulletXDirection = bulletXDirection / Math.abs(bulletXDirection);
+    var bulletYDirection = data.targetY - data.startY;
+    bulletYDirection = bulletYDirection / Math.abs(bulletYDirection);
 
     //find out if the bullet is traveling towards the local player
-    var traveling_to_local_player = false;
-    if((GameState.player.p.x > data.start_x )
-      && (bullet_x_direction > 0))
+    var travelingToLocalPlayer = false;
+    if(data.playerid != GameState.player.p.playerid)
     {
-      traveling_to_local_player = true;
-    }
-    else if((GameState.player.p.x < data.start_x )
-          && (bullet_x_direction < 0))
-    {
-      traveling_to_local_player = true;
+      if((GameState.player.p.x > data.startX )
+        && (bulletXDirection > 0))
+      {
+        travelingToLocalPlayer = true;
+      }
+      else if((GameState.player.p.x < data.startX )
+            && (bulletXDirection < 0))
+      {
+        travelingToLocalPlayer = true;
+      } 
     }
 
     //get the x and y speed for the case if there is no modification 
@@ -123,17 +126,17 @@ Q.Sprite.extend('Actor', {
     //the x-axis, y-axis. Using this ratio, and the speed 
     //as the hypotenus, we can then figure out how much 
     //to modify the bullet speed by
-    var distance_x = Math.abs(Math.abs(data.target_x) - Math.abs(data.start_x));
-    var distance_y = Math.abs(Math.abs(data.target_y) - Math.abs(data.start_y));
-    var diagonal_distance = Math.sqrt((distance_x * distance_x) + (distance_y * distance_y));
-    var speed_to_distance_ratio = Config.bullet.speed / diagonal_distance;
+    var distanceX = Math.abs(Math.abs(data.targetX) - Math.abs(data.startX));
+    var distanceY = Math.abs(Math.abs(data.targetY) - Math.abs(data.startY));
+    var diagonalDistance = Math.sqrt((distanceX * distanceX) + (distanceY * distanceY));
+    var speedToDistanceRatio = Config.bullet.speed / diagonalDistance;
 
-    var final_speed_x = speed_to_distance_ratio * (data.target_x - data.start_x);
-    var final_speed_y = speed_to_distance_ratio * (data.target_y - data.start_y);
+    var finalSpeedX = speedToDistanceRatio * (data.targetX - data.startX);
+    var finalSpeedY = speedToDistanceRatio * (data.targetY - data.startY);
 
     //modify the speed if the shuriken is traveling towards 
     //the local player
-    if(traveling_to_local_player)
+    if(travelingToLocalPlayer)
     {
 
       //here we modify the x distance by the distance to speed ratio.
@@ -145,35 +148,36 @@ Q.Sprite.extend('Actor', {
       //get the respective x-speed and y-speed, then we can use this 
       //adjusted speed to find out how much to modify the bullet speed 
       //by
-      var adjusted_speed_x = speed_to_distance_ratio * distance_x;
+      var adjustedSpeedX = speedToDistanceRatio * distanceX;
 
       //we will only use the x-speed to find the time it would take 
       //to reach the player's x coordinate
-      var time_to_reach = Math.abs(data.start_x - GameState.player.p.x) / adjusted_speed_x;
+      var timeToReach = Math.abs(data.startX - GameState.player.p.x) / adjustedSpeedX;
 
       //now we will adjust the expected time to reach by minusing 
       //the RTT
-      var time_to_reach_modified = Math.max((time_to_reach - (data.latency/1000)), 0.1);
+      var timeToReachModified = Math.max((timeToReach - (data.latency/1000)), 0.1);
 
       //now find the final speed x
-      final_speed_x = (data.target_x - data.start_x) / time_to_reach_modified;
+      finalSpeedX = (data.targetX - data.startX) / timeToReachModified;
 
       //get the final speed for the y axis
-      final_speed_y = (data.target_y - data.start_y) / time_to_reach_modified;
+      finalSpeedY = (data.targetY - data.startY) / timeToReachModified;
     }
 
     //generate a shuriken based on the data
     var p = this.p;
-    var final_speed = Math.sqrt((final_speed_x * final_speed_x) + (final_speed_y * final_speed_y));
-    var offset_ratio = p.w * 1.2 / final_speed;
-    console.log("final x: " + final_speed_x);
-    console.log("final y: " + final_speed_y);
+    var finalSpeed = Math.sqrt((finalSpeedX * finalSpeedX) + (finalSpeedY * finalSpeedY));
+    var offsetRatio = p.w * 1.2 / finalSpeed;
+    console.log("final x: " + finalSpeedX);
+    console.log("final y: " + finalSpeedY);
     console.log("p.w: " + p.w);
     var shuriken = new Q.Shuriken({ 
-                    x: data.start_x + final_speed_x * offset_ratio,
-                    y: data.start_y + final_speed_y * offset_ratio,
-                    vx: final_speed_x,
-                    vy: final_speed_y});
+                    x: data.startX + finalSpeedX * offsetRatio,
+                    y: data.startY + finalSpeedY * offsetRatio,
+                    vx: finalSpeedX,
+                    vy: finalSpeedY,
+                    playerid: data.playerid});
     this.stage.insert(shuriken);
 
   },
@@ -241,41 +245,29 @@ Q.Actor.extend("Player",{
       console.log("stageY: " + stageY);
 
       //build the data package to be sent to the shoot function
-      var shooting_data = {
+      var shootingData = {
         playerid: GameState.player.p.playerId,
-        start_x: GameState.player.p.x,
-        start_y: GameState.player.p.y,
-        target_x: stageX,
-        target_y: stageY,
+        startX: GameState.player.p.x,
+        startY: GameState.player.p.y,
+        targetX: stageX,
+        targetY: stageY,
         latency: 0
       };
       console.log("playerid: " + GameState.player.p.playerId);
-      console.log("shooting_data.playerid: " + shooting_data.playerid);
-      GameState.player.p.socket.emit('player.shoot', shooting_data);
+      console.log("shootingData.playerid: " + shootingData.playerid);
+      GameState.player.p.socket.emit('player.shoot', shootingData);
       //this._super();
       //this.actor.shoot(firing_data);
-      GameState.player.shoot_with_data(shooting_data);
+      GameState.player.shootWithData(shootingData);
   },
 
   shoot: function () {
-    console.log('player.shoot');
-    var dx = this.p.direction === 'right' ? 1 : -1;
-    var firing_data = { 
-      playerId: this.p.playerId, 
-      x: this.p.x, 
-      y: this.p.y, 
-      dx: dx, 
-      latency: 0
-    };
-    this.p.socket.emit('player.shoot', firing_data);
-    //this._super();
-    //this.actor.shoot(firing_data);
-    this.shoot_with_data(firing_data);
+    console.log('player.shoot is deprecated!');
   },
 
-  shoot_with_data: function(data)   {
+  shootWithData: function(data)   {
 
-    console.log('player.shoot_with_data');
+    console.log('player.shootWithData');
     this._super(data);
   },
 
@@ -591,7 +583,8 @@ Q.Sprite.extend('Shuriken', {
       scale: 0.05,
       gravity: 0.00,
       damage: 20,
-      lifetime: 5
+      lifetime: 5,
+      playerId: p.playerid
     });
         
     this.add('2d');
@@ -606,8 +599,16 @@ Q.Sprite.extend('Shuriken', {
   },
   handleCollision: function (col, dir) {
     console.log('handleCollision');
+    //skip if the the object being hit is the owner
+    if(col.obj.isA('Player') 
+      && (this.p.playerid == col.obj.p.playerId))
+    {
+      console.log("hit owner");
+      return;
+    }
     this.destroy();
     if (col.obj.isA('Player')) {
+      console.log("hit playerid: " + col.obj.p.playerId);
       var knockBack = 200 * (dir === 'left' ? 1 : -1 );
       col.obj.p.vy = -100;
       col.obj.p.hp -= this.p.damage;
@@ -622,23 +623,6 @@ Q.Sprite.extend('Shuriken', {
     {
       this.destroy();
     }
-  }
-});
-
-Q.Bullet.extend('Shurikenxx', {
-  init: function (p) {
-    this._super(p, { 
-      w: 0,
-      h: 0,
-      asset: "shuriken.png",
-      scale: 0.05,
-      gravity: 0.00,
-      damage: 20
-    });
-  },
-
-  step: function (dt) {
-    this.p.angle += dt * 4 * 360;
   }
 });
 
@@ -827,11 +811,11 @@ var GameState = {
   },
   actorFire: function (data) {
     var actor = this.findActor(data.playerid);
-    actor.player.shoot_with_data(data);
+    actor.player.shootWithData(data);
   }
 };
 
-Q.loadTMX("level1.tmx, collectables.json, doors.json, enemies.json, fire.mp3, jump.mp3, heart.mp3, hit.mp3, coin.mp3, player.json, player.png, shuriken.png", function() {
+Q.loadTMX("level1.tmx, collectables.json, doors.json, enemies.json, fire.mp3, jump.mp3, heart.mp3, hit.mp3, coin.mp3, player.json, player.png, shuriken.png, whirlpool.png, whirlpool2.png", function() {
   Q.compileSheets("player.png","player.json");
   Q.compileSheets("collectables.png","collectables.json");
   Q.compileSheets("enemies.png","enemies.json");
