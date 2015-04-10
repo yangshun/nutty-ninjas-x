@@ -51,14 +51,14 @@ function RoomManager (server) {
 
     socket.on('player.shoot', function (data) {
       var dataUpdated = {
-        playerid: data.playerid,
+        playerId: data.playerId,
         startX: data.startX,
         startY: data.startY,
         targetX: data.targetX,
         targetY: data.targetY,
         latency: 0
       }
-      console.log("playerId: " + dataUpdated.playerid);
+      console.log("playerId: " + dataUpdated.playerId);
       socket.broadcast.to(roomId).emit('player.shoot', dataUpdated);
     });
 

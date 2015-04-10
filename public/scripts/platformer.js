@@ -105,7 +105,7 @@ Q.Sprite.extend('Actor', {
 
     //find out if the bullet is traveling towards the local player
     var travelingToLocalPlayer = false;
-    if(data.playerid != GameState.player.p.playerid)
+    if(data.playerId != GameState.player.p.playerId)
     {
       if((GameState.player.p.x > data.startX )
         && (bulletXDirection > 0))
@@ -177,7 +177,7 @@ Q.Sprite.extend('Actor', {
                     y: data.startY + finalSpeedY * offsetRatio,
                     vx: finalSpeedX,
                     vy: finalSpeedY,
-                    playerid: data.playerid});
+                    playerId: data.playerId});
     this.stage.insert(shuriken);
 
   },
@@ -246,15 +246,15 @@ Q.Actor.extend("Player",{
 
       //build the data package to be sent to the shoot function
       var shootingData = {
-        playerid: GameState.player.p.playerId,
+        playerId: GameState.player.p.playerId,
         startX: GameState.player.p.x,
         startY: GameState.player.p.y,
         targetX: stageX,
         targetY: stageY,
         latency: 0
       };
-      console.log("playerid: " + GameState.player.p.playerId);
-      console.log("shootingData.playerid: " + shootingData.playerid);
+      console.log("playerId: " + GameState.player.p.playerId);
+      console.log("shootingData.playerId: " + shootingData.playerId);
       GameState.player.p.socket.emit('player.shoot', shootingData);
       //this._super();
       //this.actor.shoot(firing_data);
@@ -584,7 +584,7 @@ Q.Sprite.extend('Shuriken', {
       gravity: 0.00,
       damage: 20,
       lifetime: 5,
-      playerId: p.playerid
+      playerId: p.playerId
     });
         
     this.add('2d');
@@ -601,14 +601,14 @@ Q.Sprite.extend('Shuriken', {
     console.log('handleCollision');
     //skip if the the object being hit is the owner
     if(col.obj.isA('Player') 
-      && (this.p.playerid == col.obj.p.playerId))
+      && (this.p.playerId == col.obj.p.playerId))
     {
       console.log("hit owner");
       return;
     }
     this.destroy();
     if (col.obj.isA('Player')) {
-      console.log("hit playerid: " + col.obj.p.playerId);
+      console.log("hit playerId: " + col.obj.p.playerId);
       var knockBack = 200 * (dir === 'left' ? 1 : -1 );
       col.obj.p.vy = -100;
       col.obj.p.hp -= this.p.damage;
@@ -810,7 +810,7 @@ var GameState = {
     }
   },
   actorFire: function (data) {
-    var actor = this.findActor(data.playerid);
+    var actor = this.findActor(data.playerId);
     actor.player.shootWithData(data);
   }
 };
