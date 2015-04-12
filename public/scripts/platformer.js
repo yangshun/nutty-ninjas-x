@@ -42,7 +42,6 @@ var Q = window.Q = Quintus({audioSupported: [ 'wav','mp3','ogg' ]})
 
 Q.SPRITE_PLAYER = 1;
 Q.SPRITE_COLLECTABLE = 2;
-Q.SPRITE_ENEMY = 4;
 Q.SPRITE_DOOR = 8;
 Q.SPRITE_UI = 32;
 
@@ -221,7 +220,6 @@ Q.Actor.extend("Player",{
     this.on("bump.top","breakTile");
 
     this.on("sensor.tile","checkLadder");
-    this.on("enemy.hit","enemyHit");
     this.on("jump");
     this.on("jumped");
     this.add('platformerControls');
@@ -493,122 +491,6 @@ Q.Actor.extend("Player",{
       x: this.p.x + 0.0, 
       y: this.p.y + 20.0,
       asset: myAsset});
-  }
-});
-
-Q.Sprite.extend("Enemy", {
-  init: function(p,defaults) {
-
-    this._super(p,Q._defaults(defaults||{},{
-      sheet: p.sprite,
-      vx: 50,
-      defaultDirection: 'left',
-      type: Q.SPRITE_ENEMY,
-      collisionMask: Q.SPRITE_DEFAULT
-    }));
-
-    this.add("2d, aiBounce, animation");
-    this.on("bump.top",this,"die");
-    this.on("hit.sprite",this,"hit");
-  },
-
-  step: function(dt) {
-    if(this.p.dead) {
-      this.del('2d, aiBounce');
-      this.p.deadTimer++;
-      if (this.p.deadTimer > 24) {
-        // Dead for 24 frames, remove it.
-        this.destroy();
-      }
-      return;
-    }
-    var p = this.p;
-
-    p.vx += p.ax * dt;
-    p.vy += p.ay * dt;
-
-    p.x += p.vx * dt;
-    p.y += p.vy * dt;
-
-    this.play('walk');
-  },
-
-  hit: function(col) {
-    if(col.obj.isA("Player") && !col.obj.p.immune && !this.p.dead) {
-      col.obj.trigger('enemy.hit', {"enemy":this,"col":col});
-      Q.audio.play('hit.mp3');
-    }
-  },
-
-  die: function(col) {
-    if(col.obj.isA("Player")) {
-      Q.audio.play('coin.mp3');
-      this.p.vx=this.p.vy=0;
-      this.play('dead');
-      this.p.dead = true;
-      var that = this;
-      col.obj.p.vy = -300;
-      this.p.deadTimer = 0;
-    }
-  }
-});
-
-Q.Enemy.extend("Fly", {
-
-});
-
-Q.Enemy.extend("Slime", {
-  init: function(p) {
-    this._super(p,{
-      w: 55,
-      h: 34
-    });
-  }
-});
-
-Q.Enemy.extend("Snail", {
-  init: function(p) {
-    this._super(p,{
-      w: 55,
-      h: 36
-    });
-  }
-});
-
-Q.Sprite.extend('Bullet',{
-  init: function (p) {
-    this._super(p, { 
-      w: 10,
-      h: 10,
-      gravity: 0,
-      damage: 20
-    });
-        
-    this.add('2d');
-    this.on('bump.left', this, 'collisionLeft');
-    this.on('bump.right', this, 'collisionRight');
-  },
-  collisionLeft: function (col) {
-    this.handleCollision(col, 'left');
-  },
-  collisionRight: function (col) {
-    this.handleCollision(col, 'right');
-  },
-  handleCollision: function (col, dir) {
-    this.destroy();
-    if (col.obj.isA('Player')) {
-      var knockBack = 200 * (dir === 'left' ? 1 : -1 );
-      col.obj.p.vy = -100;
-      col.obj.p.hp -= this.p.damage;
-    }
-  },
-  //draw: function (ctx) {
-  //  ctx.fillStyle = '#f00';
-  //  ctx.fillRect(-this.p.cx, -this.p.cy, this.p.w, this.p.h);
-  //},
-
-  step: function (dt) {
-
   }
 });
 
@@ -1096,13 +978,6 @@ Q.loadTMX("level2.tmx, collectables.json, doors.json, enemies.json, fire.mp3, ju
     duck_left: { frames:  [15], rate: 1/10, flip: "x" },
     climb: { frames:  [16, 17], rate: 1/3, flip: false }
   });
-  var EnemyAnimations = {
-    walk: { frames: [0,1], rate: 1/3, loop: true },
-    dead: { frames: [2], rate: 1/10 }
-  };
-  Q.animations("fly", EnemyAnimations);
-  Q.animations("slime", EnemyAnimations);
-  Q.animations("snail", EnemyAnimations);
   Q.stageScene("level2");
 
   var app = angular.module('NuttyNinjasX', []);
