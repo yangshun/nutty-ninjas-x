@@ -56,9 +56,9 @@ function RoomManager (server) {
         startY: data.startY,
         targetX: data.targetX,
         targetY: data.targetY,
-        latency: 0
+        latency: player.latency
       }
-      console.log("playerId: " + dataUpdated.playerId);
+      console.log("playerId: " + dataUpdated.playerId + " latency: " + data.latency);
       socket.broadcast.to(roomId).emit('player.shoot', dataUpdated);
     });
 

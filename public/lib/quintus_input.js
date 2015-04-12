@@ -30,7 +30,8 @@ Quintus.Input = function(Q) {
     X: 88,
     ENTER: 13,
     ESC: 27,
-    P: 80
+    P: 80,
+    E: 69
   };
 
   var DEFAULT_KEYS = {
@@ -41,7 +42,8 @@ Quintus.Input = function(Q) {
     X: 'action',
     ENTER: 'confirm',
     ESC: 'esc',
-    P: 'P'
+    P: 'P',
+    E: 'e'
   };
 
   var DEFAULT_TOUCH_CONTROLS  = [ ['left','<' ],

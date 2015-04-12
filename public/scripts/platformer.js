@@ -6,10 +6,13 @@ var Config = {
   },
   player: {
     asset: 'player.png',
-    jumpSpeed: -500
+    jumpSpeed: -750
   },
   bullet: {
-    speed: 500
+    speed: 750,
+    typeShuriken: 0,
+    typePortal: 1,
+    typeLast: 2
   },
   map: {
     tile: {
@@ -17,7 +20,7 @@ var Config = {
       height: 40
     }
   },
-  levelName: 'level1.tmx',
+  levelName: 'level2.tmx',
   assets: {
     tile: {
       width: 40,
@@ -41,6 +44,7 @@ Q.SPRITE_PLAYER = 1;
 Q.SPRITE_COLLECTABLE = 2;
 Q.SPRITE_ENEMY = 4;
 Q.SPRITE_DOOR = 8;
+Q.SPRITE_UI = 32;
 
 
 Q.Sprite.extend('Actor', {
@@ -48,15 +52,17 @@ Q.Sprite.extend('Actor', {
     this._super(p, {
       sheet: "player",  // Setting a sprite sheet sets sprite width and height
       sprite: "player",
+      scale: 0.70, 
       jumpSpeed: Config.player.jumpSpeed,
-      speed: 300,
+      speed: 400,
       bulletSpeed: 1000,
       update: true,
       type: Q.SPRITE_PLAYER,
       collisionMask: Q.SPRITE_DEFAULT | Q.SPRITE_DOOR | Q.SPRITE_COLLECTABLE,
       standingPoints: [ [ -16, 44], [ -23, 35 ], [-23,-48], [23,-48], [23, 35 ], [ 16, 44 ]],
       duckingPoints : [ [ -16, 44], [ -23, 35 ], [-23,-10], [23,-10], [23, 35 ], [ 16, 44 ]],
-      animationState: 'walk_right'
+      animationState: 'walk_right',
+      weaponType: Config.bullet.typeShuriken
     });
     this.add(['2d', 'animation', 'tween']);
   },
@@ -91,12 +97,9 @@ Q.Sprite.extend('Actor', {
   },
 
   shootWithData: function(data)   {
-
-    console.log('actor.shootWithData');
-    console.log('latency = ' + data.latency);
     //simulate latency
     //data.latency = 500;
-
+    console.log("latency: " + data.latency);
     //find out which x-direction the bullet is traveling towards
     var bulletXDirection = data.targetX - data.startX;
     bulletXDirection = bulletXDirection / Math.abs(bulletXDirection);
@@ -105,7 +108,7 @@ Q.Sprite.extend('Actor', {
 
     //find out if the bullet is traveling towards the local player
     var travelingToLocalPlayer = false;
-    if(data.playerId != GameState.player.p.playerId)
+    if(Number(data.playerId) != Number(GameState.player.p.playerId))
     {
       if((GameState.player.p.x > data.startX )
         && (bulletXDirection > 0))
@@ -126,17 +129,18 @@ Q.Sprite.extend('Actor', {
     //the x-axis, y-axis. Using this ratio, and the speed 
     //as the hypotenus, we can then figure out how much 
     //to modify the bullet speed by
-    var distanceX = Math.abs(Math.abs(data.targetX) - Math.abs(data.startX));
-    var distanceY = Math.abs(Math.abs(data.targetY) - Math.abs(data.startY));
+    var distanceX = Math.abs(data.targetX - data.startX);
+    var distanceY = Math.abs(data.targetY - data.startY);
     var diagonalDistance = Math.sqrt((distanceX * distanceX) + (distanceY * distanceY));
-    var speedToDistanceRatio = Config.bullet.speed / diagonalDistance;
+    var speedToDistanceRatio = Config.bullet.speed * 1.2 / diagonalDistance;
 
     var finalSpeedX = speedToDistanceRatio * (data.targetX - data.startX);
     var finalSpeedY = speedToDistanceRatio * (data.targetY - data.startY);
 
     //modify the speed if the shuriken is traveling towards 
     //the local player
-    if(travelingToLocalPlayer)
+    if(travelingToLocalPlayer 
+      && (data.playerId != GameState.player.p.playerId) )
     {
 
       //here we modify the x distance by the distance to speed ratio.
@@ -168,17 +172,32 @@ Q.Sprite.extend('Actor', {
     //generate a shuriken based on the data
     var p = this.p;
     var finalSpeed = Math.sqrt((finalSpeedX * finalSpeedX) + (finalSpeedY * finalSpeedY));
-    var offsetRatio = p.w * 1.2 / finalSpeed;
+    var offsetRatio = p.w * 1.0 / finalSpeed;
     console.log("final x: " + finalSpeedX);
     console.log("final y: " + finalSpeedY);
     console.log("p.w: " + p.w);
-    var shuriken = new Q.Shuriken({ 
-                    x: data.startX + finalSpeedX * offsetRatio,
-                    y: data.startY + finalSpeedY * offsetRatio,
-                    vx: finalSpeedX,
-                    vy: finalSpeedY,
-                    playerId: data.playerId});
-    this.stage.insert(shuriken);
+    if(this.p.weaponType == Config.bullet.typeShuriken)
+    {
+      var shuriken = new Q.Shuriken({ 
+                      x: data.startX + finalSpeedX * offsetRatio,
+                      y: data.startY + finalSpeedY * offsetRatio,
+                      vx: finalSpeedX,
+                      vy: finalSpeedY,
+                      playerId: data.playerId});
+      this.stage.insert(shuriken);
+    }
+    else if(this.p.weaponType == Config.bullet.typePortal)
+    {
+      var shuriken = new Q.PortalBullet({ 
+                      x: data.startX + finalSpeedX * offsetRatio * 1.3,
+                      y: data.startY + finalSpeedY * offsetRatio * 1.3,
+                      vx: finalSpeedX,
+                      vy: finalSpeedY,
+                      playerId: data.playerId,
+                      targetX: data.targetX,
+                      targetY: data.targetY});
+      this.stage.insert(shuriken);
+    }
 
   },
 
@@ -192,7 +211,7 @@ Q.Actor.extend("Player",{
   init: function (p) {
 
     this._super(p, {
-      direction: "left",
+      direction: "left"
     });
 
     this.p.points = this.p.standingPoints;
@@ -209,7 +228,7 @@ Q.Actor.extend("Player",{
 
     Q.input.on('fire', this, 'shoot');
     Q.input.on("down",this, "checkDoor");
-
+    Q.input.on('e', this, 'toggleWeapon');
 
     Q.el.addEventListener('mousemove',function(e) {
       var x = e.offsetX || e.layerX,
@@ -227,11 +246,11 @@ Q.Actor.extend("Player",{
 
     //this.touchstart = fucntion(e) {self.touchstart(e);};
 
-    Q.el.addEventListener('touchstart', this.touchstart);
-    Q.el.addEventListener('mousedown', this.touchstart);
+    Q.el.addEventListener('touchend', this.touchEnd);
+    Q.el.addEventListener('mouseup', this.touchEnd);
   },
 
-  touchstart: function(e)   {
+  touchEnd: function(e)   {
 
     console.log("touchstart!");
       var x = e.offsetX || e.layerX,
@@ -251,14 +270,19 @@ Q.Actor.extend("Player",{
         startY: GameState.player.p.y,
         targetX: stageX,
         targetY: stageY,
-        latency: 0
+        latency: 0,
+        weaponType: GameState.player.p.weaponType
       };
-      console.log("playerId: " + GameState.player.p.playerId);
-      console.log("shootingData.playerId: " + shootingData.playerId);
       GameState.player.p.socket.emit('player.shoot', shootingData);
       //this._super();
       //this.actor.shoot(firing_data);
       GameState.player.shootWithData(shootingData);
+  },
+
+  toggleWeapon: function ()   {
+    console.log("toggleWeapon!");
+    this.p.weaponType = (this.p.weaponType + 1) % Config.bullet.typeLast;
+    console.log("weapon tyep is now: " + this.p.weaponType);
   },
 
   shoot: function () {
@@ -267,7 +291,6 @@ Q.Actor.extend("Player",{
 
   shootWithData: function(data)   {
 
-    console.log('player.shootWithData');
     this._super(data);
   },
 
@@ -295,7 +318,7 @@ Q.Actor.extend("Player",{
   },
 
   resetLevel: function() {
-    Q.stageScene("level1");
+    Q.stageScene("level2");
     this.p.strength = 100;
     this.animate({opacity: 1});
     Q.stageScene('hud', 3, this.p);
@@ -454,6 +477,22 @@ Q.Actor.extend("Player",{
     };
     this.p.socket.emit('player.update', data);
     PubSub.publish('updateSelf', data);
+
+
+    //move the ui elements
+    var myAsset = "shuriken.png";
+    if(this.p.weaponType == Config.bullet.typeShuriken)
+    {
+      myAsset = "shurikenRed.png";
+    }
+    else if(this.p.weaponType == Config.bullet.typePortal)
+    {
+      myAsset = "whirlpoolPink.png";
+    }
+    this.p.weaponIndicator.updateStuff({
+      x: this.p.x + 0.0, 
+      y: this.p.y + 20.0,
+      asset: myAsset});
   }
 });
 
@@ -556,7 +595,6 @@ Q.Sprite.extend('Bullet',{
     this.handleCollision(col, 'right');
   },
   handleCollision: function (col, dir) {
-    console.log('handleCollision');
     this.destroy();
     if (col.obj.isA('Player')) {
       var knockBack = 200 * (dir === 'left' ? 1 : -1 );
@@ -579,7 +617,7 @@ Q.Sprite.extend('Shuriken', {
     this._super(p, { 
       w: 0,
       h: 0,
-      asset: "shuriken.png",
+      asset: "shurikenRed.png",
       scale: 0.05,
       gravity: 0.00,
       damage: 20,
@@ -590,6 +628,8 @@ Q.Sprite.extend('Shuriken', {
     this.add('2d');
     this.on('bump.left', this, 'collisionLeft');
     this.on('bump.right', this, 'collisionRight');
+    this.on('bump.bottom', this, 'collisionBottom');
+    this.on('bump.top', this, 'collisionTop');
   },
   collisionLeft: function (col) {
     this.handleCollision(col, 'left');
@@ -597,19 +637,22 @@ Q.Sprite.extend('Shuriken', {
   collisionRight: function (col) {
     this.handleCollision(col, 'right');
   },
+  collisionBottom: function (col)   {
+    this.handleCollision(col, 'bottom');
+  },
+  collisionTop: function (col) {
+    this.handleCollision(col, 'top');
+  },
   handleCollision: function (col, dir) {
-    console.log('handleCollision');
     //skip if the the object being hit is the owner
     if(col.obj.isA('Player') 
       && (this.p.playerId == col.obj.p.playerId))
     {
-      console.log("hit owner");
       return;
     }
     this.destroy();
     if (col.obj.isA('Player')) {
-      console.log("hit playerId: " + col.obj.p.playerId);
-      var knockBack = 200 * (dir === 'left' ? 1 : -1 );
+      //var knockBack = 200 * (dir === 'left' ? 1 : -1 );
       col.obj.p.vy = -100;
       col.obj.p.hp -= this.p.damage;
     }
@@ -617,6 +660,222 @@ Q.Sprite.extend('Shuriken', {
 
   step: function (dt) {
     this.p.angle += dt * 4 * 360;
+    this.p.lifetime -= dt;
+
+    if(this.p.lifetime <= 0)
+    {
+      this.destroy();
+    }
+  }
+});
+
+Q.Sprite.extend('WeaponIndicator', {
+  init: function (p) {
+    this._super(p, { 
+      w: 0,
+      h: 0,
+      asset: "whirlpool2.png",
+      scale: 0.05,
+      gravity: 0.00,
+      damage: 20,
+      lifetime: 5,
+      z: 1,
+      type: Q.SPRITE_UI,
+      collisionMask: Q.SPRITE_NONE
+    });
+        
+    this.add('2d');
+  },
+
+  updateStuff: function(data)  {
+    //console.log("update stuff!");
+    this.p.x = data.x;
+    this.p.y = data.y;
+    this.p.asset = data.asset;
+  },
+
+  step: function (dt) {
+    var rotationRatio = 1;
+    if(this.p.asset == "whirlpool2.png")
+    {
+      rotationRatio = 1;
+    }
+    else if(this.p.asset == "shurikenRed.png")
+    {
+      rotationRatio = 4;
+    }
+    this.p.angle += dt * rotationRatio * 360;
+  }
+});
+
+
+Q.Sprite.extend('PortalBullet', {
+  init: function (p) {
+    this._super(p, { 
+      w: 0,
+      h: 0,
+      asset: "whirlpoolPink.png",
+      scale: 0.05,
+      gravity: 0.00,
+      damage: 20,
+      lifetime: 5
+    });
+        
+    this.add('2d');
+    this.on('bump.left', this, 'collisionLeft');
+    this.on('bump.right', this, 'collisionRight');
+    this.on('bump.bottom', this, 'collisionBottom');
+    this.on('bump.top', this, 'collisionTop');
+  },
+  collisionLeft: function (col) {
+    this.handleCollision(col, 'left');
+  },
+  collisionRight: function (col) {
+    this.handleCollision(col, 'right');
+  },
+  collisionBottom: function (col)   {
+    this.handleCollision(col, 'bottom');
+  },
+  collisionTop: function (col) {
+    this.handleCollision(col, 'top');
+  },
+  handleCollision: function (col, dir) {
+    //skip if the the object being hit is the owner
+    if(col.obj.isA('Player') 
+      && (this.p.playerId == col.obj.p.playerId))
+    {
+      return;
+    }
+    this.deployPortal({
+      x: this.p.x,
+      y: this.p.y
+    });
+    this.destroy();
+    if (col.obj.isA('Player')) {
+      //var knockBack = 200 * (dir === 'left' ? 1 : -1 );
+      //col.obj.p.vy = -100;
+      col.obj.p.hp -= this.p.damage;
+    }
+  },
+
+  deployPortal: function (data)   {
+
+    console.log("deploy potral! x: " + data.x + " y: " + data.y);
+    var portal = new Q.Portal({ 
+                      x: data.x,
+                      y: data.y});
+      this.stage.insert(portal);
+
+    if(this.p.playerId == GameState.player.p.playerId)
+    {
+      console.log("emit deploy portal");
+      var shootingData = {
+        playerId: this.p.playerId,
+        x: data.x,
+        y: data.y
+      }
+      GameState.player.p.socket.emit('player.deployPortal', shootingData); 
+    }
+  },
+
+  step: function (dt) {
+    this.p.angle += dt * 1 * 360;
+    this.p.lifetime -= dt;
+
+    if(this.p.lifetime <= 0)
+    {
+      this.destroy();
+    }
+
+    //check if the portal bullet has passed by the target position
+    var displacementLeftX = this.p.targetX - this.p.x;
+    var displacementLeftY = this.p.targetY - this.p.y;
+    var createPortal = false;
+    if(displacementLeftX < 2.0 && displacementLeftX > -2.0
+      && displacementLeftY < 2.0 && displacementLeftY > -2.0)
+    {
+      console.log("displacement within threshold");
+      createPortal = true;
+    }
+    else if(displacementLeftX != 0
+      && this.p.vx != 0 
+      && ((displacementLeftX / this.p.vx) < 0))
+    {
+      //this means it has overshot
+      console.log("overshoot on x");
+      createPortal = true;
+    }
+    else if(displacementLeftY != 0
+      && this.p.vy != 0
+      && ((displacementLeftY / this.p.vy) < 0))
+    {
+      //this means it has overshot
+      console.log("overshoot on Y");
+      createPortal = true;
+    }
+
+    //check if the portal should be created
+    if(createPortal)
+    {
+      this.deployPortal({
+        x: this.p.targetX,
+        y: this.p.targetY
+      });
+      this.destroy();
+    }
+  }
+});
+
+
+
+Q.Sprite.extend('Portal', {
+  init: function (p) {
+    this._super(p, { 
+      w: 0,
+      h: 0,
+      asset: "whirlpoolPink.png",
+      scale: 0.10,
+      gravity: 0.00,
+      damage: 20,
+      lifetime: 5
+    });
+        
+    this.add('2d');
+    this.on('bump.left', this, 'collisionLeft');
+    this.on('bump.right', this, 'collisionRight');
+    this.on('bump.bottom', this, 'collisionBottom');
+    this.on('bump.top', this, 'collisionTop');
+  },
+  collisionLeft: function (col) {
+    this.handleCollision(col, 'left');
+  },
+  collisionRight: function (col) {
+    this.handleCollision(col, 'right');
+  },
+  collisionBottom: function (col)   {
+    this.handleCollision(col, 'bottom');
+  },
+  collisionTop: function (col) {
+    this.handleCollision(col, 'top');
+  },
+  handleCollision: function (col, dir) {
+    //skip if the the object being hit is the owner
+    return;
+    if(col.obj.isA('Player') 
+      && (this.p.playerId == col.obj.p.playerId))
+    {
+      return;
+    }
+    this.destroy();
+    if (col.obj.isA('Player')) {
+      //var knockBack = 200 * (dir === 'left' ? 1 : -1 );
+      //col.obj.p.vy = -100;
+      col.obj.p.hp -= this.p.damage;
+    }
+  },
+
+  step: function (dt) {
+    this.p.angle += dt * 1 * 360;
     this.p.lifetime -= dt;
 
     if(this.p.lifetime <= 0)
@@ -692,8 +951,8 @@ Q.Collectable.extend("Heart", {
   }
 });
 
-Q.scene("level1",function(stage) {
-  Q.stageTMX("level1.tmx",stage);
+Q.scene("level2",function(stage) {
+  Q.stageTMX("level2.tmx",stage);
   GameState.gameStage = stage;
   // stage.add("viewport").follow(Q("Player").first());
 
@@ -746,7 +1005,6 @@ Q.scene("level1",function(stage) {
 
     socket.on('connection.rtt.toclient', function () {
       socket.emit('connection.rtt.fromclient');
-      console.log('socket receive from server');
     });
   })();
 
@@ -758,16 +1016,23 @@ var GameState = {
   gameStage: null,
   addPlayer: function (data, socket) {
     if (!this.player) {
+      var myWeaponIndicator = new Q.WeaponIndicator({
+        x: 110,
+        y: 400,
+        scale: 0.05,
+        asset: "shuriken.png"});
       var newPlayer = new Q.Player({
         playerId: data.playerId,
         name: data.name,
         x: 110,
         y: 400,
         socket: socket,
-        hp: 100
+        hp: 100,
+        weaponIndicator: myWeaponIndicator
       });
       this.player = newPlayer;
       this.gameStage.insert(this.player);
+      this.gameStage.insert(myWeaponIndicator);
       this.gameStage.add('viewport').follow(this.player, { 
         x: true, 
         y: true
@@ -815,7 +1080,7 @@ var GameState = {
   }
 };
 
-Q.loadTMX("level1.tmx, collectables.json, doors.json, enemies.json, fire.mp3, jump.mp3, heart.mp3, hit.mp3, coin.mp3, player.json, player.png, shuriken.png, whirlpool.png, whirlpool2.png", function() {
+Q.loadTMX("level2.tmx, collectables.json, doors.json, enemies.json, fire.mp3, jump.mp3, heart.mp3, hit.mp3, coin.mp3, player.json, player.png, shuriken.png, whirlpool.png, whirlpool2.png, shurikenRed.png, whirlpoolPink.png", function() {
   Q.compileSheets("player.png","player.json");
   Q.compileSheets("collectables.png","collectables.json");
   Q.compileSheets("enemies.png","enemies.json");
@@ -838,7 +1103,7 @@ Q.loadTMX("level1.tmx, collectables.json, doors.json, enemies.json, fire.mp3, ju
   Q.animations("fly", EnemyAnimations);
   Q.animations("slime", EnemyAnimations);
   Q.animations("snail", EnemyAnimations);
-  Q.stageScene("level1");
+  Q.stageScene("level2");
 
   var app = angular.module('NuttyNinjasX', []);
   app.controller('ScoreBoardController', ScoreBoardController);
