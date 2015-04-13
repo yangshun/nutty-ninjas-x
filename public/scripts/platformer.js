@@ -9,7 +9,7 @@ var Config = {
     jumpSpeed: -750
   },
   bullet: {
-    speed: 750,
+    speed: 450,
     typeShuriken: 0,
     typePortal: 1,
     typeLast: 2
@@ -178,11 +178,14 @@ Q.Sprite.extend('Actor', {
     if(this.p.weaponType == Config.bullet.typeShuriken)
     {
       var shuriken = new Q.Shuriken({ 
-                      x: data.startX + finalSpeedX * offsetRatio,
-                      y: data.startY + finalSpeedY * offsetRatio,
-                      vx: finalSpeedX,
-                      vy: finalSpeedY,
-                      playerId: data.playerId});
+                            x: data.startX + finalSpeedX * offsetRatio,
+                            y: data.startY + finalSpeedY * offsetRatio,
+                            vx: finalSpeedX,
+                            vy: finalSpeedY,
+                            origVx: finalSpeedX,
+                            origVy: finalSpeedY,
+                            playerId: data.playerId
+                          });
       this.stage.insert(shuriken);
     }
     else if(this.p.weaponType == Config.bullet.typePortal)
@@ -502,7 +505,8 @@ Q.Sprite.extend('Shuriken', {
       gravity: 0.00,
       damage: 20,
       lifetime: 5,
-      playerId: p.playerId
+      playerId: p.playerId,
+      collisionCount: 3
     });
         
     this.add('2d');
@@ -524,17 +528,32 @@ Q.Sprite.extend('Shuriken', {
     this.handleCollision(col, 'top');
   },
   handleCollision: function (col, dir) {
-    //skip if the the object being hit is the owner
-    if(col.obj.isA('Player') 
-      && (this.p.playerId == col.obj.p.playerId))
-    {
-      return;
-    }
-    this.destroy();
+    
     if (col.obj.isA('Player')) {
-      //var knockBack = 200 * (dir === 'left' ? 1 : -1 );
+      // var knockBack = 200 * (dir === 'left' ? 1 : -1 );
       col.obj.p.vy = -100;
       col.obj.p.hp -= this.p.damage;
+      this.destroy();
+    } else if (col.obj.isA('Actor')) {
+      this.destroy();
+    } else {
+      this.p.collisionCount -= 1;
+      if (this.p.collisionCount <= 0) {
+        this.destroy();
+        return;
+      }
+      switch (dir) {
+        case 'left':
+        case 'right':
+          this.p.vx = -this.p.origVx;
+          break;
+        case 'top':
+        case 'bottom':
+          this.p.vy = -this.p.origVy;
+          break;
+        default:
+          this.destroy();
+      }      
     }
   },
 
@@ -542,8 +561,7 @@ Q.Sprite.extend('Shuriken', {
     this.p.angle += dt * 4 * 360;
     this.p.lifetime -= dt;
 
-    if(this.p.lifetime <= 0)
-    {
+    if (this.p.lifetime <= 0) {
       this.destroy();
     }
   }
