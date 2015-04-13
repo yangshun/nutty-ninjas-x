@@ -543,7 +543,6 @@ Q.Sprite.extend('WeaponIndicator', {
       scale: 0.025,
       gravity: 0.00,
       damage: 20,
-      lifetime: 5,
       z: 1,
       type: Q.SPRITE_UI,
       collisionMask: Q.SPRITE_NONE
@@ -671,7 +670,7 @@ Q.Sprite.extend('Portal', {
       scale: 0.10,
       gravity: 0.00,
       damage: 20,
-      lifetime: 5
+      lifetime: 10
     });
         
     this.add('2d');
