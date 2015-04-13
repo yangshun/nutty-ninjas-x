@@ -63,6 +63,7 @@ Q.Sprite.extend('Actor', {
       animationState: 'walk_right',
       weaponType: Config.bullet.typeShuriken
     });
+    this.p.currentPortalIsPink = true;
     this.add(['2d', 'animation', 'tween']);
   },
   updateState: function (data) {
@@ -166,8 +167,10 @@ Q.Sprite.extend('Actor', {
                             vy: finalSpeedY,
                             playerId: data.playerId,
                             targetX: data.targetX,
-                            targetY: data.targetY
+                            targetY: data.targetY,
+                            portalColor: (this.p.currentPortalIsPink ? 'pink' : 'blue')
                           });
+      this.p.currentPortalIsPink = !this.p.currentPortalIsPink;
       this.stage.insert(portalBullet);
     }
   },
@@ -222,7 +225,6 @@ Q.Actor.extend("Player",{
 
   touchEnd: function(e)   {
 
-    console.log("touchstart!");
     var x = e.offsetX || e.layerX,
         y = e.offsetY || e.layerY,
         stage = Q.stage();
@@ -230,10 +232,7 @@ Q.Actor.extend("Player",{
     var stageX = Q.canvasToStageX(x, stage),
     stageY = Q.canvasToStageY(y, stage);
 
-    console.log("stageX: " + stageX);
-    console.log("stageY: " + stageY);
-
-    //build the data package to be sent to the shoot function
+    // build the data package to be sent to the shoot function
     var shootingData = {
       playerId: GameState.player.p.playerId,
       startX: GameState.player.p.x,
@@ -247,10 +246,8 @@ Q.Actor.extend("Player",{
     GameState.player.shootWithData(shootingData);
   },
 
-  toggleWeapon: function ()   {
-    console.log("toggleWeapon!");
+  toggleWeapon: function () {
     this.p.weaponType = (this.p.weaponType + 1) % Config.bullet.typeLast;
-    console.log("weapon tyep is now: " + this.p.weaponType);
   },
 
   shoot: function () {
@@ -258,7 +255,6 @@ Q.Actor.extend("Player",{
   },
 
   shootWithData: function(data)   {
-
     this._super(data);
   },
 
@@ -451,7 +447,7 @@ Q.Actor.extend("Player",{
     if (this.p.weaponType == Config.bullet.typeShuriken) {
       myAsset = "shuriken.png";
     } else if (this.p.weaponType == Config.bullet.typePortal) {
-      myAsset = "whirlpoolPink.png";
+      myAsset = 'whirlpool-' + (this.p.currentPortalIsPink ? 'pink' : 'blue') + '.png';
     }
 
     this.p.weaponIndicator.updateStuff({
@@ -539,7 +535,7 @@ Q.Sprite.extend('WeaponIndicator', {
     this._super(p, { 
       w: 0,
       h: 0,
-      asset: "whirlpool2.png",
+      asset: "whirlpool-pink.png",
       scale: 0.025,
       gravity: 0.00,
       damage: 20,
@@ -561,9 +557,7 @@ Q.Sprite.extend('WeaponIndicator', {
 
   step: function (dt) {
     var rotationRatio = 1;
-    if (this.p.asset == "whirlpool2.png") {
-      rotationRatio = 1;
-    } else if (this.p.asset == "shuriken.png") {
+    if (this.p.asset === "shuriken.png") {
       rotationRatio = 4;
     }
     this.p.angle += dt * rotationRatio * 360;
@@ -573,10 +567,11 @@ Q.Sprite.extend('WeaponIndicator', {
 
 Q.Sprite.extend('PortalBullet', {
   init: function (p) {
+    var asset = 'whirlpool-' + p.portalColor + '.png';
     this._super(p, { 
       w: 0,
       h: 0,
-      asset: "whirlpoolPink.png",
+      asset: asset,
       scale: 0.05,
       gravity: 0.00,
       damage: 20,
@@ -603,15 +598,11 @@ Q.Sprite.extend('PortalBullet', {
   },
   handleCollision: function (col, dir) {
     //skip if the the object being hit is the owner
-    if(col.obj.isA('Player') 
-      && (this.p.playerId == col.obj.p.playerId))
-    {
+    if (col.obj.isA('Player') 
+      && (this.p.playerId == col.obj.p.playerId)) {
       return;
     }
-    this.deployPortal({
-      x: this.p.x,
-      y: this.p.y
-    });
+    this.createPortal();
     this.destroy();
     if (col.obj.isA('Player')) {
       //var knockBack = 200 * (dir === 'left' ? 1 : -1 );
@@ -619,26 +610,14 @@ Q.Sprite.extend('PortalBullet', {
       col.obj.p.hp -= this.p.damage;
     }
   },
-
-  deployPortal: function (data)   {
-
-    console.log("deploy potral! x: " + data.x + " y: " + data.y);
-    var portal = new Q.Portal({ 
-                      x: data.x,
-                      y: data.y});
+  createPortal: function () {
+    var portal = new Q.Portal({
+                        x: this.p.targetX,
+                        y: this.p.targetY,
+                        portalColor: this.p.portalColor
+                      });
     this.stage.insert(portal);
-
-    if (this.p.playerId === GameState.player.p.playerId) {
-      console.log("emit deploy portal");
-      var shootingData = {
-        playerId: this.p.playerId,
-        x: data.x,
-        y: data.y
-      }
-      GameState.player.p.socket.emit('player.deployPortal', shootingData); 
-    }
   },
-
   step: function (dt) {
     this.p.angle += dt * 1 * 360;
     this.p.lifetime -= dt;
@@ -650,31 +629,28 @@ Q.Sprite.extend('PortalBullet', {
     //check if the portal bullet has passed by the target position
     var displacementLeftX = this.p.targetX - this.p.x;
     var displacementLeftY = this.p.targetY - this.p.y;
-    var createPortal = false;
+    var willCreatePortal = false;
     if (displacementLeftX < 2.0 && displacementLeftX > -2.0
       && displacementLeftY < 2.0 && displacementLeftY > -2.0) {
       console.log("displacement within threshold");
-      createPortal = true;
+      willCreatePortal = true;
     } else if (displacementLeftX != 0
               && this.p.vx != 0 
               && ((displacementLeftX / this.p.vx) < 0)) {
       // this means it has overshot
       console.log("overshoot on x");
-      createPortal = true;
+      willCreatePortal = true;
     } else if (displacementLeftY != 0
               && this.p.vy != 0
               && ((displacementLeftY / this.p.vy) < 0)) {
       // this means it has overshot
       console.log("overshoot on Y");
-      createPortal = true;
+      willCreatePortal = true;
     }
 
     //check if the portal should be created
-    if (createPortal) {
-      this.deployPortal({
-        x: this.p.targetX,
-        y: this.p.targetY
-      });
+    if (willCreatePortal) {
+      this.createPortal();
       this.destroy();
     }
   }
@@ -682,10 +658,12 @@ Q.Sprite.extend('PortalBullet', {
 
 Q.Sprite.extend('Portal', {
   init: function (p) {
+    var asset = 'whirlpool-' + p.portalColor + '.png';
+
     this._super(p, { 
       w: 0,
       h: 0,
-      asset: "whirlpoolPink.png",
+      asset: asset,
       scale: 0.10,
       gravity: 0.00,
       damage: 20,
@@ -863,7 +841,7 @@ var GameState = {
   }
 };
 
-Q.loadTMX("level2.tmx, collectables.json, doors.json, enemies.json, fire.mp3, jump.mp3, heart.mp3, hit.mp3, coin.mp3, player.json, player.png, shuriken.png, whirlpool.png, whirlpool2.png, shurikenRed.png, whirlpoolPink.png", function() {
+Q.loadTMX("level2.tmx, collectables.json, doors.json, enemies.json, fire.mp3, jump.mp3, heart.mp3, hit.mp3, coin.mp3, player.json, player.png, shuriken.png, whirlpool.png, shurikenRed.png, whirlpool-pink.png, whirlpool-blue.png", function() {
   Q.compileSheets("player.png","player.json");
   Q.compileSheets("collectables.png","collectables.json");
   Q.compileSheets("enemies.png","enemies.json");
