@@ -427,9 +427,11 @@ Q.Actor.extend("Player",{
     this.p.door = false;
     this.p.checkDoor = false;
 
-    if (this.p.y > 2000) {
-      this.p.y = 0;
+    if (this.p.y > 2000 || this.p.x < 0 || this.p.x > 5000) {
+      this.p.x = 1000;
+      this.p.y = 10;
     }
+
     this.play(animationState);
 
     var data = { 
@@ -459,6 +461,7 @@ Q.Actor.extend("Player",{
       y: this.p.y + 17.5,
       asset: myAsset
     });
+
   }
 });
 
@@ -818,18 +821,20 @@ var GameState = {
   gameStage: null,
   addPlayer: function (data, socket) {
     if (!this.player) {
+
+      var xPos = Math.floor(Math.random() * (5000 - 500)) + 500;
       var myWeaponIndicator = new Q.WeaponIndicator({
-        x: 110,
-        y: 400,
+        x: xPos,
+        y: 0,
         asset: "shuriken.png"
       });
       var newPlayer = new Q.Player({
         playerId: data.playerId,
         name: data.name,
-        x: 110,
-        y: 400,
+        x: xPos,
+        y: 0,
         socket: socket,
-        hp: 100,
+        hp: 500,
         weaponIndicator: myWeaponIndicator
       });
       this.player = newPlayer;
@@ -851,8 +856,8 @@ var GameState = {
   addActor: function (data) {
     var temp = new Q.Actor({ 
       playerId: data.playerId, 
-      x: 110,
-      y: 50
+      x: 0,
+      y: 0
     });
     this.gameStage.insert(temp);
     this.actors.push({
