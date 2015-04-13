@@ -61,9 +61,11 @@ Q.Sprite.extend('Actor', {
       standingPoints: [ [ -16, 44], [ -23, 35 ], [-23,-48], [23,-48], [23, 35 ], [ 16, 44 ]],
       duckingPoints : [ [ -16, 44], [ -23, 35 ], [-23,-10], [23,-10], [23, 35 ], [ 16, 44 ]],
       animationState: 'walk_right',
-      weaponType: Config.bullet.typeShuriken
+      weaponType: Config.bullet.typeShuriken,
+      portalA: null,
+      portalB: null
     });
-    this.p.currentPortalIsPink = true;
+    this.p.currentPortalIsA = true;
     this.add(['2d', 'animation', 'tween']);
   },
   updateState: function (data) {
@@ -74,6 +76,7 @@ Q.Sprite.extend('Actor', {
     this.p.update = true;
     this.p.gravity = data.landed < 0 ? 0 : 1;
     this.p.animationState = data.animationState;
+    this.p.currentPortalIsA = data.currentPortalIsA;
   },
   shootWithData: function (data)   {
     //simulate latency
@@ -168,9 +171,9 @@ Q.Sprite.extend('Actor', {
                             playerId: data.playerId,
                             targetX: data.targetX,
                             targetY: data.targetY,
-                            portalColor: (this.p.currentPortalIsPink ? 'pink' : 'blue')
+                            portalType: (this.p.currentPortalIsA ? 'pink' : 'blue')
                           });
-      this.p.currentPortalIsPink = !this.p.currentPortalIsPink;
+      this.p.currentPortalIsA = !this.p.currentPortalIsA;
       this.stage.insert(portalBullet);
     }
   },
@@ -437,7 +440,8 @@ Q.Actor.extend("Player",{
       direction: this.p.direction,
       landed: this.p.landed,
       hp: this.p.hp,
-      animationState: animationState
+      animationState: animationState,
+      currentPortalIsA: this.p.currentPortalIsA
     };
     this.p.socket.emit('player.update', data);
     PubSub.publish('updateSelf', data);
@@ -447,7 +451,7 @@ Q.Actor.extend("Player",{
     if (this.p.weaponType == Config.bullet.typeShuriken) {
       myAsset = "shuriken.png";
     } else if (this.p.weaponType == Config.bullet.typePortal) {
-      myAsset = 'whirlpool-' + (this.p.currentPortalIsPink ? 'pink' : 'blue') + '.png';
+      myAsset = 'whirlpool-' + (this.p.currentPortalIsA ? 'pink' : 'blue') + '.png';
     }
 
     this.p.weaponIndicator.updateStuff({
@@ -567,7 +571,7 @@ Q.Sprite.extend('WeaponIndicator', {
 
 Q.Sprite.extend('PortalBullet', {
   init: function (p) {
-    var asset = 'whirlpool-' + p.portalColor + '.png';
+    var asset = 'whirlpool-' + p.portalType + '.png';
     this._super(p, { 
       w: 0,
       h: 0,
@@ -611,12 +615,12 @@ Q.Sprite.extend('PortalBullet', {
     }
   },
   createPortal: function () {
-    var portal = new Q.Portal({
-                        x: this.p.targetX,
-                        y: this.p.targetY,
-                        portalColor: this.p.portalColor
-                      });
-    this.stage.insert(portal);
+    GameState.createPortal({
+      playerId: this.p.playerId,
+      targetX: this.p.targetX,
+      targetY: this.p.targetY,
+      portalType: this.p.portalType
+    });
   },
   step: function (dt) {
     this.p.angle += dt * 1 * 360;
@@ -658,7 +662,7 @@ Q.Sprite.extend('PortalBullet', {
 
 Q.Sprite.extend('Portal', {
   init: function (p) {
-    var asset = 'whirlpool-' + p.portalColor + '.png';
+    var asset = 'whirlpool-' + p.portalType + '.png';
 
     this._super(p, { 
       w: 0,
@@ -798,6 +802,11 @@ var GameState = {
         x: true, 
         y: true
       });
+      // Temp fix: Add yourself to list of actors
+      this.actors.push({
+        player: newPlayer,
+        playerId: data.playerId
+      });
     } else {
       console.log('Player already exists!');
     }
@@ -838,6 +847,26 @@ var GameState = {
   actorFire: function (data) {
     var actor = this.findActor(data.playerId);
     actor.player.shootWithData(data);
+  },
+  createPortal: function (data) {
+    var actor = this.findActor(data.playerId).player;
+    var portal = new Q.Portal({
+                        x: data.targetX,
+                        y: data.targetY,
+                        portalType: data.portalType
+                      });
+    if (data.portalType === 'pink') {
+      if (actor.portalA) {
+        actor.portalA.destroy();
+      }
+      actor.portalA = portal;
+    } else {
+      if (actor.portalB) {
+        actor.portalB.destroy();
+      }
+      actor.portalB = portal;
+    }
+    this.gameStage.insert(portal);
   }
 };
 
