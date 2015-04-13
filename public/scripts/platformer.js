@@ -78,6 +78,7 @@ Q.Sprite.extend('Actor', {
     //simulate latency
     //data.latency = 500;
     console.log("latency: " + data.latency);
+    data.latency = 0;
     //find out which x-direction the bullet is traveling towards
     var bulletXDirection = data.targetX - data.startX;
     bulletXDirection = bulletXDirection / Math.abs(bulletXDirection);
@@ -111,41 +112,41 @@ Q.Sprite.extend('Actor', {
     var finalSpeedX = speedToDistanceRatio * (data.targetX - data.startX);
     var finalSpeedY = speedToDistanceRatio * (data.targetY - data.startY);
 
-    //modify the speed if the shuriken is traveling towards 
-    //the local player
-    if (travelingToLocalPlayer && (data.playerId != GameState.player.p.playerId)) {
+    // //modify the speed if the shuriken is traveling towards 
+    // //the local player
+    // if (travelingToLocalPlayer && (data.playerId != GameState.player.p.playerId)) {
 
-      // here we modify the x distance by the distance to speed ratio.
-      // the logic here is that first we assume the distance from the 
-      // starting xy coordinate to the target xy coordinate is covered 
-      // in one unit time. But we know that is unlikely, so by using 
-      // the ratio of the actual speed and the hypotenus, we can tell 
-      // what is the ratio we must modify the (end-start) distance to 
-      // get the respective x-speed and y-speed, then we can use this 
-      // adjusted speed to find out how much to modify the bullet speed 
-      // by
-      var adjustedSpeedX = speedToDistanceRatio * distanceX;
+    //   // here we modify the x distance by the distance to speed ratio.
+    //   // the logic here is that first we assume the distance from the 
+    //   // starting xy coordinate to the target xy coordinate is covered 
+    //   // in one unit time. But we know that is unlikely, so by using 
+    //   // the ratio of the actual speed and the hypotenus, we can tell 
+    //   // what is the ratio we must modify the (end-start) distance to 
+    //   // get the respective x-speed and y-speed, then we can use this 
+    //   // adjusted speed to find out how much to modify the bullet speed 
+    //   // by
+    //   var adjustedSpeedX = speedToDistanceRatio * distanceX;
 
-      // we will only use the x-speed to find the time it would take 
-      // to reach the player's x coordinate
-      var timeToReach = Math.abs(data.startX - GameState.player.p.x) / adjustedSpeedX;
+    //   // we will only use the x-speed to find the time it would take 
+    //   // to reach the player's x coordinate
+    //   var timeToReach = Math.abs(data.startX - GameState.player.p.x) / adjustedSpeedX;
 
-      // now we will adjust the expected time to reach by minusing 
-      // the RTT
-      var timeToReachModified = Math.max((timeToReach - (data.latency/1000)), 0.1);
+    //   // now we will adjust the expected time to reach by minusing 
+    //   // the RTT
+    //   var timeToReachModified = Math.max((timeToReach - (data.latency/1000)), 0.1);
 
-      // now find the final speed x
-      finalSpeedX = (data.targetX - data.startX) / timeToReachModified;
+    //   // now find the final speed x
+    //   finalSpeedX = (data.targetX - data.startX) / timeToReachModified;
 
-      // get the final speed for the y axis
-      finalSpeedY = (data.targetY - data.startY) / timeToReachModified;
-    }
+    //   // get the final speed for the y axis
+    //   finalSpeedY = (data.targetY - data.startY) / timeToReachModified;
+    // }
 
     // generate a shuriken based on the data
     var p = this.p;
     var finalSpeed = Math.sqrt((finalSpeedX * finalSpeedX) + (finalSpeedY * finalSpeedY));
     var offsetRatio = p.w * 1.0 / finalSpeed;
-    console.log(data.weaponType);
+    offsetRatio = 0.1;
     if (data.weaponType === Config.bullet.typeShuriken) {
       var shuriken = new Q.Shuriken({ 
                             x: data.startX + finalSpeedX * offsetRatio,
