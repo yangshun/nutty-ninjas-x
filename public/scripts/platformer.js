@@ -476,21 +476,19 @@ Q.Actor.extend("Player",{
     this.p.socket.emit('player.update', data);
     PubSub.publish('updateSelf', data);
 
-
-    //move the ui elements
+    // Move the ui elements
     var myAsset = "shuriken.png";
-    if(this.p.weaponType == Config.bullet.typeShuriken)
-    {
-      myAsset = "shurikenRed.png";
-    }
-    else if(this.p.weaponType == Config.bullet.typePortal)
-    {
+    if (this.p.weaponType == Config.bullet.typeShuriken) {
+      myAsset = "shuriken.png";
+    } else if (this.p.weaponType == Config.bullet.typePortal) {
       myAsset = "whirlpoolPink.png";
     }
+
     this.p.weaponIndicator.updateStuff({
-      x: this.p.x + 0.0, 
-      y: this.p.y + 20.0,
-      asset: myAsset});
+      x: this.p.x + this.p.w/4, 
+      y: this.p.y + 17.5,
+      asset: myAsset
+    });
   }
 });
 
@@ -499,7 +497,7 @@ Q.Sprite.extend('Shuriken', {
     this._super(p, { 
       w: 0,
       h: 0,
-      asset: "shurikenRed.png",
+      asset: "shuriken.png",
       scale: 0.05,
       gravity: 0.00,
       damage: 20,
@@ -557,7 +555,7 @@ Q.Sprite.extend('WeaponIndicator', {
       w: 0,
       h: 0,
       asset: "whirlpool2.png",
-      scale: 0.05,
+      scale: 0.025,
       gravity: 0.00,
       damage: 20,
       lifetime: 5,
@@ -578,12 +576,9 @@ Q.Sprite.extend('WeaponIndicator', {
 
   step: function (dt) {
     var rotationRatio = 1;
-    if(this.p.asset == "whirlpool2.png")
-    {
+    if (this.p.asset == "whirlpool2.png") {
       rotationRatio = 1;
-    }
-    else if(this.p.asset == "shurikenRed.png")
-    {
+    } else if (this.p.asset == "shuriken.png") {
       rotationRatio = 4;
     }
     this.p.angle += dt * rotationRatio * 360;
@@ -901,8 +896,8 @@ var GameState = {
       var myWeaponIndicator = new Q.WeaponIndicator({
         x: 110,
         y: 400,
-        scale: 0.05,
-        asset: "shuriken.png"});
+        asset: "shuriken.png"
+      });
       var newPlayer = new Q.Player({
         playerId: data.playerId,
         name: data.name,
