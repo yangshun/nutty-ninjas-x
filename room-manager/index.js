@@ -50,16 +50,9 @@ function RoomManager (server) {
     });
 
     socket.on('player.shoot', function (data) {
-      var dataUpdated = {
-        playerId: data.playerId,
-        startX: data.startX,
-        startY: data.startY,
-        targetX: data.targetX,
-        targetY: data.targetY,
-        latency: player.latency
-      }
-      console.log("playerId: " + dataUpdated.playerId + " latency: " + data.latency);
-      socket.broadcast.to(roomId).emit('player.shoot', dataUpdated);
+      data.latency = player.latency;
+      console.log("playerId: " + data.playerId + " latency: " + data.latency);
+      socket.broadcast.to(roomId).emit('player.shoot', data);
     });
 
     playerId++;
