@@ -503,7 +503,7 @@ Q.Sprite.extend('Shuriken', {
       this.destroy();
     } else if (col.obj.isA('Actor')) {
       this.destroy();
-    } else {
+    } else if (!col.obj.isA('Portal'))  {
       this.p.collisionCount -= 1;
       if (this.p.collisionCount <= 0) {
         this.destroy();
@@ -527,6 +527,8 @@ Q.Sprite.extend('Shuriken', {
   step: function (dt) {
     this.p.angle += dt * 4 * 360;
     this.p.lifetime -= dt;
+    this.p.previousVx = this.p.vx;
+    this.p.previousVy = this.p.vy;
 
     if (this.p.lifetime <= 0) {
       this.destroy();
@@ -693,30 +695,42 @@ Q.Sprite.extend('Portal', {
   },
   handleCollision: function (col, dir) {
     //skip if the the object being hit is the owner
-    if (col.obj.isA('Player')) {
+    if (col.obj.isA('Player') || col.obj.isA('Shuriken')) {
       var actor = this.p.belongsToPlayer;
       var otherPortal = this.p.portalType === 'pink' ? actor.portalB : actor.portalA;
       if (otherPortal) {
-        var offset = 100;
-        switch (dir) {
-          case 'left':
-            col.obj.p.x = otherPortal.p.x + offset;
-            col.obj.p.y = otherPortal.p.y;
-            break;
-          case 'right':
-            col.obj.p.x = otherPortal.p.x - offset;
-            col.obj.p.y = otherPortal.p.y;
-            break;
-          case 'top':
-            col.obj.p.x = otherPortal.p.x;
-            col.obj.p.y = otherPortal.p.y + offset;
-            break;
-          case 'bottom':
-            col.obj.p.x = otherPortal.p.x + offset;
-            col.obj.p.y = otherPortal.p.y - offset;
-            break;
-          default:
-            break;
+        if (col.obj.isA('Shuriken')) {
+          var delta = 0.2;
+          col.obj.p.vx = col.obj.p.previousVx;
+          col.obj.p.vy = col.obj.p.previousVy;
+          col.obj.p.x = otherPortal.p.x + delta * col.obj.p.vx;
+          col.obj.p.y = otherPortal.p.y + delta * col.obj.p.vy;
+        } else {
+          var offset = 100;
+          switch (dir) {
+            case 'left':
+              col.obj.p.x = otherPortal.p.x + offset;
+              col.obj.p.y = otherPortal.p.y;
+              break;
+            case 'right':
+              col.obj.p.x = otherPortal.p.x - offset;
+              col.obj.p.y = otherPortal.p.y;
+              break;
+            case 'top':
+              col.obj.p.x = otherPortal.p.x;
+              col.obj.p.y = otherPortal.p.y + offset;
+              break;
+            case 'bottom':
+              col.obj.p.x = otherPortal.p.x + offset;
+              col.obj.p.y = otherPortal.p.y - offset;
+              break;
+            default:
+              break;
+          }
+        }
+      } else {
+        if (col.obj.isA('Shuriken')) {
+          col.obj.destroy();
         }
       }
     }
