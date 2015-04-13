@@ -693,15 +693,32 @@ Q.Sprite.extend('Portal', {
   },
   handleCollision: function (col, dir) {
     //skip if the the object being hit is the owner
-    return;
-    if (col.obj.isA('Player') && (this.p.playerId == col.obj.p.playerId)) {
-      return;
-    }
-    this.destroy();
     if (col.obj.isA('Player')) {
-      //var knockBack = 200 * (dir === 'left' ? 1 : -1 );
-      //col.obj.p.vy = -100;
-      col.obj.p.hp -= this.p.damage;
+      var actor = this.p.belongsToPlayer;
+      var otherPortal = this.p.portalType === 'pink' ? actor.portalB : actor.portalA;
+      if (otherPortal) {
+        var offset = 100;
+        switch (dir) {
+          case 'left':
+            col.obj.p.x = otherPortal.p.x + offset;
+            col.obj.p.y = otherPortal.p.y;
+            break;
+          case 'right':
+            col.obj.p.x = otherPortal.p.x - offset;
+            col.obj.p.y = otherPortal.p.y;
+            break;
+          case 'top':
+            col.obj.p.x = otherPortal.p.x;
+            col.obj.p.y = otherPortal.p.y + offset;
+            break;
+          case 'bottom':
+            col.obj.p.x = otherPortal.p.x + offset;
+            col.obj.p.y = otherPortal.p.y - offset;
+            break;
+          default:
+            break;
+        }
+      }
     }
   },
 
@@ -711,6 +728,13 @@ Q.Sprite.extend('Portal', {
 
     if (this.p.lifetime <= 0) {
       this.destroy();
+      var actor = this.p.belongsToPlayer;
+      // Kill a player's portal references if it expires.
+      if (this.p.portalType === 'pink') {
+        actor.portalA = null;
+      } else {
+        actor.portalB = null;
+      }
     }
   }
 });
@@ -852,7 +876,8 @@ var GameState = {
     var portal = new Q.Portal({
                         x: data.targetX,
                         y: data.targetY,
-                        portalType: data.portalType
+                        portalType: data.portalType,
+                        belongsToPlayer: actor
                       });
     if (data.portalType === 'pink') {
       if (actor.portalA) {
