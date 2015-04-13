@@ -626,10 +626,9 @@ Q.Sprite.extend('PortalBullet', {
     var portal = new Q.Portal({ 
                       x: data.x,
                       y: data.y});
-      this.stage.insert(portal);
+    this.stage.insert(portal);
 
-    if(this.p.playerId == GameState.player.p.playerId)
-    {
+    if (this.p.playerId === GameState.player.p.playerId) {
       console.log("emit deploy portal");
       var shootingData = {
         playerId: this.p.playerId,
@@ -644,8 +643,7 @@ Q.Sprite.extend('PortalBullet', {
     this.p.angle += dt * 1 * 360;
     this.p.lifetime -= dt;
 
-    if(this.p.lifetime <= 0)
-    {
+    if (this.p.lifetime <= 0) {
       this.destroy();
     }
 
@@ -653,32 +651,26 @@ Q.Sprite.extend('PortalBullet', {
     var displacementLeftX = this.p.targetX - this.p.x;
     var displacementLeftY = this.p.targetY - this.p.y;
     var createPortal = false;
-    if(displacementLeftX < 2.0 && displacementLeftX > -2.0
-      && displacementLeftY < 2.0 && displacementLeftY > -2.0)
-    {
+    if (displacementLeftX < 2.0 && displacementLeftX > -2.0
+      && displacementLeftY < 2.0 && displacementLeftY > -2.0) {
       console.log("displacement within threshold");
       createPortal = true;
-    }
-    else if(displacementLeftX != 0
-      && this.p.vx != 0 
-      && ((displacementLeftX / this.p.vx) < 0))
-    {
-      //this means it has overshot
+    } else if (displacementLeftX != 0
+              && this.p.vx != 0 
+              && ((displacementLeftX / this.p.vx) < 0)) {
+      // this means it has overshot
       console.log("overshoot on x");
       createPortal = true;
-    }
-    else if(displacementLeftY != 0
-      && this.p.vy != 0
-      && ((displacementLeftY / this.p.vy) < 0))
-    {
-      //this means it has overshot
+    } else if (displacementLeftY != 0
+              && this.p.vy != 0
+              && ((displacementLeftY / this.p.vy) < 0)) {
+      // this means it has overshot
       console.log("overshoot on Y");
       createPortal = true;
     }
 
     //check if the portal should be created
-    if(createPortal)
-    {
+    if (createPortal) {
       this.deployPortal({
         x: this.p.targetX,
         y: this.p.targetY
@@ -687,8 +679,6 @@ Q.Sprite.extend('PortalBullet', {
     }
   }
 });
-
-
 
 Q.Sprite.extend('Portal', {
   init: function (p) {
@@ -723,9 +713,7 @@ Q.Sprite.extend('Portal', {
   handleCollision: function (col, dir) {
     //skip if the the object being hit is the owner
     return;
-    if(col.obj.isA('Player') 
-      && (this.p.playerId == col.obj.p.playerId))
-    {
+    if (col.obj.isA('Player') && (this.p.playerId == col.obj.p.playerId)) {
       return;
     }
     this.destroy();
@@ -740,76 +728,9 @@ Q.Sprite.extend('Portal', {
     this.p.angle += dt * 1 * 360;
     this.p.lifetime -= dt;
 
-    if(this.p.lifetime <= 0)
-    {
+    if (this.p.lifetime <= 0) {
       this.destroy();
     }
-  }
-});
-
-Q.Sprite.extend("Collectable", {
-  init: function(p) {
-    this._super(p,{
-      sheet: p.sprite,
-      type: Q.SPRITE_COLLECTABLE,
-      collisionMask: Q.SPRITE_PLAYER,
-      sensor: true,
-      vx: 0,
-      vy: 0,
-      gravity: 0
-    });
-    this.add("animation");
-
-    this.on("sensor");
-  },
-
-  // When a Collectable is hit.
-  sensor: function(colObj) {
-    // Increment the score.
-    if (this.p.amount) {
-      colObj.p.score += this.p.amount;
-      Q.stageScene('hud', 3, colObj.p);
-    }
-    Q.audio.play('coin.mp3');
-    this.destroy();
-  }
-});
-
-Q.Sprite.extend("Door", {
-  init: function(p) {
-    this._super(p,{
-      sheet: p.sprite,
-      type: Q.SPRITE_DOOR,
-      collisionMask: Q.SPRITE_NONE,
-      sensor: true,
-      vx: 0,
-      vy: 0,
-      gravity: 0
-    });
-    this.add("animation");
-
-    this.on("sensor");
-  },
-  findLinkedDoor: function() {
-    return this.stage.find(this.p.link);
-  },
-  // When the player is in the door.
-  sensor: function(colObj) {
-    // Mark the door object on the player.
-    colObj.p.door = this;
-  }
-});
-
-Q.Collectable.extend("Heart", {
-  // When a Heart is hit.
-  sensor: function(colObj) {
-    // Increment the strength.
-    if (this.p.amount) {
-      colObj.p.strength = Math.max(colObj.p.strength + 25, 100);
-      Q.stageScene('hud', 3, colObj.p);
-      Q.audio.play('heart.mp3');
-    }
-    this.destroy();
   }
 });
 
