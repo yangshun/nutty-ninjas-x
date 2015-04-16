@@ -158,8 +158,8 @@ Q.Sprite.extend('Actor', {
     var p = this.p;
     var finalSpeed = Math.sqrt((finalSpeedX * finalSpeedX) + (finalSpeedY * finalSpeedY));
     console.log("finalSpeed: " + finalSpeed);
-    var offsetRatio = p.w * 1.0 / finalSpeed;
-    offsetRatio = 0.1;
+    var offsetRatio = p.w * 1.10 / finalSpeed;
+
     if (data.weaponType === Config.bullet.typeShuriken) {
       var shuriken = new Q.Shuriken({ 
                             x: data.startX + finalSpeedX * offsetRatio,
