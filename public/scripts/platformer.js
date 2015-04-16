@@ -20,7 +20,7 @@ var Config = {
       height: 40
     }
   },
-  levelName: 'level2.tmx',
+  levelName: 'level3.tmx',
   assets: {
     tile: {
       width: 40,
@@ -285,7 +285,7 @@ Q.Actor.extend("Player",{
   },
 
   resetLevel: function() {
-    Q.stageScene("level2");
+    Q.stageScene("level3");
     this.p.strength = 100;
     this.animate({opacity: 1});
     Q.stageScene('hud', 3, this.p);
@@ -427,9 +427,21 @@ Q.Actor.extend("Player",{
     this.p.door = false;
     this.p.checkDoor = false;
 
-    if (this.p.y > 2000 || this.p.x < 0 || this.p.x > 5000) {
-      this.p.x = 1000;
-      this.p.y = 10;
+    //if (this.p.y > 2000 || this.p.x < 0 || this.p.x > 5000) {
+    //  this.p.x = 1000;
+    //  this.p.y = 10;
+    //}
+    if(this.p.y > 2000)
+    {
+    	this.p.y = 10;
+    }
+    if(this.p.x < 0)
+    {
+    	this.p.x = 10;
+    }
+    if(this.p.x > 7000)
+    {
+    	this.p.x = 6900;
     }
 
     this.play(animationState);
@@ -756,8 +768,8 @@ Q.Sprite.extend('Portal', {
   }
 });
 
-Q.scene("level2",function(stage) {
-  Q.stageTMX("level2.tmx",stage);
+Q.scene("level3",function(stage) {
+  Q.stageTMX("level3.tmx",stage);
   GameState.gameStage = stage;
   // stage.add("viewport").follow(Q("Player").first());
 
@@ -913,7 +925,7 @@ var GameState = {
   }
 };
 
-Q.loadTMX("level2.tmx, collectables.json, doors.json, enemies.json, fire.mp3, jump.mp3, heart.mp3, hit.mp3, coin.mp3, player.json, player.png, shuriken.png, whirlpool.png, shurikenRed.png, whirlpool-pink.png, whirlpool-blue.png", function() {
+Q.loadTMX("level3.tmx, collectables.json, doors.json, enemies.json, fire.mp3, jump.mp3, heart.mp3, hit.mp3, coin.mp3, player.json, player.png, shuriken.png, whirlpool.png, shurikenRed.png, whirlpool-pink.png, whirlpool-blue.png", function() {
   Q.compileSheets("player.png","player.json");
   Q.compileSheets("collectables.png","collectables.json");
   Q.compileSheets("enemies.png","enemies.json");
@@ -929,7 +941,7 @@ Q.loadTMX("level2.tmx, collectables.json, doors.json, enemies.json, fire.mp3, ju
     duck_left: { frames:  [15], rate: 1/10, flip: "x" },
     climb: { frames:  [16, 17], rate: 1/3, flip: false }
   });
-  Q.stageScene("level2");
+  Q.stageScene("level3");
 
   var app = angular.module('NuttyNinjasX', []);
   app.controller('ScoreBoardController', ScoreBoardController);
