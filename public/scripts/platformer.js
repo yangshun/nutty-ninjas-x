@@ -229,7 +229,6 @@ Q.Sprite.extend('Actor', {
 });
 
 Q.Actor.extend("Player",{
-
   init: function (p) {
 
     this._super(p, {
