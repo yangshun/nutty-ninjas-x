@@ -9,6 +9,8 @@ Q.Actor.extend("Player",{
 		this.add('2d, platformerControls, ');
 		
 		this.on("sensor.tile","checkLadder");
+		this.on('jump');
+		this.on('jumped');
 		this.add('platformerControls');
 
 		Q.input.on('e', this, 'toggleWeapon');
