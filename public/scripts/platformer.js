@@ -1,4 +1,4 @@
-var Config = {
+/*var Config = {
   setup: {
     development: true,
     maximize: true,
@@ -869,7 +869,7 @@ Q.scene("level3",function(stage) {
     });
   })();
 
-});
+});*/
 
 var GameState = {
   player: null,
