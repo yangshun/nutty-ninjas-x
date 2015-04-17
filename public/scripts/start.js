@@ -10,6 +10,7 @@ var assets = [
   'coin.mp3',
   'shooting-sound-1.mp3',
   'shooting-sound-2.mp3',
+  'background-music.mp3',
   'player.json', 
   'player.png',
   'shuriken.png',
