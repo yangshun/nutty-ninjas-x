@@ -203,7 +203,7 @@ Q.Actor.extend("Player",{
 			onLadder: this.p.onLadder,
 			ducked: animationState == "duck_" + this.p.direction,
 			// direction: this.p.direction,
-			// name: this.p.name,
+			name: this.p.name,
 			// hp: this.p.hp,
 			// animationState: animationState,
 			// currentPortalIsA: this.p.currentPortalIsA

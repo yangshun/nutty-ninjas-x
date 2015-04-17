@@ -25,14 +25,14 @@ Q.Sprite.extend('Actor', {
 		// Update trivial information
 		this.p.targetX = data.x;
 		this.p.targetY = data.y;
-		this.p.direction = data.vx > 0 ? 'left' : 'right';
+		this.p.direction = data.vx < 0 ? 'left' : 'right';
 		
 		// Determine the animation state based on information given
 		if (data.ducked) {
-			this.p.animationState = "duck_" + data.direction;
+			this.p.animationState = "duck_" + this.p.direction;
 		} else if (data.onLadder && data.vy != 0) {
 			this.p.animationState = "climb";
-		} else if (data.vx != 0) {
+		} else if (data.vx == 0) {
 			this.p.animationState = "stand_" + this.p.direction;
 		} else if (data.landed) {
 			this.p.animationState = 'walk_' + this.p.direction;
