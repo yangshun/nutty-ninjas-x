@@ -1,4 +1,25 @@
-Q.loadTMX("level3.tmx, collectables.json, doors.json, enemies.json, fire.mp3, jump.mp3, heart.mp3, hit.mp3, coin.mp3, player.json, player.png, shuriken.png, whirlpool.png, shurikenRed.png, whirlpool-pink.png, whirlpool-blue.png", function() {
+var assets = [
+  'level3.tmx', 
+  'collectables.json', 
+  'doors.json', 
+  'enemies.json', 
+  'fire.mp3', 
+  'jump.mp3', 
+  'heart.mp3', 
+  'hit.mp3', 
+  'coin.mp3',
+  'shooting-sound-1.mp3',
+  'shooting-sound-2.mp3',
+  'player.json', 
+  'player.png',
+  'shuriken.png',
+  'whirlpool.png', 
+  'shurikenRed.png', 
+  'whirlpool-pink.png', 
+  'whirlpool-blue.png'
+];
+
+Q.loadTMX(assets.join(','), function() {
   Q.compileSheets("player.png","player.json");
   Q.compileSheets("collectables.png","collectables.json");
   Q.compileSheets("enemies.png","enemies.json");
