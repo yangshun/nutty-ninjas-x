@@ -106,7 +106,7 @@
   </tile>
  </tileset>
  <imagelayer name="Background" x="-6" y="-184">
-  <image source="../images/bg.png"/>
+  <image source="../images/bamboo-tile.jpg"/>
  </imagelayer>
  <layer name="Collision" width="200" height="20">
   <properties>
