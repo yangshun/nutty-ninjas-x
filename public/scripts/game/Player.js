@@ -1,6 +1,5 @@
 Q.Actor.extend("Player",{
 	init: function (p) {
-
 		this._super(p, {
 			direction: "left"
 		});
@@ -8,12 +7,8 @@ Q.Actor.extend("Player",{
 		this.p.points = this.p.standingPoints;
 
 		this.add('2d, platformerControls, ');
-
-		this.on("bump.top","breakTile");
-
+		
 		this.on("sensor.tile","checkLadder");
-		this.on("jump");
-		this.on("jumped");
 		this.add('platformerControls');
 
 		Q.input.on('fire', this, 'shoot');
@@ -41,7 +36,6 @@ Q.Actor.extend("Player",{
 	},
 
 	touchEnd: function(e)   {
-
 		var x = e.offsetX || e.layerX,
 		y = e.offsetY || e.layerY,
 		stage = Q.stage();
@@ -135,14 +129,6 @@ Q.Actor.extend("Player",{
 		} else {
 			this.play("stand_" + this.p.direction);
 		}
-	},
-
-	breakTile: function(col) {
-		if(col.obj.isA("TileLayer")) {
-			if(col.tile == 24) { col.obj.setTile(col.tileX,col.tileY, 36); }
-			else if(col.tile == 36) { col.obj.setTile(col.tileX,col.tileY, 24); }
-		}
-		Q.audio.play('coin.mp3');
 	},
 
 	step: function(dt) {
@@ -244,16 +230,13 @@ Q.Actor.extend("Player",{
 		//  this.p.x = 1000;
 		//  this.p.y = 10;
 		//}
-		if(this.p.y > 2000)
-		{
+		if(this.p.y > 2000) {
 			this.p.y = 10;
 		}
-		if(this.p.x < 0)
-		{
+		if(this.p.x < 0) {
 			this.p.x = 10;
 		}
-		if(this.p.x > 7000)
-		{
+		if(this.p.x > 7000) {
 			this.p.x = 6900;
 		}
 
