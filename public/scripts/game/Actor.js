@@ -142,6 +142,13 @@ Q.Sprite.extend('Actor', {
 			this.p.currentPortalIsA = !this.p.currentPortalIsA;
 			this.stage.insert(portalBullet);
 		}
+
+		// Play random shooting sound
+		if (Math.random() > 0.5) {
+			Q.audio.play('shooting-sound-1.mp3');
+		} else {
+			Q.audio.play('shooting-sound-2.mp3');
+		}
 	},
 
 	step: function (dt) {
