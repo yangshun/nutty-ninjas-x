@@ -835,7 +835,7 @@ Q.scene("level3",function(stage) {
 
 });*/
 
-var GameState = {
+/*var GameState = {
   player: null,
   actors: [],
   gameStage: null,
@@ -954,7 +954,7 @@ Q.loadTMX("level3.tmx, collectables.json, doors.json, enemies.json, fire.mp3, ju
   var app = angular.module('NuttyNinjasX', []);
   app.controller('ScoreBoardController', ScoreBoardController);
   angular.bootstrap(document, ['NuttyNinjasX']);
-});
+});*/
 
 /*
 Q.el.addEventListener('mousemove',function(e) {
