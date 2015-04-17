@@ -971,7 +971,7 @@ var GameState = {
   }
 };
 
-Q.loadTMX("level3.tmx, collectables.json, doors.json, enemies.json, fire.mp3, jump.mp3, heart.mp3, hit.mp3, coin.mp3, player.json, player.png, shuriken.png, whirlpool.png, shurikenRed.png, whirlpool-pink.png, whirlpool-blue.png", function() {
+/*Q.loadTMX("level3.tmx, collectables.json, doors.json, enemies.json, fire.mp3, jump.mp3, heart.mp3, hit.mp3, coin.mp3, player.json, player.png, shuriken.png, whirlpool.png, shurikenRed.png, whirlpool-pink.png, whirlpool-blue.png", function() {
   Q.compileSheets("player.png","player.json");
   Q.compileSheets("collectables.png","collectables.json");
   Q.compileSheets("enemies.png","enemies.json");
@@ -992,7 +992,7 @@ Q.loadTMX("level3.tmx, collectables.json, doors.json, enemies.json, fire.mp3, ju
   var app = angular.module('NuttyNinjasX', []);
   app.controller('ScoreBoardController', ScoreBoardController);
   angular.bootstrap(document, ['NuttyNinjasX']);
-});
+});*/
 
 /*
 Q.el.addEventListener('mousemove',function(e) {
