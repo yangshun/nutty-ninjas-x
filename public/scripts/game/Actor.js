@@ -7,7 +7,6 @@ Q.Sprite.extend('Actor', {
 			jumpSpeed: Config.player.jumpSpeed,
 			speed: 400,
 			bulletSpeed: 1000,
-			update: true,
 			type: Q.SPRITE_PLAYER,
 			collisionMask: Q.SPRITE_DEFAULT | Q.SPRITE_DOOR | Q.SPRITE_COLLECTABLE,
 			standingPoints: [ [ -16, 44], [ -23, 35 ], [-23,-48], [23,-48], [23, 35 ], [ 16, 44 ]],
@@ -23,20 +22,28 @@ Q.Sprite.extend('Actor', {
 	},
 
 	updateState: function (data) {
+		// Update trivial information
 		this.p.targetX = data.x;
 		this.p.targetY = data.y;
-		this.p.direction = data.direction;
-		this.p.flip = this.p.direction === 'left' ? 'x' : false;
-		this.p.update = true;
-		this.p.gravity = data.landed < 0 ? 0 : 1;
-		this.p.animationState = data.animationState;
-		this.p.currentPortalIsA = data.currentPortalIsA;
+		this.p.direction = data.vx > 0 ? 'left' : 'right';
+		
+		// Determine the animation state based on information given
+		if (data.ducked) {
+			this.p.animationState = "duck_" + data.direction;
+		} else if (data.onLadder && data.vy != 0) {
+			this.p.animationState = "climb";
+		} else if (data.vx != 0) {
+			this.p.animationState = "stand_" + this.p.direction;
+		} else if (data.landed) {
+			this.p.animationState = 'walk_' + this.p.direction;
+		} else {
+			this.p.animationState = 'jump_' + this.p.direction;
+		}
 	},
 
 	shootWithData: function (data) {
 		//simulate latency
 		//data.latency = 500;
-		console.log("latency: " + data.latency);
 
 		//find out which x-direction the bullet is traveling towards
 		var bulletXDirection = data.targetX - data.startX;
@@ -106,7 +113,6 @@ Q.Sprite.extend('Actor', {
 		// generate a shuriken based on the data
 		var p = this.p;
 		var finalSpeed = Math.sqrt((finalSpeedX * finalSpeedX) + (finalSpeedY * finalSpeedY));
-		console.log("finalSpeed: " + finalSpeed);
 		var offsetRatio = p.w * 1.10 / finalSpeed;
 
 		if (data.weaponType === Config.bullet.typeShuriken) {

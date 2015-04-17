@@ -144,7 +144,7 @@ Q.Actor.extend("Player",{
 
 			if(Q.inputs['down']) {
 				this.p.ignoreControls = true;
-				animationState = "duck_" + this.p.direction;        
+				animationState = "duck_" + this.p.direction;
 				if(this.p.landed > 0) {
 					this.p.vx = this.p.vx * (1 - dt*2);
 				}
@@ -190,16 +190,21 @@ Q.Actor.extend("Player",{
 
 		this.play(animationState);
 
+		// Send update to other player at every frame
 		var data = { 
 			playerId: this.p.playerId,
-			name: this.p.name,
 			x: this.p.x, 
 			y: this.p.y,
-			direction: this.p.direction,
+			vx: this.p.vx,
+			vy: this.p.vy,
 			landed: this.p.landed,
-			hp: this.p.hp,
-			animationState: animationState,
-			currentPortalIsA: this.p.currentPortalIsA
+			onLadder: this.p.onLadder,
+			ducked: animationState == "duck_" + this.p.direction,
+			// direction: this.p.direction,
+			// name: this.p.name,
+			// hp: this.p.hp,
+			// animationState: animationState,
+			// currentPortalIsA: this.p.currentPortalIsA
 		};
 		this.p.socket.emit('player.update', data);
 		PubSub.publish('updateSelf', data);
