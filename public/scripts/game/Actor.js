@@ -39,6 +39,9 @@ Q.Sprite.extend('Actor', {
 		} else {
 			this.p.animationState = 'jump_' + this.p.direction;
 		}
+
+		// No gravity
+		this.p.gravity = 0;
 	},
 
 	shootWithData: function (data) {
@@ -154,32 +157,7 @@ Q.Sprite.extend('Actor', {
 	step: function (dt) {
 		this.play(this.p.animationState);
 
-		if (Math.abs(this.p.targetX - this.p.x) > 5.0 || Math.abs(this.p.targetY - this.p.y) > 5.0) {
-			//slide the actor towards the target position 
-			//if it is not too far away
-			if (Math.abs(this.p.targetX - this.p.x) < 100.0 && Math.abs(this.p.targetY - this.p.y) < 100.0) {
-				//actor is within threshold distance of target 
-				//position. we will slide towards that position 
-				// at high speed
-				var slidingSpeed = 1000.0; //this means it will cover the threshold in 0.1 sec.
-				var slidingDistance = slidingSpeed * dt;
-				var displacementX = (this.p.targetX - this.p.x);
-				var displacementY = (this.p.targetY - this.p.y);
-
-				var directionX = Math.abs(displacementX) / displacementX;
-				var directionY = Math.abs(displacementY) / displacementY;
-
-				var slideX = Math.min(Math.abs(displacementX), slidingSpeed);
-				var slideY = Math.min(Math.abs(displacementY), slidingSpeed);
-				
-				this.p.x = this.p.x + (directionX * slideX);
-				this.p.y = this.p.y + (directionY * slideY);
-			} else {
-				//actor is too far away from the target
-				//we will snap directly
-				this.p.x = this.p.targetX;
-				this.p.y = this.p.targetY;
-			}
-		}
+		this.p.x = this.p.targetX;
+		this.p.y = this.p.targetY;
 	}
 });

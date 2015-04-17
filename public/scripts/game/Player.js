@@ -133,6 +133,11 @@ Q.Actor.extend("Player",{
 			} else {
 				this.p.vy = 0;
 				if (this.p.vx != 0) {
+					if (this.p.vx > 0) {
+						this.p.direction = "right";
+					} else {
+						this.p.direction = "left";
+					}
 					this.play("walk_" + this.p.direction);
 				} else {
 					this.play("stand_" + this.p.direction);
@@ -175,9 +180,7 @@ Q.Actor.extend("Player",{
 			}
 		}
 
-		// Reset the onLadder flag!
-		this.p.onLadder = false;
-		this.p.ladderX = undefined;
+		this.play(animationState);
 
 		// Warp player around
 		if(this.p.y > 2000) {
@@ -189,8 +192,6 @@ Q.Actor.extend("Player",{
 		if(this.p.x > 7000) {
 			this.p.x = 6900;
 		}
-
-		this.play(animationState);
 
 		// Send update to other player at every frame
 		var data = { 
@@ -225,5 +226,9 @@ Q.Actor.extend("Player",{
 			asset: myAsset
 		});
 
+
+		// Reset the onLadder flag!
+		this.p.onLadder = false;
+		this.p.ladderX = undefined;
 	}
 });
