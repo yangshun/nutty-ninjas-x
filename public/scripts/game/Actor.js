@@ -1,11 +1,11 @@
 Q.Sprite.extend('Actor', {
 	init: function (p) {
 		this._super(p, {
-			sheet: "player",  // Setting a sprite sheet sets sprite width and height
-			sprite: "player",
+			sheet: "player-red",  // Setting a sprite sheet sets sprite width and height
+			sprite: "player-red",
 			scale: 0.70, 
 			jumpSpeed: Config.player.jumpSpeed,
-			speed: 400,
+			speed: 200,
 			bulletSpeed: 1000,
 			type: Q.SPRITE_PLAYER,
 			collisionMask: Q.SPRITE_DEFAULT | Q.SPRITE_DOOR | Q.SPRITE_COLLECTABLE,

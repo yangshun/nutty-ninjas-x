@@ -50,8 +50,32 @@
    </properties>
   </tile>
  </tileset>
- <tileset firstgid="157" name="player" tilewidth="72" tileheight="97">
-  <image source="../images/player.png" width="1296" height="98"/>
+ <tileset firstgid="157" name="player-red" tilewidth="72" tileheight="97">
+  <image source="../images/player-red.png" width="1296" height="98"/>
+  <tile id="0">
+   <properties>
+    <property name="Class" value="Player"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="157" name="player-blue" tilewidth="72" tileheight="97">
+  <image source="../images/player-blue.png" width="1296" height="98"/>
+  <tile id="0">
+   <properties>
+    <property name="Class" value="Player"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="157" name="player-green" tilewidth="72" tileheight="97">
+  <image source="../images/player-green.png" width="1296" height="98"/>
+  <tile id="0">
+   <properties>
+    <property name="Class" value="Player"/>
+   </properties>
+  </tile>
+ </tileset>
+ <tileset firstgid="157" name="player-yellow" tilewidth="72" tileheight="97">
+  <image source="../images/player-yellow.png" width="1296" height="98"/>
   <tile id="0">
    <properties>
     <property name="Class" value="Player"/>
