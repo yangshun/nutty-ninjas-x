@@ -21,7 +21,7 @@
               <!-- Default panel contents -->
               <div class="panel-heading">
                 <h3>
-                  <button class="btn-sm btn-info nn-lobby-button" data-toggle="modal" data-target="#myModal">Create Room</button>
+                  <button class="btn-sm btn-info nn-lobby-button" data-toggle="modal" data-target="#createGameModal">Create Room</button>
                   Game Lobby
                 </h3>
               </div>
@@ -29,7 +29,7 @@
               <ul class="list-group">
                 <li ng-repeat="(roomName, players) in rooms" class="list-group-item">
                   <h4>
-                    <a class="btn-sm btn-warning nn-lobby-button" href="/play?room={{ roomName }}">Join Game</a>
+                    <button class="btn-sm btn-warning nn-lobby-button" ng-click="chooseRoom(roomName)">Join Game</button>
                     {{ roomName }}
                   </h4>
                   <p class="nn-num-players">{{ players | keylength }} player<span ng-show="(players | keylength) != 1">s</span> in game</p>
@@ -40,7 +40,8 @@
           </div>
         </div>
       <div>
-      <div class="modal fade" id="myModal">
+
+      <div class="modal fade" id="createGameModal">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
@@ -56,6 +57,7 @@
                 <label for="nn-player-name">Player Name</label>
                 <input id="nn-player-name" type="text" class="form-control" ng-model="playerName" placeholder="Enter player name">
               </div>
+              <p ng-show="errorMessage" class="nn-error-message">{{ errorMessage }}</p>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -64,6 +66,33 @@
           </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
       </div><!-- /.modal -->
+
+      <div class="modal fade" id="joinGameModal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">Join Game</h4>
+            </div>
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="nn-room-name">Room Name</label>
+                <input id="nn-room-name" type="text" class="form-control" ng-model="chosenRoom" placeholder="Enter room name" disabled>
+              </div>
+              <div class="form-group">
+                <label for="nn-player-name">Player Name</label>
+                <input id="nn-player-name" type="text" class="form-control" ng-model="playerName" placeholder="Enter player name">
+              </div>
+              <p ng-show="errorMessage" class="nn-error-message">{{ errorMessage }}</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+              <button type="button" class="btn btn-primary" ng-click="joinGame()">Join</button>
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div><!-- /.modal -->
+
       <script src="/bower_components/jquery/dist/jquery.min.js"></script>
       <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
       <script src="/bower_components/angular/angular.js"></script>

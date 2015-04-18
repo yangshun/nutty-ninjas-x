@@ -10,6 +10,9 @@ app.filter('keylength', function(){
 
 function LobbyController ($scope) {
   $scope.rooms = {};
+  $scope.roomName = '';
+  $scope.playerName = '';
+  $scope.chosenRoom = '';
 
   var socket = io(window.location.host + '/lobby');
   socket.on('lobby.state', function (data) {
@@ -20,7 +23,29 @@ function LobbyController ($scope) {
   $scope.createGame = function () {
     var roomName = $scope.roomName.replace(/[^a-zA-Z0-9]/g, '');
     var playerName = $scope.playerName.replace(/[^a-zA-Z0-9]/g, '');
+    if (roomName === '' || playerName === '') {
+      $scope.errorMessage = 'Please fill in valid names for room and player.';
+      return;
+    } else {
+      $scope.errorMessage = '';
+    }
     window.location.href = '/play?room=' + roomName + '&playerName=' + playerName;
+  }
+
+  $scope.chooseRoom = function (roomName) {
+    $scope.chosenRoom = roomName;
+    $('#joinGameModal').modal();
+  }
+
+  $scope.joinGame = function () {
+    var playerName = $scope.playerName.replace(/[^a-zA-Z0-9]/g, '');
+    if (playerName === '') {
+      $scope.errorMessage = 'Please fill in valid name for player.';
+      return;
+    } else {
+      $scope.errorMessage = '';
+    }
+    window.location.href = '/play?room=' + $scope.chosenRoom + '&playerName=' + playerName; 
   }
 }
 

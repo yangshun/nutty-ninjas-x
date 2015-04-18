@@ -83,6 +83,10 @@ a:hover {
   color: #999;
 }
 
+.nn-error-message {
+  color: red;
+}
+
 .nn-scoreboard {
   background-color: rgba(0,0,0,0.75);
   bottom: 0;
@@ -93,3 +97,4 @@ a:hover {
   width: 100px;
   z-index: 100;
 }
+
