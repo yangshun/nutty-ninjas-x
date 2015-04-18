@@ -18,7 +18,9 @@ function LobbyController ($scope) {
   });
 
   $scope.createGame = function () {
-    window.location.href = '/play?room=' + $scope.gameName + '&playerName=' + $scope.playerName;
+    var roomName = $scope.roomName.replace(/[^a-zA-Z0-9]/g, '');
+    var playerName = $scope.playerName.replace(/[^a-zA-Z0-9]/g, '');
+    window.location.href = '/play?room=' + roomName + '&playerName=' + playerName;
   }
 }
 
