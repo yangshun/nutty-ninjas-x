@@ -4,7 +4,6 @@ function Player (name, roomId, playerId, socket, socketId) {
 	this.playerId = playerId;
 	this.socket = socket;
 	this.socketId = socketId;
-	this.gameState;
 
 	this.startMeasuringLatency();
 }

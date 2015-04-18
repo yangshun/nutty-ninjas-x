@@ -1,5 +1,6 @@
 var io;
 var rooms = {};
+var sockets = {};
 
 function RoomManager (server) {
 	var that = this;
@@ -27,8 +28,9 @@ function RoomManager (server) {
 			if (!rooms[roomId]) {
 				rooms[roomId] = {};
 			}
-			player = new Player(data.name, roomId, thisPlayerId, socket);
+			player = new Player(data.name, roomId, thisPlayerId, socket, socket.id);
 			rooms[roomId][thisPlayerId] = player.getState();
+			sockets[thisPlayerId] = socket;
 			socket.emit('player.connected.self', player.getState());
 			socket.broadcast.to(roomId).emit('player.connected.new', player.getState());
 			lobbyCon.emit('lobby.state', rooms);
@@ -38,6 +40,7 @@ function RoomManager (server) {
 			socket.broadcast.to(roomId).emit('player.disconnected', player.getState());
 			var room = rooms[player.roomId];
 			delete room[player.playerId];
+			delete sockets[player.playerId];
 			if (Object.keys(room).length === 0) {
 				delete rooms[player.roomId];
 			}
@@ -64,6 +67,13 @@ function RoomManager (server) {
 		socket.on('player.shoot', function (data) {
 			data.latency = player.latency;
 			socket.broadcast.to(roomId).emit('player.shoot', data);
+
+			// var room = rooms[roomId];
+			// for (playerId in room) {
+			// 	if (playerId != data.playerId) {
+			// 		sockets[playerId].emit('player.shoot', data);
+			// 	}
+			// }
 		});
 
 		playerId++;
