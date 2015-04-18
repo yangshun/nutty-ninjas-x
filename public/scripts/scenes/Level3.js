@@ -32,7 +32,7 @@ Q.scene("level3", function (stage) {
 		var colors = ['red', 'blue', 'green', 'yellow'];
 		var color = getQueryVariable('color');
 		if (!color || colors.indexOf(color) === -1) {
-			color = colors[Math.floor(Math.random() * colors.length)] + Math.floor(Math.random() * 1000);
+			color = colors[Math.floor(Math.random() * colors.length)];
 		}
 
 		socket.on('connect', function () {
