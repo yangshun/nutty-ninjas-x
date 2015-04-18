@@ -68,7 +68,7 @@ Q.Sprite.extend('Actor', {
 		if (data.ducked != undefined) { this.p.ducked = data.ducked; }		
 		
 		// Determine other information based on information given
-		this.p.direction = data.vx < 0 ? 'left' : 'right';
+		this.p.direction = data.direction;
 		if (data.ducked) {
 			this.p.animationState = "duck_" + this.p.direction;
 		} else if (data.onLadder && data.vy != 0) {
