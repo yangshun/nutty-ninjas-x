@@ -16,7 +16,6 @@ var GameState = {
         socket: socket,
         hp: 200,
         hp_dirty: true,       // Flag to indicate whether hp has changed and need to be boardcast
-        weaponIndicator: myWeaponIndicator,
         targetX: xPos,
         targetY: 0
       });

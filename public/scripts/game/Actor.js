@@ -195,5 +195,11 @@ Q.Sprite.extend('Actor', {
 
 	step: function (dt) {
 		this.play(this.p.animationState);
+	},
+
+	destroy: function () {
+		// Destroy UI elements attached to actor
+		this.p.healthBar.destroy();
+		this.p.weaponIndicator.destroy();
 	}
 });
