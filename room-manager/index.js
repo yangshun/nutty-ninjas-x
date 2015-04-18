@@ -128,6 +128,10 @@ function RoomManager (server) {
 			}
 		});
 
+		socket.on('player.tombstone', function (data) {
+			socket.broadcast.to(roomId).emit('player.tombstone', data);
+		});
+
 		playerId++;
 	});
 }
