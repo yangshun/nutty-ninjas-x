@@ -268,7 +268,7 @@ Q.Actor.extend("Player", {
 			this.p.tombstone.p.py = this.p.y;
 			this.p.tombstone.p.x = this.p.x;
 			this.p.tombstone.p.y = this.p.y;
-			this.p.tombstone.p.lifetime = 2.0;
+			this.p.tombstone.p.lifetime = 3.0;
 
 			this.p.socket.emit('player.tombstone', 
 			{
