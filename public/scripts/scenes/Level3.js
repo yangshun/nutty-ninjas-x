@@ -1,8 +1,11 @@
-Q.scene("level3",function(stage) {
+Q.scene("level3", function (stage) {
 	Q.stageTMX("level3.tmx",stage);
+	Q.audio.play('background-music.mp3',{ 
+		loop: true 
+	});
+
 	GameState.gameStage = stage;
 	// stage.add("viewport").follow(Q("Player").first());
-
 
 	(function () {
 		function getQueryVariable (variable) {

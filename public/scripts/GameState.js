@@ -17,7 +17,7 @@ var GameState = {
         x: xPos,
         y: 0,
         socket: socket,
-        hp: 500,
+        hp: 200,
         weaponIndicator: myWeaponIndicator,
         targetX: xPos,
         targetY: 0

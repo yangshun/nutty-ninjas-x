@@ -17,6 +17,15 @@ Q.Sprite.extend('Actor', {
 			portalB: null
 		});
 
+		var healthBar = new Q.HealthBar({
+			x: this.p.x,
+			y: this.p.y,
+			actor: this.p
+		});
+
+		this.p.healthBar = healthBar;
+		GameState.gameStage.insert(healthBar);
+
 		this.p.currentPortalIsA = true;
 		this.add(['2d', 'animation', 'tween']);
 	},
@@ -25,20 +34,24 @@ Q.Sprite.extend('Actor', {
 		// Update trivial information
 		this.p.targetX = data.x;
 		this.p.targetY = data.y;
-		this.p.direction = data.vx > 0 ? 'left' : 'right';
+		this.p.direction = data.vx < 0 ? 'left' : 'right';
+		this.p.hp = data.hp;
 		
 		// Determine the animation state based on information given
 		if (data.ducked) {
-			this.p.animationState = "duck_" + data.direction;
+			this.p.animationState = "duck_" + this.p.direction;
 		} else if (data.onLadder && data.vy != 0) {
 			this.p.animationState = "climb";
-		} else if (data.vx != 0) {
+		} else if (data.vx == 0) {
 			this.p.animationState = "stand_" + this.p.direction;
 		} else if (data.landed) {
 			this.p.animationState = 'walk_' + this.p.direction;
 		} else {
 			this.p.animationState = 'jump_' + this.p.direction;
 		}
+
+		// No gravity
+		this.p.gravity = 0;
 	},
 
 	shootWithData: function (data) {
@@ -142,37 +155,19 @@ Q.Sprite.extend('Actor', {
 			this.p.currentPortalIsA = !this.p.currentPortalIsA;
 			this.stage.insert(portalBullet);
 		}
+
+		// Play random shooting sound
+		if (Math.random() > 0.5) {
+			Q.audio.play('shooting-sound-1.mp3');
+		} else {
+			Q.audio.play('shooting-sound-2.mp3');
+		}
 	},
 
 	step: function (dt) {
 		this.play(this.p.animationState);
 
-		if (Math.abs(this.p.targetX - this.p.x) > 5.0 || Math.abs(this.p.targetY - this.p.y) > 5.0) {
-			//slide the actor towards the target position 
-			//if it is not too far away
-			if (Math.abs(this.p.targetX - this.p.x) < 100.0 && Math.abs(this.p.targetY - this.p.y) < 100.0) {
-				//actor is within threshold distance of target 
-				//position. we will slide towards that position 
-				// at high speed
-				var slidingSpeed = 1000.0; //this means it will cover the threshold in 0.1 sec.
-				var slidingDistance = slidingSpeed * dt;
-				var displacementX = (this.p.targetX - this.p.x);
-				var displacementY = (this.p.targetY - this.p.y);
-
-				var directionX = Math.abs(displacementX) / displacementX;
-				var directionY = Math.abs(displacementY) / displacementY;
-
-				var slideX = Math.min(Math.abs(displacementX), slidingSpeed);
-				var slideY = Math.min(Math.abs(displacementY), slidingSpeed);
-				
-				this.p.x = this.p.x + (directionX * slideX);
-				this.p.y = this.p.y + (directionY * slideY);
-			} else {
-				//actor is too far away from the target
-				//we will snap directly
-				this.p.x = this.p.targetX;
-				this.p.y = this.p.targetY;
-			}
-		}
+		this.p.x = this.p.targetX;
+		this.p.y = this.p.targetY;
 	}
 });

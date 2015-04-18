@@ -28,7 +28,6 @@ function RoomManager (server) {
 				rooms[roomId] = {};
 			}
 			player = new Player(data.name, roomId, thisPlayerId, socket);
-			console.log('Player', thisPlayerId, 'connected to', roomId);
 			rooms[roomId][thisPlayerId] = player.getState();
 			socket.emit('player.connected.self', player.getState());
 			socket.broadcast.to(roomId).emit('player.connected.new', player.getState());
@@ -46,12 +45,24 @@ function RoomManager (server) {
 		});
 
 		socket.on('player.update', function (data) {
+			// TODO: implement IM here
+			/*// Update the server game state
+			var room = rooms[roomId];
+			var myId = data.playerId;
+			if (room[myId] != undefined) {
+				room[myId].gameState = data;
+			}
+
+			for (playerId in room) {
+
+			}*/
+
+			// Boardcast to all player in room
 			socket.broadcast.to(roomId).emit('player.updated', data);
 		});
 
 		socket.on('player.shoot', function (data) {
 			data.latency = player.latency;
-			console.log("playerId: " + data.playerId + " latency: " + data.latency);
 			socket.broadcast.to(roomId).emit('player.shoot', data);
 		});
 
