@@ -17,7 +17,8 @@ var GameState = {
         hp: 200,
         hp_dirty: true,       // Flag to indicate whether hp has changed and need to be boardcast
         targetX: xPos,
-        targetY: 0
+        targetY: 0,
+        color: data.color
       });
       this.player = newPlayer;
       this.gameStage.insert(this.player);

@@ -1,8 +1,8 @@
 Q.Sprite.extend('Actor', {
 	init: function (p) {
 		this._super(p, {
-			sheet: "player-red",  // Setting a sprite sheet sets sprite width and height
-			sprite: "player-red",
+			sheet: "player-" + p.color,  // Setting a sprite sheet sets sprite width and height
+			sprite: "player-" + p.color,
 			scale: 0.70, 
 			jumpSpeed: Config.player.jumpSpeed,
 			speed: 200,

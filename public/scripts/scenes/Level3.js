@@ -22,16 +22,24 @@ Q.scene("level3", function (stage) {
 
 		var roomId = getQueryVariable('room');
 		var socket = io(window.location.host + '/game');
+
 		var names = ['John', 'Mary', 'Jane', 'Peter', 'Bob', 'Karen'];
 		var playerName = getQueryVariable('playerName');
 		if (!playerName) {
-			playerName = names[Math.floor(Math.random() * 6)] + Math.floor(Math.random() * 1000);
+			playerName = names[Math.floor(Math.random() * names.length)] + Math.floor(Math.random() * 1000);
+		}
+
+		var colors = ['red', 'blue', 'green', 'yellow'];
+		var color = getQueryVariable('color');
+		if (!color || colors.indexOf(color) === -1) {
+			color = colors[Math.floor(Math.random() * colors.length)] + Math.floor(Math.random() * 1000);
 		}
 
 		socket.on('connect', function () {
 			socket.emit('player.join', {
 				name: playerName,
-				roomId: roomId
+				roomId: roomId,
+				color: color
 			});
 		});
 

@@ -1,7 +1,8 @@
-function Player (name, roomId, playerId, socket) {
+function Player (name, roomId, playerId, color, socket) {
 	this.name = name;
 	this.roomId = roomId;
 	this.playerId = playerId;
+	this.color = color;
 	this.socket = socket;
 	this.gameState;
 
@@ -34,6 +35,7 @@ Player.prototype.getState = function () {
 	return {
 		name: this.name,
 		playerId: this.playerId,
+		color: this.color
 	};
 }
 

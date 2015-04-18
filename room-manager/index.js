@@ -27,7 +27,8 @@ function RoomManager (server) {
 			if (!rooms[roomId]) {
 				rooms[roomId] = {};
 			}
-			player = new Player(data.name, roomId, thisPlayerId, socket);
+			var color = data.color;
+			player = new Player(data.name, roomId, thisPlayerId, color, socket);
 			rooms[roomId][thisPlayerId] = player.getState();
 			socket.emit('player.connected.self', player.getState());
 			socket.broadcast.to(roomId).emit('player.connected.new', player.getState());

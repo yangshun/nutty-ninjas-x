@@ -213,7 +213,8 @@ Q.Actor.extend("Player",{
 			name: this.p.name,
 			hp: this.p.hp,
 			// animationState: animationState,
-			currentPortalIsA: this.p.currentPortalIsA
+			currentPortalIsA: this.p.currentPortalIsA,
+			color: this.p.color
 			// Situational information
 			/*name: this.p.name_dirty ? this.p.name : undefined,
 			hp: this.p.hp_dirty ? this.p.hp : undefined,*/
