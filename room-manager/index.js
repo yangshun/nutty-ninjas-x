@@ -111,15 +111,7 @@ function RoomManager (server) {
 			}*/
 
 			// Boardcast to all player in room
-			/*socket.broadcast.to(roomId).emit('player.updated', data);*/
-
-			var room = rooms[roomId];
-			for (playerId in room) {
-				if (playerId != data.playerId) {
-					console.log (data.playerId + " move event to " + playerId);
-					sockets[playerId].emit('player.updated', data);
-				}
-			}
+			socket.broadcast.to(roomId).emit('player.updated', data);
 		});
 
 		socket.on('player.shoot', function (data) {
