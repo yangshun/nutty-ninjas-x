@@ -36,6 +36,15 @@ Q.Sprite.extend('Actor', {
 		this.p.weaponIndicator = weaponIndicator;
 		GameState.gameStage.insert(weaponIndicator);
 
+		var nameIndicator = new Q.NameIndicator({
+      x: this.p.x,
+      y: this.p.y,
+      actor: this.p,
+    });
+
+		this.p.nameIndicator = nameIndicator;
+		GameState.gameStage.insert(nameIndicator);
+
 		this.p.currentPortalIsA = true;
 		this.add(['2d', 'animation', 'tween']);
 	},
