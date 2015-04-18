@@ -61,8 +61,8 @@ Q.scene("level3", function (stage) {
 			GameState.actorFire(data);
 		});
 
-		socket.on('player.tombstone', function (data) {
-			GameState.actorTombstone(data);
+		socket.on('player.death', function (data) {
+			GameState.addNinjaGhost(data);
 		});
 
 		socket.on('player.debug', function () {

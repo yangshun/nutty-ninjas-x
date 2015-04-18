@@ -261,26 +261,14 @@ Q.Actor.extend("Player", {
 		this.p.onLadder = false;
 		this.p.ladderX = undefined;
 
-		//check if the player is killed
-		if (this.p.hp <= 0.0)
-		{
-			this.p.tombstone.p.px = this.p.x;
-			this.p.tombstone.p.py = this.p.y;
-			this.p.tombstone.p.x = this.p.x;
-			this.p.tombstone.p.y = this.p.y;
-			this.p.tombstone.p.lifetime = 3.0;
+		// Check if the player is killed
+		if (this.p.hp <= 0.0) {
+			this.p.socket.emit('player.death', {
+				x: this.p.x,
+				y: this.p.y,
+			});
 
-			this.p.socket.emit('player.tombstone', 
-			{
-				px: this.p.tombstone.p.px,
-				py: this.p.tombstone.p.py,
-				x: this.p.tombstone.p.px,
-				y: this.p.tombstone.p.py,
-				lifetime: this.p.tombstone.p.lifetime,
-				playerId: this.p.playerId
-			})
-			
-			//reset hp and move to a new spot
+			// Reset hp and move to a new spot
 			this.p.hp = 200;
 			this.p.x = Math.floor(Math.random() * (5000 - 500)) + 500;
 			this.p.y = 0;

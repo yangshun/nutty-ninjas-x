@@ -96,20 +96,11 @@ var GameState = {
     }
     this.gameStage.insert(portal);
   },
-  actorTombstone: function (data) {
-    //var actor = this.findActor(data.playerId).player;
-    //var tombstone = actor.p.tombstone;
-    //tombstone.p.x = data.x;
-    //tombstone.p.y = data.y;
-    //tombstone.p.lifetime = data.life;
-
-    var tombstone = new Q.Tombstone({
-      px: data.px,
-      py: data.py,
+  addNinjaGhost: function (data) {
+    var ninjaGhost = new Q.NinjaGhost({
       x: data.x,
-      y: data.y,
-      lifetime: data.lifetime
+      y: data.y
     });
-    this.gameStage.insert(tombstone);
+    this.gameStage.insert(ninjaGhost);
   }
 };
