@@ -210,5 +210,6 @@ Q.Sprite.extend('Actor', {
 		// Destroy UI elements attached to actor
 		this.p.healthIndicator.destroy();
 		this.p.weaponIndicator.destroy();
+		this.p.nameIndicator.destroy();
 	}
 });
