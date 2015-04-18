@@ -61,6 +61,10 @@ Q.scene("level3", function (stage) {
 			GameState.actorFire(data);
 		});
 
+		socket.on('player.debug', function () {
+			console.log ("Debug received from " + socket.id);
+		});
+
 		socket.on('connection.rtt.toclient', function () {
 			socket.emit('connection.rtt.fromclient');
 		});
