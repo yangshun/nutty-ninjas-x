@@ -205,9 +205,9 @@ Q.Actor.extend("Player",{
 			ducked: animationState == "duck_" + this.p.direction,
 			// direction: this.p.direction,
 			name: this.p.name,
-			// hp: this.p.hp,
+			hp: this.p.hp,
 			// animationState: animationState,
-			// currentPortalIsA: this.p.currentPortalIsA
+			currentPortalIsA: this.p.currentPortalIsA
 		};
 		this.p.socket.emit('player.update', data);
 		PubSub.publish('updateSelf', data);
@@ -225,7 +225,6 @@ Q.Actor.extend("Player",{
 			y: this.p.y + 17.5,
 			asset: myAsset
 		});
-
 
 		// Reset the onLadder flag!
 		this.p.onLadder = false;

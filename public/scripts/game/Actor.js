@@ -17,6 +17,15 @@ Q.Sprite.extend('Actor', {
 			portalB: null
 		});
 
+		var healthBar = new Q.HealthBar({
+			x: this.p.x,
+			y: this.p.y,
+			actor: this.p
+		});
+
+		this.p.healthBar = healthBar;
+		GameState.gameStage.insert(healthBar);
+
 		this.p.currentPortalIsA = true;
 		this.add(['2d', 'animation', 'tween']);
 	},

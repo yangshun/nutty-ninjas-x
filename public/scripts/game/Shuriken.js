@@ -39,7 +39,7 @@ Q.Sprite.extend('Shuriken', {
 		if (col.obj.isA('Player')) {
 			// var knockBack = 200 * (dir === 'left' ? 1 : -1 );
 			col.obj.p.vy = -100;
-			col.obj.p.hp -= this.p.damage;
+			col.obj.p.hp = Math.max(col.obj.p.hp - this.p.damage, 0);
 			this.destroy();
 		} else if (col.obj.isA('Actor')) {
 			this.destroy();
