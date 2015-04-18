@@ -12,7 +12,7 @@ Q.Sprite.extend('Actor', {
 			standingPoints: [ [ -16, 44], [ -23, 35 ], [-23,-48], [23,-48], [23, 35 ], [ 16, 44 ]],
 			duckingPoints : [ [ -16, 44], [ -23, 35 ], [-23,-10], [23,-10], [23, 35 ], [ 16, 44 ]],
 			animationState: 'walk_right',
-			weaponType: Config.bullet.typeShuriken,
+			weaponType: Constants.WeaponType.Shuriken,
 			portalA: null,
 			portalB: null
 		});
@@ -25,6 +25,16 @@ Q.Sprite.extend('Actor', {
 
 		this.p.healthBar = healthBar;
 		GameState.gameStage.insert(healthBar);
+
+    var weaponIndicator = new Q.WeaponIndicator({
+      x: this.p.x,
+      y: this.p.y,
+      actor: this.p,
+      type: Constants.WeaponType.Shuriken
+    });
+
+		this.p.weaponIndicator = weaponIndicator;
+		GameState.gameStage.insert(weaponIndicator);
 
 		this.p.currentPortalIsA = true;
 		this.add(['2d', 'animation', 'tween']);
@@ -52,6 +62,7 @@ Q.Sprite.extend('Actor', {
 
 		// No gravity
 		this.p.gravity = 0;
+		this.p.weaponType = data.weaponType;
 	},
 
 	shootWithData: function (data) {
@@ -128,32 +139,35 @@ Q.Sprite.extend('Actor', {
 		var finalSpeed = Math.sqrt((finalSpeedX * finalSpeedX) + (finalSpeedY * finalSpeedY));
 		var offsetRatio = p.w * 1.10 / finalSpeed;
 
-		if (data.weaponType === Config.bullet.typeShuriken) {
-			var shuriken = new Q.Shuriken({ 
-				x: data.startX + finalSpeedX * offsetRatio,
-				y: data.startY + finalSpeedY * offsetRatio,
-				vx: finalSpeedX,
-				vy: finalSpeedY,
-				origVx: finalSpeedX,
-				origVy: finalSpeedY,
-				playerId: data.playerId
-			});
+		switch (data.weaponType) {
+			case Constants.WeaponType.Shuriken:
+				var shuriken = new Q.Shuriken({ 
+					x: data.startX + finalSpeedX * offsetRatio,
+					y: data.startY + finalSpeedY * offsetRatio,
+					vx: finalSpeedX,
+					vy: finalSpeedY,
+					origVx: finalSpeedX,
+					origVy: finalSpeedY,
+					playerId: data.playerId
+				});
 
-			this.stage.insert(shuriken);
-		} else if (data.weaponType === Config.bullet.typePortal) {
-			var portalBullet = new Q.PortalBullet({ 
-				x: data.startX + finalSpeedX * offsetRatio * 1.3,
-				y: data.startY + finalSpeedY * offsetRatio * 1.3,
-				vx: finalSpeedX,
-				vy: finalSpeedY,
-				playerId: data.playerId,
-				targetX: data.targetX,
-				targetY: data.targetY,
-				portalType: (this.p.currentPortalIsA ? 'pink' : 'blue')
-			});
+				this.stage.insert(shuriken);
+				break;
+			case Constants.WeaponType.Portal:
+				var portalBullet = new Q.PortalBullet({ 
+					x: data.startX + finalSpeedX * offsetRatio * 1.3,
+					y: data.startY + finalSpeedY * offsetRatio * 1.3,
+					vx: finalSpeedX,
+					vy: finalSpeedY,
+					playerId: data.playerId,
+					targetX: data.targetX,
+					targetY: data.targetY,
+					portalType: (this.p.currentPortalIsA ? 'pink' : 'blue')
+				});
 
-			this.p.currentPortalIsA = !this.p.currentPortalIsA;
-			this.stage.insert(portalBullet);
+				this.p.currentPortalIsA = !this.p.currentPortalIsA;
+				this.stage.insert(portalBullet);
+				break;
 		}
 
 		// Play random shooting sound

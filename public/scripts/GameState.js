@@ -6,11 +6,7 @@ var GameState = {
     if (!this.player) {
 
       var xPos = Math.floor(Math.random() * (5000 - 500)) + 500;
-      var myWeaponIndicator = new Q.WeaponIndicator({
-        x: xPos,
-        y: 0,
-        asset: "shuriken.png"
-      });
+
       var newPlayer = new Q.Player({
         playerId: data.playerId,
         name: data.name,
@@ -18,13 +14,12 @@ var GameState = {
         y: 0,
         socket: socket,
         hp: 200,
-        weaponIndicator: myWeaponIndicator,
         targetX: xPos,
         targetY: 0
       });
       this.player = newPlayer;
       this.gameStage.insert(this.player);
-      this.gameStage.insert(myWeaponIndicator);
+      
       this.gameStage.add('viewport').follow(this.player, { 
         x: true, 
         y: true

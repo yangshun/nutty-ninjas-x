@@ -22,9 +22,6 @@ Q.Actor.extend("Player",{
 
 			var stageX = Q.canvasToStageX(x, stage),
 			stageY = Q.canvasToStageY(y, stage);
-
-			//console.log("stageX: " + stageX);
-			//console.log("stageY: " + stageY);
 		});
 
 		var self = this;
@@ -58,7 +55,7 @@ Q.Actor.extend("Player",{
 	},
 
 	toggleWeapon: function () {
-		this.p.weaponType = (this.p.weaponType + 1) % Config.bullet.typeLast;
+		this.p.weaponType = (this.p.weaponType + 1) % Object.keys(Constants.WeaponType).length;
 	},
 
 	shootWithData: function(data)   {
@@ -203,6 +200,7 @@ Q.Actor.extend("Player",{
 			landed: this.p.landed,
 			onLadder: this.p.onLadder,
 			ducked: animationState == "duck_" + this.p.direction,
+			weaponType: this.p.weaponType,
 			// direction: this.p.direction,
 			name: this.p.name,
 			hp: this.p.hp,
@@ -211,20 +209,6 @@ Q.Actor.extend("Player",{
 		};
 		this.p.socket.emit('player.update', data);
 		PubSub.publish('updateSelf', data);
-
-		// Spawn the Weapon Indicator and attach to the belt of the ninja
-		var myAsset = "shuriken.png";
-		if (this.p.weaponType == Config.bullet.typeShuriken) {
-			myAsset = "shuriken.png";
-		} else if (this.p.weaponType == Config.bullet.typePortal) {
-			myAsset = 'whirlpool-' + (this.p.currentPortalIsA ? 'pink' : 'blue') + '.png';
-		}
-
-		this.p.weaponIndicator.updateStuff({
-			x: this.p.x + this.p.w/4, 
-			y: this.p.y + 17.5,
-			asset: myAsset
-		});
 
 		// Reset the onLadder flag!
 		this.p.onLadder = false;
