@@ -3,6 +3,7 @@
     <head>
         <title></title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <script src="/socket.io/socket.io.js"></script>
         <link href="http://fonts.googleapis.com/css?family=Carter+One" rel="stylesheet" type="text/css">
         <link rel="stylesheet" href="css/flatly.css"/>
@@ -57,6 +58,15 @@
                 <label for="nn-player-name">Player Name</label>
                 <input id="nn-player-name" type="text" class="form-control" ng-model="playerName" placeholder="Enter player name">
               </div>
+              <div class="form-group">
+                <label for="nn-player-name">Ninja Colour</label>
+                <ul class="nav nav-pills">
+                  <li class="ninja-red" ng-class="{ active: selectedColour === 'red' }" role="presentation" ng-click="selectedColour = 'red'"><a href="#">Red</a></li>
+                  <li class="ninja-blue" ng-class="{ active: selectedColour === 'blue' }" role="presentation" ng-click="selectedColour = 'blue'"><a href="#">Blue</a></li>
+                  <li class="ninja-green" ng-class="{ active: selectedColour === 'green' }" role="presentation" ng-click="selectedColour = 'green'"><a href="#">Green</a></li>
+                  <li class="ninja-yellow" ng-class="{ active: selectedColour === 'yellow' }"role="presentation" ng-click="selectedColour = 'yellow'"><a href="#">Yellow</a></li>
+                </ul>
+              </div>
               <p ng-show="errorMessage" class="nn-error-message">{{ errorMessage }}</p>
             </div>
             <div class="modal-footer">
@@ -82,6 +92,15 @@
               <div class="form-group">
                 <label for="nn-player-name">Player Name</label>
                 <input id="nn-player-name" type="text" class="form-control" ng-model="playerName" placeholder="Enter player name">
+              </div>
+              <div class="form-group">
+                <label for="nn-player-name">Ninja Colour</label>
+                <ul class="nav nav-pills">
+                  <li class="ninja-red" ng-class="{ active: selectedColour === 'red' }" role="presentation" ng-click="selectedColour = 'red'"><a href="#">Red</a></li>
+                  <li class="ninja-blue" ng-class="{ active: selectedColour === 'blue' }" role="presentation" ng-click="selectedColour = 'blue'"><a href="#">Blue</a></li>
+                  <li class="ninja-green" ng-class="{ active: selectedColour === 'green' }" role="presentation" ng-click="selectedColour = 'green'"><a href="#">Green</a></li>
+                  <li class="ninja-yellow" ng-class="{ active: selectedColour === 'yellow' }"role="presentation" ng-click="selectedColour = 'yellow'"><a href="#">Yellow</a></li>
+                </ul>
               </div>
               <p ng-show="errorMessage" class="nn-error-message">{{ errorMessage }}</p>
             </div>

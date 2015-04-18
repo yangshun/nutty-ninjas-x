@@ -13,6 +13,7 @@ function LobbyController ($scope) {
   $scope.roomName = '';
   $scope.playerName = '';
   $scope.chosenRoom = '';
+  $scope.selectedColour = 'red';
 
   var socket = io(window.location.host + '/lobby');
   socket.on('lobby.state', function (data) {
@@ -29,7 +30,7 @@ function LobbyController ($scope) {
     } else {
       $scope.errorMessage = '';
     }
-    window.location.href = '/play?room=' + roomName + '&playerName=' + playerName;
+    window.location.href = '/play?room=' + roomName + '&playerName=' + playerName + '&color=' + $scope.selectedColour;
   }
 
   $scope.chooseRoom = function (roomName) {
@@ -45,7 +46,7 @@ function LobbyController ($scope) {
     } else {
       $scope.errorMessage = '';
     }
-    window.location.href = '/play?room=' + $scope.chosenRoom + '&playerName=' + playerName; 
+    window.location.href = '/play?room=' + $scope.chosenRoom + '&playerName=' + playerName + '&color=' + $scope.selectedColour;
   }
 }
 

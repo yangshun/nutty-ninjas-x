@@ -98,3 +98,34 @@ a:hover {
   z-index: 100;
 }
 
+.ninja-red a {
+  color: #fe1b1b;
+}
+.ninja-red.active a {
+  background-color: #fe1b1b !important;
+  color: #fff;
+}
+
+.ninja-blue a {
+  color: #1bd6fe;
+}
+.ninja-blue.active a {
+  background-color: #1bd6fe !important;
+  color: #fff;
+}
+
+.ninja-green a {
+  color: #5bfe1b;
+}
+.ninja-green.active a {
+  background-color: #5bfe1b !important;
+  color: #fff;
+}
+
+.ninja-yellow a {
+  color: #fed61b;
+}
+.ninja-yellow.active a {
+  background-color: #fed61b !important;
+  color: #fff;
+}
