@@ -56,69 +56,83 @@ function RoomManager (server) {
 			}
 
 			for (playerId in room) {
-				var forward = false;
+				if (playerId != myId) {
+					var forward = false;
 
-				// Simple distance calculation
-				var distance = Math.abs (room[myId].x - room[playerId].x) + Math.abs (room[myId].y - room[playerId].y);
+					// Simple distance calculation
+					var distance = 0;
+					if (room[myId].gameState != null && room[playerId].gameState != null) {
+						Math.abs (room[myId].gameState.x - room[playerId].gameState.x) + Math.abs (room[myId].gameState.y - room[playerId].gameState.y);
+					}
 
-				if (distance < 5 * 1000) {
-					// Close enough! Send everything
-					forward = true;
+					if (distance < 5 * 1000) {
+						// Close enough! Send everything
+						forward = true;
 
-				} else if (distance < 10 * 1000) {
-					// Quite far away, not interested
-					// But might still be visible in large screen
+					} else if (distance < 10 * 1000) {
+						// Quite far away, not interested
+						// But might still be visible in large screen
 
-					// 30% chance to discard all optional fields
-					// Effectively reduce package size
-					var discardChance = Math.random () < 0.3;
-					if (discardChance) {
+						// 30% chance to discard all optional fields
+						// Effectively reduce package size
+						var discardChance = Math.random () < 0.3;
+						if (discardChance) {
+							delete data.vx;
+							delete data.vy;
+							delete data.landed;
+							delete data.onLadder;
+							delete data.ducked;
+						}
+
+						// Only forward 70% of the package
+						var forwardChance = Math.random () < 0.7;
+						forward = true;
+
+					} else {
+						// Super far away, definitely not interested
+
+						// Don't even bother sending optional fields
 						delete data.vx;
 						delete data.vy;
 						delete data.landed;
 						delete data.onLadder;
 						delete data.ducked;
+
+						// Only forward 40% of the package
+						var forwardChance = Math.random () < 0.4;
+						forward = true;
 					}
 
-					// Only forward 70% of the package
-					var forwardChance = Math.random () < 0.7;
-					forward = true;
-
-				} else {
-					// Super far away, definitely not interested
-
-					// Don't even bother sending optional fields
-					delete data.vx;
-					delete data.vy;
-					delete data.landed;
-					delete data.onLadder;
-					delete data.ducked;
-
-					// Only forward 40% of the package
-					var forwardChance = Math.random () < 0.4;
-					forward = true;
-				}
-
-				// Forward the package to the recipient
-				if (forward) {
-					room[playerId].socket.emit ("player.update", data);
+					// Forward the package to the recipient
+					if (true) {
+						sockets[playerId].emit ('player.updated', data);
+					}
 				}
 			}*/
 
 			// Boardcast to all player in room
-			socket.broadcast.to(roomId).emit('player.updated', data);
+			/*socket.broadcast.to(roomId).emit('player.updated', data);*/
+
+			var room = rooms[roomId];
+			for (playerId in room) {
+				if (playerId != data.playerId) {
+					console.log (data.playerId + " move event to " + playerId);
+					sockets[playerId].emit('player.updated', data);
+				}
+			}
 		});
 
 		socket.on('player.shoot', function (data) {
 			data.latency = player.latency;
-			socket.broadcast.to(roomId).emit('player.shoot', data);
+			/*socket.broadcast.to(roomId).emit('player.shoot', data);*/
 
-			// var room = rooms[roomId];
-			// for (playerId in room) {
-			// 	if (playerId != data.playerId) {
-			// 		sockets[playerId].emit('player.shoot', data);
-			// 	}
-			// }
+			var room = rooms[roomId];
+			for (playerId in room) {
+				if (playerId != data.playerId) {
+					console.log (data.playerId + " shoot event to " + playerId);
+					sockets[playerId].emit('player.shoot', data);
+				}
+			}
 		});
 
 		playerId++;
