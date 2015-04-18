@@ -41,13 +41,25 @@ Q.Sprite.extend('Actor', {
 	},
 
 	updateState: function (data) {
-		// Update trivial information
-		this.p.targetX = data.x;
-		this.p.targetY = data.y;
-		this.p.direction = data.vx < 0 ? 'left' : 'right';
-		this.p.hp = data.hp;
+		// Update trivial information, these information will always be available
+		// in the data payload
+		this.p.x = data.x;
+		this.p.y = data.y;
+		this.p.currentPortalIsA = data.currentPortalIsA;
+
+		// Update other information if existed
+		if (data.hp != undefined) { this.p.hp = data.hp; }
+		if (data.name != undefined) {  this.p.name = data.name; }
+		if (data.x != undefined) { this.p.x = data.x; }
+		if (data.y != undefined) { this.p.y = data.y; }
+		if (data.vx != undefined) { this.p.vx = data.vx; }
+		if (data.vy != undefined) { this.p.vy = data.vy; }
+		if (data.landed != undefined) { this.p.landed = data.landed; }
+		if (data.onLadder != undefined) { this.p.onLadder = data.onLadder; }
+		if (data.ducked != undefined) { this.p.ducked = data.ducked; }		
 		
-		// Determine the animation state based on information given
+		// Determine other information based on information given
+		this.p.direction = data.vx < 0 ? 'left' : 'right';
 		if (data.ducked) {
 			this.p.animationState = "duck_" + this.p.direction;
 		} else if (data.onLadder && data.vy != 0) {
@@ -60,14 +72,17 @@ Q.Sprite.extend('Actor', {
 			this.p.animationState = 'jump_' + this.p.direction;
 		}
 
-		// No gravity
-		this.p.gravity = 0;
 		this.p.weaponType = data.weaponType;
+
+		// No gravity and velocity
+		this.p.gravity = 0;
+		this.p.vx = 0;
+		this.p.vy = 0;
 	},
 
 	shootWithData: function (data) {
 		//simulate latency
-		//data.latency = 500;
+		data.latency = 500;
 
 		//find out which x-direction the bullet is traveling towards
 		var bulletXDirection = data.targetX - data.startX;
@@ -180,8 +195,5 @@ Q.Sprite.extend('Actor', {
 
 	step: function (dt) {
 		this.play(this.p.animationState);
-
-		this.p.x = this.p.targetX;
-		this.p.y = this.p.targetY;
 	}
 });

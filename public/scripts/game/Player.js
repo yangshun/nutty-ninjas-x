@@ -191,10 +191,18 @@ Q.Actor.extend("Player",{
 		}
 
 		// Send update to other player at every frame
+		
+		// Creating payload
 		var data = { 
+			// Compulsory information - server will always send them
 			playerId: this.p.playerId,
-			x: this.p.x, 
+			currentPortalIsA: this.p.currentPortalIsA,
+
+			// Priority information - server will send if within range
+			x: this.p.x,
 			y: this.p.y,
+			
+			// Optional information - server only send when visible
 			vx: this.p.vx,
 			vy: this.p.vy,
 			landed: this.p.landed,
@@ -206,7 +214,14 @@ Q.Actor.extend("Player",{
 			hp: this.p.hp,
 			// animationState: animationState,
 			currentPortalIsA: this.p.currentPortalIsA
+			// Situational information
+			/*name: this.p.name_dirty ? this.p.name : undefined,
+			hp: this.p.hp_dirty ? this.p.hp : undefined,*/
 		};
+
+		if (this.p.name_dirty) { data.name = this.p.name; }
+		if (this.p.hp_dirty) { data.hp = this.p.hp; }
+
 		this.p.socket.emit('player.update', data);
 		PubSub.publish('updateSelf', data);
 
