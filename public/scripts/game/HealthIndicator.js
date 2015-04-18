@@ -1,4 +1,4 @@
-Q.Sprite.extend('HealthBar', {
+Q.Sprite.extend('HealthIndicator', {
   init: function (p) {
     this._super(p, { 
       w: 50,

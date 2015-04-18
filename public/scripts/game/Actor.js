@@ -17,14 +17,14 @@ Q.Sprite.extend('Actor', {
 			portalB: null
 		});
 
-		var healthBar = new Q.HealthBar({
+		var healthIndicator = new Q.HealthIndicator({
 			x: this.p.x,
 			y: this.p.y,
 			actor: this.p
 		});
 
-		this.p.healthBar = healthBar;
-		GameState.gameStage.insert(healthBar);
+		this.p.healthIndicator = healthIndicator;
+		GameState.gameStage.insert(healthIndicator);
 
     var weaponIndicator = new Q.WeaponIndicator({
       x: this.p.x,
@@ -208,7 +208,7 @@ Q.Sprite.extend('Actor', {
 
 	destroy: function () {
 		// Destroy UI elements attached to actor
-		this.p.healthBar.destroy();
+		this.p.healthIndicator.destroy();
 		this.p.weaponIndicator.destroy();
 	}
 });
