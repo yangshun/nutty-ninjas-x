@@ -14,10 +14,12 @@ var GameState = {
       var newPlayer = new Q.Player({
         playerId: data.playerId,
         name: data.name,
+        name_dirty: true,     // Flag to indicate whether name need to be boardcast
         x: xPos,
         y: 0,
         socket: socket,
         hp: 200,
+        hp_dirty: true,       // Flag to indicate whether hp has changed and need to be boardcast
         weaponIndicator: myWeaponIndicator,
         targetX: xPos,
         targetY: 0
