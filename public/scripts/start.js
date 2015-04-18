@@ -17,7 +17,9 @@ var assets = [
   'whirlpool.png', 
   'shurikenRed.png', 
   'whirlpool-pink.png', 
-  'whirlpool-blue.png'
+  'whirlpool-blue.png',
+  'gun-frost.png',
+  'gun-juggernaut.png',
 ];
 
 Q.loadTMX(assets.join(','), function() {

@@ -3,11 +3,10 @@ Q.Sprite.extend('WeaponIndicator', {
 		this._super(p, { 
 			w: 0,
 			h: 0,
-			asset: "whirlpool-pink.png",
-			scale: 0.025,
+			scale: 0.125,
 			gravity: 0.00,
 			damage: 20,
-			z: 1,
+			z: 5,
 			type: Q.SPRITE_UI,
 			collisionMask: Q.SPRITE_NONE
 		});
@@ -16,21 +15,18 @@ Q.Sprite.extend('WeaponIndicator', {
 	},
 
 	step: function (dt) {
-		var rotationRatio = 1;
+
 		// Spawn the Weapon Indicator and attach to the belt of the ninja
 		var myAsset;
 		if (this.p.actor.weaponType === Constants.WeaponType.Shuriken) {
-			myAsset = 'shuriken.png';
+			myAsset = 'gun-juggernaut.png';
 		} else if (this.p.actor.weaponType === Constants.WeaponType.Portal) {
-			myAsset = 'whirlpool-' + (this.p.actor.currentPortalIsA ? 'pink' : 'blue') + '.png';
+			myAsset = 'gun-frost.png';
 		}
+		var time = (new Date()).getTime();
 		this.p.asset = myAsset;
-		this.p.x = this.p.actor.x + this.p.actor.w/4; 
-		this.p.y = this.p.actor.y + 17.5;
-
-		if (this.p.weaponType === Constants.WeaponType.Shuriken) {
-			rotationRatio = 4;
-		}
-		this.p.angle += dt * rotationRatio * 360;
+		this.p.x = this.p.actor.x;
+		this.p.y = this.p.actor.y + 1 + 2 * Math.sin(time/100);
+		this.p.flip = this.p.actor.direction === 'left' ? 'x' : false;
 	}
 });
