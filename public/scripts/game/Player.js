@@ -1,8 +1,11 @@
-Q.Actor.extend("Player",{
+Q.Actor.extend("Player", {
 	init: function (p) {
 		this._super(p, {
 			direction: "left"
 		});
+
+		this.p.ammoLeft = Constants.Ammo.Max;
+		this.p.refreshAmmoDuration = 0;
 
 		this.p.points = this.p.standingPoints;
 
@@ -30,9 +33,24 @@ Q.Actor.extend("Player",{
 
 		Q.el.addEventListener('touchend', this.touchEnd);
 		Q.el.addEventListener('mouseup', this.touchEnd);
+
+		PubSub.publish('updateAmmo', {
+			ammoLeft: this.p.ammoLeft
+		});
 	},
 
-	touchEnd: function(e)   {
+	touchEnd: function (e) {
+		// This is actually a canvas method and not a Quintus Sprite method
+		var player = GameState.player;
+		if (player.p.ammoLeft > 0) {
+			player.p.ammoLeft -= 1;			
+			PubSub.publish('updateAmmo', {
+				ammoLeft: player.p.ammoLeft
+			});
+		} else {
+			return;
+		}
+		
 		var x = e.offsetX || e.layerX,
 		y = e.offsetY || e.layerY,
 		stage = Q.stage();
@@ -42,16 +60,17 @@ Q.Actor.extend("Player",{
 
 		// build the data package to be sent to the shoot function
 		var shootingData = {
-			playerId: GameState.player.p.playerId,
-			startX: GameState.player.p.x,
-			startY: GameState.player.p.y,
+			playerId: player.p.playerId,
+			startX: player.p.x,
+			startY: player.p.y,
 			targetX: stageX,
 			targetY: stageY,
-			weaponType: GameState.player.p.weaponType
+			weaponType: player.p.weaponType
 		};
 
-		GameState.player.p.socket.emit('player.shoot', shootingData);
-		GameState.player.shootWithData(shootingData);
+		player.p.socket.emit('player.shoot', shootingData);
+		player.shootWithData(shootingData);
+
 	},
 
 	toggleWeapon: function () {
@@ -227,12 +246,23 @@ Q.Actor.extend("Player",{
 		this.p.socket.emit('player.update', data);
 		PubSub.publish('updateSelf', data);
 
+		this.p.refreshAmmoDuration += dt;
+		if (this.p.refreshAmmoDuration > Constants.Ammo.RegenRate) {
+			this.p.refreshAmmoDuration = 0;
+			if (this.p.ammoLeft < Constants.Ammo.Max) {
+				this.p.ammoLeft += 1;
+				PubSub.publish('updateAmmo', {
+					ammoLeft: this.p.ammoLeft
+				});
+			}
+		}
+
 		// Reset the onLadder flag!
 		this.p.onLadder = false;
 		this.p.ladderX = undefined;
 
 		//check if the player is killed
-		if(this.p.hp <= 0.0)
+		if (this.p.hp <= 0.0)
 		{
 			this.p.tombstone.p.px = this.p.x;
 			this.p.tombstone.p.py = this.p.y;
