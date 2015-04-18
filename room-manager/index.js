@@ -45,10 +45,17 @@ function RoomManager (server) {
 		});
 
 		socket.on('player.update', function (data) {
-			// Update the server game state
-			if (rooms[roomId][data.playerId] != undefined) {
-				rooms[roomId][data.playerId].gameState = data;
+			// TODO: implement IM here
+			/*// Update the server game state
+			var room = rooms[roomId];
+			var myId = data.playerId;
+			if (room[myId] != undefined) {
+				room[myId].gameState = data;
 			}
+
+			for (playerId in room) {
+
+			}*/
 
 			// Boardcast to all player in room
 			socket.broadcast.to(roomId).emit('player.updated', data);

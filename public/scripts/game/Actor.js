@@ -35,6 +35,7 @@ Q.Sprite.extend('Actor', {
 		this.p.targetX = data.x;
 		this.p.targetY = data.y;
 		this.p.direction = data.vx < 0 ? 'left' : 'right';
+		this.p.hp = data.hp;
 		
 		// Determine the animation state based on information given
 		if (data.ducked) {
