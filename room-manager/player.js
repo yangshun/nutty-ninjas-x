@@ -1,11 +1,11 @@
-function Player (name, roomId, playerId, socket) {
+
+function Player (name, roomId, playerId, color, socket, socketId) {
 	this.name = name;
 	this.roomId = roomId;
 	this.playerId = playerId;
+	this.color = color;
 	this.socket = socket;
-	this.gameState;
-
-
+	this.socketId = socketId;
 
 	this.startMeasuringLatency();
 }
@@ -34,6 +34,8 @@ Player.prototype.getState = function () {
 	return {
 		name: this.name,
 		playerId: this.playerId,
+		socketId: this.socketId,
+		color: this.color
 	};
 }
 

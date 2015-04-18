@@ -22,16 +22,24 @@ Q.scene("level3", function (stage) {
 
 		var roomId = getQueryVariable('room');
 		var socket = io(window.location.host + '/game');
+
 		var names = ['John', 'Mary', 'Jane', 'Peter', 'Bob', 'Karen'];
 		var playerName = getQueryVariable('playerName');
 		if (!playerName) {
-			playerName = names[Math.floor(Math.random() * 6)] + Math.floor(Math.random() * 1000);
+			playerName = names[Math.floor(Math.random() * names.length)] + Math.floor(Math.random() * 1000);
+		}
+
+		var colors = ['red', 'blue', 'green', 'yellow'];
+		var color = getQueryVariable('color');
+		if (!color || colors.indexOf(color) === -1) {
+			color = colors[Math.floor(Math.random() * colors.length)];
 		}
 
 		socket.on('connect', function () {
 			socket.emit('player.join', {
 				name: playerName,
-				roomId: roomId
+				roomId: roomId,
+				color: color
 			});
 		});
 
@@ -45,6 +53,8 @@ Q.scene("level3", function (stage) {
 		});
 
 		socket.on('player.updated', function (data) {
+			console.log ("player.updated received");
+
 			GameState.updateActors(data);
 			PubSub.publish('updatePlayer', data);
 		});
@@ -55,7 +65,11 @@ Q.scene("level3", function (stage) {
 
 		socket.on('player.tombstone', function (data) {
 			GameState.actorTombstone(data);
-		})
+		});
+
+		socket.on('player.debug', function () {
+			console.log ("Debug received from " + socket.id);
+		});
 
 		socket.on('connection.rtt.toclient', function () {
 			socket.emit('connection.rtt.fromclient');

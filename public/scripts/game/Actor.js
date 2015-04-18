@@ -1,8 +1,8 @@
 Q.Sprite.extend('Actor', {
 	init: function (p) {
 		this._super(p, {
-			sheet: "player-red",  // Setting a sprite sheet sets sprite width and height
-			sprite: "player-red",
+			sheet: "player-" + p.color,  // Setting a sprite sheet sets sprite width and height
+			sprite: "player-" + p.color,
 			scale: 0.70, 
 			jumpSpeed: Config.player.jumpSpeed,
 			speed: 200,
@@ -77,7 +77,7 @@ Q.Sprite.extend('Actor', {
 		if (data.ducked != undefined) { this.p.ducked = data.ducked; }		
 		
 		// Determine other information based on information given
-		this.p.direction = data.vx < 0 ? 'left' : 'right';
+		this.p.direction = data.direction;
 		if (data.ducked) {
 			this.p.animationState = "duck_" + this.p.direction;
 		} else if (data.onLadder && data.vy != 0) {

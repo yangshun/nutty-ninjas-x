@@ -4,7 +4,7 @@ Q.Sprite.extend('Shuriken', {
 			w: 0,
 			h: 0,
 			asset: "shuriken.png",
-			scale: 0.05,
+			scale: 0.075,
 			gravity: 0.30,
 			damage: 20,
 			lifetime: 5,

@@ -17,7 +17,8 @@ var GameState = {
         hp: 200,
         hp_dirty: true,       // Flag to indicate whether hp has changed and need to be boardcast
         targetX: xPos,
-        targetY: 0
+        targetY: 0,
+        color: data.color
       });
       this.player = newPlayer;
       this.gameStage.insert(this.player);
@@ -39,12 +40,14 @@ var GameState = {
     var temp = new Q.Actor({ 
       playerId: data.playerId, 
       x: 0,
-      y: 0
+      y: 0,
+      color: data.color
     });
     this.gameStage.insert(temp);
     this.actors.push({
       player: temp,
-      playerId: data.playerId
+      playerId: data.playerId,
+      color: data.color
     });
   },
   findActor: function (playerId) {
