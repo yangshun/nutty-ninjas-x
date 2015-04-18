@@ -98,6 +98,20 @@ a:hover {
   z-index: 100;
 }
 
+.nn-ammoboard {
+  top: 10px;
+  left: 10px;
+  position: absolute;
+  z-index: 100;
+}
+
+.nn-ammoboard .nn-ammo {
+  display: inline-block;
+  float: left;
+  width: 45px;
+  height: 35px;
+}
+
 .ninja-red a {
   color: #fe1b1b;
 }

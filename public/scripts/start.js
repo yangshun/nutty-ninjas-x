@@ -52,5 +52,6 @@ Q.loadTMX(assets.join(','), function() {
 
   var app = angular.module('NuttyNinjasX', []);
   app.controller('ScoreBoardController', ScoreBoardController);
+  app.controller('AmmoBoardController', AmmoBoardController);
   angular.bootstrap(document, ['NuttyNinjasX']);
 });

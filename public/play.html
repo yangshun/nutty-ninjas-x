@@ -21,6 +21,11 @@
         <link rel="stylesheet" href="css/style.css"/>
     </head>
     <body>
+
+        <div ng-controller="AmmoBoardController" class="nn-ammoboard">
+            <img class="nn-ammo" ng-repeat="a in range(ammoLeft) track by $index" src="/images/shuriken.png">
+        </div>
+
         <div ng-controller="ScoreBoardController" class="nn-scoreboard">
           <table>
             <thead>
@@ -37,9 +42,11 @@
             </tbody>
           </table>
         </div>
+
         <script src="/bower_components/angular/angular.js"></script>
         <script src="/bower_components/pubsub-js/src/pubsub.js"></script>
         <script src="/scripts/ScoreBoardController.js"></script>
+        <script src="/scripts/AmmoBoardController.js"></script>
         
         <script src="/scripts/game/Constants.js"></script>
         <script src="/scripts/game/Config.js"></script>
