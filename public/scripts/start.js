@@ -12,7 +12,10 @@ var assets = [
   'shooting-sound-2.mp3',
   'background-music.mp3',
   'player.json', 
-  'player.png',
+  'player-red.png',
+  'player-blue.png',
+  'player-green.png',
+  'player-yellow.png',
   'shuriken.png',
   'whirlpool.png', 
   'shurikenRed.png', 
@@ -23,11 +26,11 @@ var assets = [
 ];
 
 Q.loadTMX(assets.join(','), function() {
-  Q.compileSheets("player.png","player.json");
+
   Q.compileSheets("collectables.png","collectables.json");
   Q.compileSheets("enemies.png","enemies.json");
   Q.compileSheets("doors.png","doors.json");
-  Q.animations("player", {
+  var animations = {
     walk_right: { frames: [0,1,2,3,4,5,6,7,8,9,10], rate: 1/15, flip: false, loop: true },
     walk_left: { frames:  [0,1,2,3,4,5,6,7,8,9,10], rate: 1/15, flip:"x", loop: true },
     jump_right: { frames: [13], rate: 1/10, flip: false },
@@ -37,7 +40,12 @@ Q.loadTMX(assets.join(','), function() {
     duck_right: { frames: [15], rate: 1/10, flip: false },
     duck_left: { frames:  [15], rate: 1/10, flip: "x" },
     climb: { frames:  [16, 17], rate: 1/3, flip: false }
+  };
+  ['red', 'blue', 'green', 'yellow'].forEach(function (color) {
+    Q.compileSheets("player-" + color + ".png", ".json");
+    Q.animations("player-" + color, animations);
   });
+  
   Q.stageScene("level3");
 
   var app = angular.module('NuttyNinjasX', []);

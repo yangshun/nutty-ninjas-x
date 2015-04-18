@@ -1,11 +1,11 @@
 Q.Sprite.extend('Actor', {
 	init: function (p) {
 		this._super(p, {
-			sheet: "player",  // Setting a sprite sheet sets sprite width and height
-			sprite: "player",
+			sheet: "player-" + p.color,  // Setting a sprite sheet sets sprite width and height
+			sprite: "player-" + p.color,
 			scale: 0.70, 
 			jumpSpeed: Config.player.jumpSpeed,
-			speed: 400,
+			speed: 200,
 			bulletSpeed: 1000,
 			type: Q.SPRITE_PLAYER,
 			collisionMask: Q.SPRITE_DEFAULT | Q.SPRITE_DOOR | Q.SPRITE_COLLECTABLE,
@@ -17,14 +17,14 @@ Q.Sprite.extend('Actor', {
 			portalB: null
 		});
 
-		var healthBar = new Q.HealthBar({
+		var healthIndicator = new Q.HealthIndicator({
 			x: this.p.x,
 			y: this.p.y,
 			actor: this.p
 		});
 
-		this.p.healthBar = healthBar;
-		GameState.gameStage.insert(healthBar);
+		this.p.healthIndicator = healthIndicator;
+		GameState.gameStage.insert(healthIndicator);
 
     var weaponIndicator = new Q.WeaponIndicator({
       x: this.p.x,
@@ -208,7 +208,8 @@ Q.Sprite.extend('Actor', {
 
 	destroy: function () {
 		// Destroy UI elements attached to actor
-		this.p.healthBar.destroy();
+		this.p.healthIndicator.destroy();
 		this.p.weaponIndicator.destroy();
+		this.p.nameIndicator.destroy();
 	}
 });

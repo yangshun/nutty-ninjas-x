@@ -1,4 +1,4 @@
-Q.Sprite.extend('HealthBar', {
+Q.Sprite.extend('HealthIndicator', {
   init: function (p) {
     this._super(p, { 
       w: 50,
@@ -19,7 +19,7 @@ Q.Sprite.extend('HealthBar', {
     ctx.fillStyle = 'black';
     ctx.fillRect(-this.p.cx, 0, this.p.w, this.p.h);
 
-    ctx.fillStyle = 'red';
+    ctx.fillStyle = this.p.actor.color;
     var barWidth = parseInt(this.p.actor.hp / 200 * this.p.w);
     ctx.fillRect(-this.p.cx, 0, barWidth, this.p.h);
   }
