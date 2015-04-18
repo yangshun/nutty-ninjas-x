@@ -45,6 +45,15 @@ Q.Sprite.extend('Actor', {
 		this.p.nameIndicator = nameIndicator;
 		GameState.gameStage.insert(nameIndicator);
 
+		var tombstone = new Q.Tombstone({
+	      x: this.p.x,
+	      y: this.p.y,
+	      actor: this.p,
+	      lifetime: 0
+		});
+		this.p.tombstone = tombstone;
+		GameState.gameStage.insert(tombstone);
+
 		this.p.currentPortalIsA = true;
 		this.add(['2d', 'animation', 'tween']);
 	},
@@ -211,5 +220,6 @@ Q.Sprite.extend('Actor', {
 		this.p.healthIndicator.destroy();
 		this.p.weaponIndicator.destroy();
 		this.p.nameIndicator.destroy();
+		this.p.tombstone.destroy();
 	}
 });

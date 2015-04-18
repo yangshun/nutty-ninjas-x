@@ -53,6 +53,10 @@ Q.scene("level3", function (stage) {
 			GameState.actorFire(data);
 		});
 
+		socket.on('player.tombstone', function (data) {
+			GameState.actorTombstone(data);
+		})
+
 		socket.on('connection.rtt.toclient', function () {
 			socket.emit('connection.rtt.fromclient');
 		});

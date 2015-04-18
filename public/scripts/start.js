@@ -18,6 +18,7 @@ var assets = [
   'player-yellow.png',
   'shuriken.png',
   'whirlpool.png', 
+  'ghostsurprised.png',
   'shurikenRed.png', 
   'whirlpool-pink.png', 
   'whirlpool-blue.png',

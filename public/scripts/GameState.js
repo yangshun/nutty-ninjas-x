@@ -92,5 +92,21 @@ var GameState = {
       actor.portalB = portal;
     }
     this.gameStage.insert(portal);
+  },
+  actorTombstone: function (data) {
+    //var actor = this.findActor(data.playerId).player;
+    //var tombstone = actor.p.tombstone;
+    //tombstone.p.x = data.x;
+    //tombstone.p.y = data.y;
+    //tombstone.p.lifetime = data.life;
+
+    var tombstone = new Q.Tombstone({
+      px: data.px,
+      py: data.py,
+      x: data.x,
+      y: data.y,
+      lifetime: data.lifetime
+    });
+    this.gameStage.insert(tombstone);
   }
 };
