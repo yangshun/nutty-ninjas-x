@@ -3,6 +3,10 @@ function Player (name, roomId, playerId, socket) {
 	this.roomId = roomId;
 	this.playerId = playerId;
 	this.socket = socket;
+	this.gameState;
+
+
+
 	this.startMeasuringLatency();
 }
 
@@ -15,7 +19,6 @@ Player.prototype.startMeasuringLatency = function () {
 		lastSentRttResponseReceived = true;
 		var currentTime = new Date().getTime();
 		that.latency = currentTime - lastSentTime;
-		console.log('Player', that.playerId, 'latency', that.latency);
 	});
 
 	var rttMeasure = setInterval(function () {
@@ -30,7 +33,7 @@ Player.prototype.startMeasuringLatency = function () {
 Player.prototype.getState = function () {
 	return {
 		name: this.name,
-		playerId: this.playerId
+		playerId: this.playerId,
 	};
 }
 
