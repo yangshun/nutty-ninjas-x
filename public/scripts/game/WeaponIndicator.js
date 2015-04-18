@@ -18,15 +18,21 @@ Q.Sprite.extend('WeaponIndicator', {
 
 		// Spawn the Weapon Indicator and attach to the belt of the ninja
 		var myAsset;
+		var offset = 0;
 		if (this.p.actor.weaponType === Constants.WeaponType.Shuriken) {
-			myAsset = 'gun-juggernaut.png';
+			myAsset = 'shuriken.png';
+			this.p.scale = 0.075;
+			offset = -5;
 		} else if (this.p.actor.weaponType === Constants.WeaponType.Portal) {
-			myAsset = 'gun-frost.png';
+			myAsset = 'gun-' + this.p.actor.color + '.png';
+			this.p.scale = 0.125;
+			offset = 1;
 		}
 		var time = (new Date()).getTime();
 		this.p.asset = myAsset;
 		this.p.x = this.p.actor.x;
-		this.p.y = this.p.actor.y + 1 + 2 * Math.sin(time/100);
+		this.p.y = this.p.actor.y + offset + 2 * Math.sin(time/100);
+		
 		this.p.flip = this.p.actor.direction === 'left' ? 'x' : false;
 	}
 });

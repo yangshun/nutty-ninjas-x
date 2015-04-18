@@ -21,8 +21,10 @@ var assets = [
   'shurikenRed.png', 
   'whirlpool-pink.png', 
   'whirlpool-blue.png',
-  'gun-frost.png',
-  'gun-juggernaut.png',
+  'gun-red.png',
+  'gun-blue.png',
+  'gun-green.png',
+  'gun-yellow.png',
 ];
 
 Q.loadTMX(assets.join(','), function() {
