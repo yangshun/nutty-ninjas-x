@@ -39,9 +39,7 @@ Q.Sprite.extend('Actor', {
 
 		// Update other information if existed
 		if (data.hp != undefined) { this.p.hp = data.hp; }
-		if (data.name != undefined) { 
-			this.p.name = data.name; 
-		}
+		if (data.name != undefined) {  this.p.name = data.name; }
 		if (data.x != undefined) { this.p.x = data.x; }
 		if (data.y != undefined) { this.p.y = data.y; }
 		if (data.vx != undefined) { this.p.vx = data.vx; }
@@ -72,7 +70,7 @@ Q.Sprite.extend('Actor', {
 
 	shootWithData: function (data) {
 		//simulate latency
-		//data.latency = 500;
+		data.latency = 500;
 
 		//find out which x-direction the bullet is traveling towards
 		var bulletXDirection = data.targetX - data.startX;

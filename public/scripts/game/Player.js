@@ -213,9 +213,12 @@ Q.Actor.extend("Player",{
 			ducked: animationState == "duck_" + this.p.direction,
 
 			// Situational information
-			name: this.p.name_dirty ? this.p.name : undefined,
-			hp: this.p.hp_dirty ? this.p.hp : undefined,
+			/*name: this.p.name_dirty ? this.p.name : undefined,
+			hp: this.p.hp_dirty ? this.p.hp : undefined,*/
 		};
+
+		if (this.p.name_dirty) { data.name = this.p.name; }
+		if (this.p.hp_dirty) { data.hp = this.p.hp; }
 
 		this.p.socket.emit('player.update', data);
 		PubSub.publish('updateSelf', data);
