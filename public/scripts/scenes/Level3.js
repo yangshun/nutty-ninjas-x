@@ -53,6 +53,8 @@ Q.scene("level3", function (stage) {
 		});
 
 		socket.on('player.updated', function (data) {
+			console.log ("player.updated received");
+
 			GameState.updateActors(data);
 			PubSub.publish('updatePlayer', data);
 		});
