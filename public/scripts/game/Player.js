@@ -138,9 +138,9 @@ Q.Actor.extend("Player",{
 					} else {
 						this.p.direction = "left";
 					}
-					this.play("walk_" + this.p.direction);
+					animationState = "walk_" + this.p.direction;
 				} else {
-					this.play("stand_" + this.p.direction);
+					animationState = "stand_" + this.p.direction;
 				}
 			}
 		} else {
