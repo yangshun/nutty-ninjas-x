@@ -100,7 +100,7 @@ Q.Sprite.extend('Actor', {
 
 	shootWithData: function (data) {
 		//simulate latency
-		data.latency = 500;
+		//data.latency = 500;
 
 		//find out which x-direction the bullet is traveling towards
 		var bulletXDirection = data.targetX - data.startX;
