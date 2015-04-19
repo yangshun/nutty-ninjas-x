@@ -71,7 +71,6 @@ var GameState = {
 	updateActors: function (data) {
 		var actor = this.findActor(data.playerId);
 		if (actor) {
-			//console.log(data.animationState);
 			actor.player.updateState(data);
 		} else {
 			// New actor
@@ -113,5 +112,15 @@ var GameState = {
 			y: data.y
 		});
 		this.gameStage.insert(ninjaGhost);
+	},
+
+	updateLatency: function (latency) {
+		// Update latency for all actors
+		for (i in this.actors) {
+			this.actors[i].player.p.latency = latency;
+		}
+
+		// Player should already in the actor list, but add in case
+		this.player.p.latency;
 	}
 };

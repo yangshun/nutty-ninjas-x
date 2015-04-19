@@ -50,9 +50,6 @@ Q.Sprite.extend('Actor', {
 	},
 
 	updateState: function (data) {
-		// Latency is updated by server
-		this.p.latency = data.latency;
-
 		// Update trivial information, these information will always be available
 		// in the data payload
 		this.p.x = data.x;
@@ -94,9 +91,6 @@ Q.Sprite.extend('Actor', {
 	},
 
 	shootWithData: function (data) {
-		// Latency is updated by server
-		this.p.latency = data.latency;
-
 		//find out which x-direction the bullet is traveling towards
 		var bulletXDirection = data.targetX - data.startX;
 		bulletXDirection = bulletXDirection / Math.abs(bulletXDirection);

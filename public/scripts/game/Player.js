@@ -111,10 +111,6 @@ Q.Actor.extend("Player", {
 		this.p.weaponType = (this.p.weaponType + 1) % Object.keys(Constants.WeaponType).length;
 	},
 
-	shootWithData: function(data) {
-		this._super(data);
-	},
-
 	jump: function(obj) {
 		// Only play sound once.
 		if (!obj.p.playedJump) {

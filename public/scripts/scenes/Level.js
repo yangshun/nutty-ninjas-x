@@ -74,14 +74,17 @@ Q.scene("level", function (stage) {
 		socket.on('player.updated', function (data) {
 			GameState.updateActors(data);
 			PubSub.publish('updatePlayer', data);
+			GameState.updateLatency(data.latency);
 		});
 
 		socket.on('player.shoot', function (data) {
 			GameState.actorFire(data);
+			GameState.updateLatency(data.latency);
 		});
 
 		socket.on('player.death', function (data) {
 			GameState.addNinjaGhost(data);
+			GameState.updateLatency(data.latency);
 		});
 
 		socket.on('connection.rtt.toclient', function () {
