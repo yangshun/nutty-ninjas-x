@@ -122,7 +122,6 @@ function RoomManager (server) {
 			var room = rooms[roomId];
 			for (playerId in room) {
 				if (playerId != data.playerId) {
-					console.log (data.playerId + " shoot event to " + playerId);
 					sockets[playerId].emit('player.shoot', data);
 				}
 			}
