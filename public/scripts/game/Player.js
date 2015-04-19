@@ -245,20 +245,26 @@ Q.Actor.extend("Player", {
 			ducked: animationState == "duck_" + this.p.direction,
 			weaponType: this.p.weaponType,
 			direction: this.p.direction,
-			name: this.p.name,
-			hp: this.p.hp,
 			currentPortalIsA: this.p.currentPortalIsA,
-			color: this.p.color,
 		};
 
 		// Addition information - append to data payload only dirty
+
+		// data.important is to prevent server to attempt skip the package
 		if (this.p.name_dirty) {
 			data.name = this.p.name;
+			data.important = true;
 			name_dirty = false;
 		}
 		if (this.p.hp_dirty) {
 			data.hp = this.p.hp;
+			data.important = true;
 			hp_dirty = false;
+		}
+		if (this.p.color_dirty) {
+			data.color = this.p.color;
+			data.important = true;
+			color_dirty = false;	
 		}
 
 		// Send data to server

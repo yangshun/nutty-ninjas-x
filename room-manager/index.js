@@ -123,8 +123,13 @@ function RoomManager (server) {
 						}
 
 						// 70% chance to forward the package
-						var forwardChance = Math.random() < 0.7;
-						forward = forwardChance;
+						if (data.important) {
+							delete data.important;
+							forward = true;
+						} else {
+							var forwardChance = Math.random() < 0.7;
+							forward = forwardChance;
+						}
 
 					} else {
 						// Super far away, definitely not interested
@@ -141,8 +146,13 @@ function RoomManager (server) {
 						delete data.ducked;
 
 						// Only forward 40% of the package
-						var forwardChance = Math.random () < 0.4;
-						forward = forwardChance;
+						if (data.important) {
+							delete data.important;
+							forward = true;
+						} else {
+							var forwardChance = Math.random() < 0.7;
+							forward = forwardChance;
+						}
 					}
 
 					// Forward the package to the recipient
