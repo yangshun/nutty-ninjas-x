@@ -120,13 +120,17 @@ function RoomManager (server) {
 							delete data.landed;
 							delete data.onLadder;
 							delete data.ducked;
+							delete data.weaponType;
 						}
 
-						// 70% chance to forward the package
+						
 						if (data.important) {
+							// Packge containt situational field!
+							// Must send
 							delete data.important;
 							forward = true;
 						} else {
+							// 70% chance to forward the package
 							var forwardChance = Math.random() < 0.7;
 							forward = forwardChance;
 						}
@@ -144,12 +148,15 @@ function RoomManager (server) {
 						delete data.landed;
 						delete data.onLadder;
 						delete data.ducked;
+						delete data.weaponType;
 
-						// Only forward 40% of the package
 						if (data.important) {
+							// Packge containt situational field!
+							// Must send
 							delete data.important;
 							forward = true;
 						} else {
+							// Only forward 40% of the package
 							var forwardChance = Math.random() < 0.7;
 							forward = forwardChance;
 						}

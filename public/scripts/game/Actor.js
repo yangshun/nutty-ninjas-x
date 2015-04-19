@@ -58,7 +58,8 @@ Q.Sprite.extend('Actor', {
 
 		// Update other information if existed
 		if (data.hp != undefined) { this.p.hp = data.hp; }
-		if (data.name != undefined) {  this.p.name = data.name; }
+		if (data.name != undefined) { this.p.name = data.name; }
+		if (data.color != undefined) { this.p.color = data.color; }
 		if (data.x != undefined) { this.p.x = data.x; }
 		if (data.y != undefined) { this.p.y = data.y; }
 		if (data.vx != undefined) { this.p.vx = data.vx; }
@@ -66,6 +67,7 @@ Q.Sprite.extend('Actor', {
 		if (data.landed != undefined) { this.p.landed = data.landed; }
 		if (data.onLadder != undefined) { this.p.onLadder = data.onLadder; }
 		if (data.ducked != undefined) { this.p.ducked = data.ducked; }		
+		if (data.weaponType != undefined) { this.p.weaponType = data.weaponType; }
 		
 		// Determine other information based on information given
 		this.p.direction = data.direction;
@@ -80,8 +82,6 @@ Q.Sprite.extend('Actor', {
 		} else {
 			this.p.animationState = 'jump_' + this.p.direction;
 		}
-
-		this.p.weaponType = data.weaponType;
 
 		// No gravity and velocity
 		this.p.gravity = 0;
