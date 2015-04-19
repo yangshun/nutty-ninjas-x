@@ -1,6 +1,6 @@
 Q.Sprite.extend('PortalBullet', {
 	init: function (p) {
-		var asset = 'whirlpool-' + p.portalType + '.png';
+		var asset = 'swirls-' + p.portalColor + '.png';
 		this._super(p, { 
 			w: 0,
 			h: 0,
@@ -30,17 +30,17 @@ Q.Sprite.extend('PortalBullet', {
 		this.handleCollision(col, 'top');
 	},
 	handleCollision: function (col, dir) {
-	//skip if the the object being hit is the owner
-	if (col.obj.isA('Player') 
-		&& (this.p.playerId == col.obj.p.playerId)) {
-		return;
-	}
-	this.createPortal();
-	this.destroy();
-	if (col.obj.isA('Player')) {
-		  //var knockBack = 200 * (dir === 'left' ? 1 : -1 );
-		  //col.obj.p.vy = -100;
-		  col.obj.p.hp -= this.p.damage;
+		//skip if the the object being hit is the owner
+		if (col.obj.isA('Player') 
+			&& (this.p.playerId == col.obj.p.playerId)) {
+			return;
+		}
+		this.createPortal();
+		this.destroy();
+		if (col.obj.isA('Player')) {
+			  //var knockBack = 200 * (dir === 'left' ? 1 : -1 );
+			  //col.obj.p.vy = -100;
+			  col.obj.p.hp -= this.p.damage;
 		}
 	},
 	createPortal: function () {
@@ -48,7 +48,8 @@ Q.Sprite.extend('PortalBullet', {
 			playerId: this.p.playerId,
 			targetX: this.p.targetX,
 			targetY: this.p.targetY,
-			portalType: this.p.portalType
+			portalType: this.p.portalType,
+			portalColor: this.p.portalColor
 		});
 	},
 	step: function (dt) {
