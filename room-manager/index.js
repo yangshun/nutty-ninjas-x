@@ -91,7 +91,7 @@ function RoomManager (server) {
 						}
 
 						// 70% chance to forward the package
-						var forwardChance = Math.random() < 1;
+						var forwardChance = Math.random() < 0.7;
 						forward = forwardChance;
 
 					} else {
@@ -105,7 +105,7 @@ function RoomManager (server) {
 						delete data.ducked;
 
 						// Only forward 40% of the package
-						var forwardChance = Math.random () < 1;
+						var forwardChance = Math.random () < 0.4;
 						forward = forwardChance;
 					}
 
@@ -115,21 +115,11 @@ function RoomManager (server) {
 					}
 				}
 			}
-
-			// Boardcast to all player in room
-			/*socket.broadcast.to(roomId).emit('player.updated', data);*/
 		});
 
 		socket.on('player.shoot', function (data) {
 			data.latency = player.latency;
-			/*socket.broadcast.to(roomId).emit('player.shoot', data);*/
-
-			var room = rooms[roomId];
-			for (playerId in room) {
-				if (playerId != data.playerId) {
-					sockets[playerId].emit('player.shoot', data);
-				}
-			}
+			socket.broadcast.to(roomId).emit('player.shoot', data);
 		});
 
 		socket.on('player.death', function (data) {
