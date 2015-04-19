@@ -191,6 +191,7 @@ function RoomManager (server) {
 			/*socket.broadcast.to(roomId).emit('player.shoot', data);*/
 			var room = rooms[roomId];
 			for (id in room) {
+				console.log ("Check player " + id);
 				if (id != data.playerId) {
 					// Delay sending shoot to ensure the actor receive it at the same time
 					// with the Player shooting
@@ -201,7 +202,10 @@ function RoomManager (server) {
 					// Hence delay would be data.maxLatency - room[id].latency;
 					var delay = data.maxLatency - room[id].latency;
 
-					setTimeout (function () {sockets[id].emit ('player.shoot', data);}, delay);
+					//setTimeout (function () {sockets[id].emit ('player.shoot', data); console.log ("Shoot to player " + id);}, delay);
+
+					// Need to rely on callback with parameters, might not work on old browsers
+					setTimeout (function (id) {sockets[id].emit ('player.shoot', data); console.log ("Shoot to player " + id);}, delay, id);
 					
 				}
 			}

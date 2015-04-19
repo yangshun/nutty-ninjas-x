@@ -81,7 +81,7 @@ var GameState = {
 	actorFire: function (data) {
 		var actor = this.findActor(data.playerId);
 
-		if (actor != undefined) {			
+		if (actor != undefined) {
 			actor.player.shootWithData(data);
 		} else {
 			console.log ("Cannot find the actor that just shoot!");
