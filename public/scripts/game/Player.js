@@ -97,10 +97,7 @@ Q.Actor.extend("Player", {
 
 		// Local lag - delay shooting to hopefully
 		// shoot only when the data reach server
-
-		// TOOD: implement local lag
-		player.shootWithData(shootingData);
-
+		setTimeout(function () {player.shootWithData(shootingDat)}, this.p.latency);
 	},
 
 	/*
