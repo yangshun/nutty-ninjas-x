@@ -82,7 +82,6 @@
    </properties>
   </tile>
  </tileset>
-<<<<<<< HEAD:public/data/level3.tmx
  <tileset firstgid="229" name="collectables" tilewidth="70" tileheight="70" spacing="2">
   <image source="../images/collectables.png" width="936" height="216"/>
   <tile id="1">
@@ -100,9 +99,6 @@
   </tile>
  </tileset>
  <tileset firstgid="268" name="doors" tilewidth="70" tileheight="110">
-=======
- <tileset firstgid="214" name="doors" tilewidth="70" tileheight="110">
->>>>>>> 51266de2a039442f4d6d163a59beb46b4b89d889:public/data/level.tmx
   <image source="../images/doors.png" width="140" height="110"/>
   <tile id="0">
    <properties>
@@ -112,30 +108,6 @@
    </properties>
   </tile>
  </tileset>
-<<<<<<< HEAD:public/data/level3.tmx
- <tileset firstgid="270" name="enemies" tilewidth="72" tileheight="72">
-  <image source="../images/enemies.png" width="216" height="216"/>
-  <tile id="0">
-   <properties>
-    <property name="Class" value="Snail"/>
-    <property name="sprite" value="snail"/>
-   </properties>
-  </tile>
-  <tile id="1">
-   <properties>
-    <property name="Class" value="Slime"/>
-    <property name="sprite" value="slime"/>
-   </properties>
-  </tile>
-  <tile id="2">
-   <properties>
-    <property name="Class" value="Fly"/>
-    <property name="sprite" value="fly"/>
-   </properties>
-  </tile>
- </tileset>
-=======
->>>>>>> 51266de2a039442f4d6d163a59beb46b4b89d889:public/data/level.tmx
  <imagelayer name="Background" x="-6" y="-184">
   <image source="../images/bamboo-tile.jpg"/>
  </imagelayer>
