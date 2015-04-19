@@ -13,14 +13,13 @@ function RoomManager (server) {
 
 	var that = this;
 	this.connections = {};
-	var playerId = 0;
 
 	var roomCon = io.of('/game');
 	roomCon.on('connection', function (socket) {
 		var Player = require('./player');
 		var player = null;
 		var roomId;
-		var thisPlayerId = playerId;
+		var thisPlayerId = (new Date()).getTime();
 
 		socket.on('player.join', function (data) {
 			roomId = data.roomId;
@@ -33,7 +32,6 @@ function RoomManager (server) {
 			rooms[roomId][thisPlayerId] = player.getState();
 			sockets[thisPlayerId] = socket;
 			socket.emit('player.connected.self', player.getState());
-			socket.broadcast.to(roomId).emit('player.connected.new', player.getState());
 			lobbyCon.emit('lobby.state', rooms);
 		});
 
@@ -49,7 +47,7 @@ function RoomManager (server) {
 		});
 
 		socket.on('player.update', function (data) {
-			/*// Update the server game state
+			// Update the server game state
 			var room = rooms[roomId];
 			var myId = data.playerId;
 			if (room[myId] != undefined) {
@@ -62,21 +60,22 @@ function RoomManager (server) {
 
 					// Simple distance calculation
 					var distance = 0;
-					if (room[myId].gameState != null && room[playerId].gameState != null) {
-						Math.abs (room[myId].gameState.x - room[playerId].gameState.x) + Math.abs (room[myId].gameState.y - room[playerId].gameState.y);
+					if (room[myId] != undefined && room[myId].gameState != undefined && 
+						room[playerId] != undefined && room[playerId].gameState != undefined) {
+						distance = Math.abs(room[myId].gameState.x - room[playerId].gameState.x) + Math.abs (room[myId].gameState.y - room[playerId].gameState.y);
 					}
 
-					if (distance < 5 * 1000) {
+					if (distance < 2 * 1000) {
 						// Close enough! Send everything
 						forward = true;
 
-					} else if (distance < 10 * 1000) {
+					} else if (distance < 4 * 1000) {
 						// Quite far away, not interested
 						// But might still be visible in large screen
 
-						// 30% chance to discard all optional fields
+						// 50% chance to discard all optional fields
 						// Effectively reduce package size
-						var discardChance = Math.random () < 0.3;
+						var discardChance = Math.random () < 0.5;
 						if (discardChance) {
 							delete data.vx;
 							delete data.vy;
@@ -85,9 +84,9 @@ function RoomManager (server) {
 							delete data.ducked;
 						}
 
-						// Only forward 70% of the package
-						var forwardChance = Math.random () < 0.7;
-						forward = true;
+						// 70% chance to forward the package
+						var forwardChance = Math.random() < 1;
+						forward = forwardChance;
 
 					} else {
 						// Super far away, definitely not interested
@@ -100,19 +99,19 @@ function RoomManager (server) {
 						delete data.ducked;
 
 						// Only forward 40% of the package
-						var forwardChance = Math.random () < 0.4;
-						forward = true;
+						var forwardChance = Math.random () < 1;
+						forward = forwardChance;
 					}
 
 					// Forward the package to the recipient
-					if (true) {
+					if (forward) {
 						sockets[playerId].emit ('player.updated', data);
 					}
 				}
-			}*/
+			}
 
 			// Boardcast to all player in room
-			socket.broadcast.to(roomId).emit('player.updated', data);
+			/*socket.broadcast.to(roomId).emit('player.updated', data);*/
 		});
 
 		socket.on('player.shoot', function (data) {
@@ -130,8 +129,6 @@ function RoomManager (server) {
 		socket.on('player.death', function (data) {
 			socket.broadcast.to(roomId).emit('player.death', data);
 		});
-
-		playerId++;
 	});
 }
 
