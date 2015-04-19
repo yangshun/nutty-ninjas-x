@@ -81,9 +81,10 @@ var GameState = {
                         x: data.targetX,
                         y: data.targetY,
                         portalType: data.portalType,
+                        portalColor: data.portalColor,
                         belongsToPlayer: actor
                       });
-    if (data.portalType === 'pink') {
+    if (data.portalType === 'A') {
       if (actor.portalA) {
         actor.portalA.destroy();
       }

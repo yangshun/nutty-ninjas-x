@@ -5,7 +5,7 @@ Q.Sprite.extend('Actor', {
 			sprite: "player-" + p.color,
 			scale: 0.70, 
 			jumpSpeed: Config.player.jumpSpeed,
-			speed: 200,
+			speed: 400,
 			bulletSpeed: 1000,
 			type: Q.SPRITE_PLAYER,
 			collisionMask: Q.SPRITE_DEFAULT | Q.SPRITE_DOOR | Q.SPRITE_COLLECTABLE,
@@ -186,7 +186,8 @@ Q.Sprite.extend('Actor', {
 					playerId: data.playerId,
 					targetX: data.targetX,
 					targetY: data.targetY,
-					portalType: (this.p.currentPortalIsA ? 'pink' : 'blue')
+					portalType: (this.p.currentPortalIsA ? 'A' : 'B'),
+					portalColor: this.p.color
 				});
 
 				this.p.currentPortalIsA = !this.p.currentPortalIsA;

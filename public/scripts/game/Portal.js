@@ -1,14 +1,14 @@
 Q.Sprite.extend('Portal', {
 	init: function (p) {
-		var asset = 'whirlpool-' + p.portalType + '.png';
-
+		var asset = 'swirls-' + p.portalColor + '.png';
+		console.log(asset)
 		this._super(p, { 
 			w: 0,
 			h: 0,
 			asset: asset,
-			scale: 0.10,
+			scale: 0.15,
 			gravity: 0.00,
-			damage: 20,
+			damage: 0,
 			lifetime: 10
 		});
 		
@@ -34,7 +34,7 @@ Q.Sprite.extend('Portal', {
 		//skip if the the object being hit is the owner
 		if (col.obj.isA('Player') || col.obj.isA('Shuriken')) {
 			var actor = this.p.belongsToPlayer;
-			var otherPortal = this.p.portalType === 'pink' ? actor.portalB : actor.portalA;
+			var otherPortal = this.p.portalType === 'A' ? actor.portalB : actor.portalA;
 			if (otherPortal) {
 				if (col.obj.isA('Shuriken')) {
 					var delta = 0.2;
@@ -74,14 +74,14 @@ Q.Sprite.extend('Portal', {
 	},
 
 	step: function (dt) {
-		this.p.angle += dt * 1 * 360;
+		this.p.angle -= dt * 2 * 360;
 		this.p.lifetime -= dt;
 
 		if (this.p.lifetime <= 0) {
 			this.destroy();
 			var actor = this.p.belongsToPlayer;
 		  // Kill a player's portal references if it expires.
-		  if (this.p.portalType === 'pink') {
+		  if (this.p.portalType === 'A') {
 		  	actor.portalA = null;
 		  } else {
 		  	actor.portalB = null;
