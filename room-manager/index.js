@@ -76,6 +76,9 @@ function RoomManager (server) {
 		 * data containing game state of that player, including playerId, name, hp, position, etc.
 		 */
 		socket.on('player.update', function (data) {
+			// Add latency to the data
+			data.latency = player.latency;
+
 			// Update the server game state
 			var room = rooms[roomId];
 			var myId = data.playerId;
@@ -156,13 +159,20 @@ function RoomManager (server) {
 		/* 'player.shoot' event - send every time the client shoots something
 		 */
 		socket.on('player.shoot', function (data) {
+			// Add latency to the data
 			data.latency = player.latency;
+
+			// Boardcast too all player except the sender
 			socket.broadcast.to(roomId).emit('player.shoot', data);
 		});
 
 		/* 'player.death' event - send every time the client dies
 		 */
 		socket.on('player.death', function (data) {
+			// Add latency to the data
+			data.latency = player.latency;
+
+			// Boardcast too all player except the sender
 			socket.broadcast.to(roomId).emit('player.death', data);
 		});
 	});
