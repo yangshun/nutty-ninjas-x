@@ -1,7 +1,5 @@
 var assets = [
-  'level3.tmx', 
-  'collectables.json', 
-  'doors.json', 
+  'level.tmx',  
   'fire.mp3', 
   'jump.mp3', 
   'heart.mp3', 
@@ -29,7 +27,6 @@ var assets = [
 
 Q.loadTMX(assets.join(','), function() {
 
-  Q.compileSheets("collectables.png","collectables.json");
   Q.compileSheets("doors.png","doors.json");
   var animations = {
     walk_right: { frames: [0,1,2,3,4,5,6,7,8,9,10], rate: 1/15, flip: false, loop: true },
@@ -47,7 +44,7 @@ Q.loadTMX(assets.join(','), function() {
     Q.animations("player-" + color, animations);
   });
   
-  Q.stageScene("level3");
+  Q.stageScene("level");
 
   var app = angular.module('NuttyNinjasX', []);
   app.controller('ScoreBoardController', ScoreBoardController);
