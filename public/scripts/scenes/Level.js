@@ -1,13 +1,17 @@
+
+
 Q.scene("level", function (stage) {
+
+	// Initialize stage and play background music
+	GameState.gameStage = stage;
 	Q.stageTMX("level.tmx",stage);
 	// Q.audio.play('background-music.mp3',{ 
 	// 	loop: true 
 	// });
-
-	GameState.gameStage = stage;
-	// stage.add("viewport").follow(Q("Player").first());
+	
 
 	(function () {
+		// Get the variable from url query string
 		function getQueryVariable (variable) {
 			var query = window.location.search.substring(1);
 			var vars = query.split('&');
@@ -23,18 +27,21 @@ Q.scene("level", function (stage) {
 		var roomId = getQueryVariable('room');
 		var socket = io(window.location.host + '/game');
 
-		var names = ['John', 'Mary', 'Jane', 'Peter', 'Bob', 'Karen'];
+		// Some default names, will be given randomly to player if their name is empty
+		var names = ['John', 'Mary', 'Jane', 'Peter', 'Bob', 'Karen', 'YangShun', 'ZhengHan', 'TrungHieu'];
 		var playerName = getQueryVariable('playerName');
 		if (!playerName) {
 			playerName = names[Math.floor(Math.random() * names.length)] + Math.floor(Math.random() * 1000);
 		}
 
+		// Color will also be given randomly to player if their color is empty
 		var colors = ['red', 'blue', 'green', 'yellow'];
 		var color = getQueryVariable('color');
 		if (!color || colors.indexOf(color) === -1) {
 			color = colors[Math.floor(Math.random() * colors.length)];
 		}
 
+		// On conntected - send 'player.join' request to server immediately
 		socket.on('connect', function () {
 			socket.emit('player.join', {
 				name: playerName,
@@ -43,6 +50,8 @@ Q.scene("level", function (stage) {
 			});
 		});
 
+		// On 'player.conntected.self' - server just sent the all whole state
+		// Initialize the player's ninja as Player and other ninjas as Actor
 		socket.on('player.connected.self', function (data) {
 			var room = data.room;
 			var pid = data.id;
