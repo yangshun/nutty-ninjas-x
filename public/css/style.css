@@ -126,6 +126,10 @@ a:hover {
   height: 35px;
 }
 
+.nn-ammoboard .nn-ammolabel {
+  margin: 10px;
+}
+
 .ninja-red a {
   color: #fe1b1b;
 }
