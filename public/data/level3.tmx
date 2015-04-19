@@ -108,27 +108,6 @@
    </properties>
   </tile>
  </tileset>
- <tileset firstgid="216" name="enemies" tilewidth="72" tileheight="72">
-  <image source="../images/enemies.png" width="216" height="216"/>
-  <tile id="0">
-   <properties>
-    <property name="Class" value="Snail"/>
-    <property name="sprite" value="snail"/>
-   </properties>
-  </tile>
-  <tile id="1">
-   <properties>
-    <property name="Class" value="Slime"/>
-    <property name="sprite" value="slime"/>
-   </properties>
-  </tile>
-  <tile id="2">
-   <properties>
-    <property name="Class" value="Fly"/>
-    <property name="sprite" value="fly"/>
-   </properties>
-  </tile>
- </tileset>
  <imagelayer name="Background" x="-6" y="-184">
   <image source="../images/bamboo-tile.jpg"/>
  </imagelayer>

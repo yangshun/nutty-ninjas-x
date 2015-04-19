@@ -2,7 +2,6 @@ var assets = [
   'level3.tmx', 
   'collectables.json', 
   'doors.json', 
-  'enemies.json', 
   'fire.mp3', 
   'jump.mp3', 
   'heart.mp3', 
@@ -17,10 +16,6 @@ var assets = [
   'player-green.png',
   'player-yellow.png',
   'shuriken.png',
-  'whirlpool.png',
-  'shurikenRed.png', 
-  'whirlpool-pink.png', 
-  'whirlpool-blue.png',
   'swirls-red.png',
   'swirls-blue.png',
   'swirls-green.png',
@@ -35,7 +30,6 @@ var assets = [
 Q.loadTMX(assets.join(','), function() {
 
   Q.compileSheets("collectables.png","collectables.json");
-  Q.compileSheets("enemies.png","enemies.json");
   Q.compileSheets("doors.png","doors.json");
   var animations = {
     walk_right: { frames: [0,1,2,3,4,5,6,7,8,9,10], rate: 1/15, flip: false, loop: true },
