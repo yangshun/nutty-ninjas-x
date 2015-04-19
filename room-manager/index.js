@@ -31,7 +31,13 @@ function RoomManager (server) {
 			player = new Player(data.name, roomId, thisPlayerId, color, socket, socket.id);
 			rooms[roomId][thisPlayerId] = player.getState();
 			sockets[thisPlayerId] = socket;
-			socket.emit('player.connected.self', player.getState());
+			//socket.emit('player.connected.self', player.getState());
+			var payload = {
+				room : rooms[roomId],
+				id : thisPlayerId
+			};
+			socket.emit('player.connected.self', payload);
+
 			lobbyCon.emit('lobby.state', rooms);
 		});
 

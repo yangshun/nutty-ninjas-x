@@ -44,7 +44,17 @@ Q.scene("level3", function (stage) {
 		});
 
 		socket.on('player.connected.self', function (data) {
-			GameState.addPlayer(data, socket);
+			var room = data.room;
+			var pid = data.id;
+
+			for (id in room) {
+				if (pid == id) {
+					GameState.addPlayer(room[id], socket);		
+				} else {
+					GameState.addActor(room[id]);
+				}
+			}
+			
 		});
 
 		socket.on('player.disconnected', function (data) {
