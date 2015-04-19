@@ -18,7 +18,7 @@ Player.prototype.startMeasuringLatency = function () {
 	that.socket.on('connection.rtt.fromclient', function (data) {
 		lastSentRttResponseReceived = true;
 		var currentTime = new Date().getTime();
-		that.latency = currentTime - lastSentTime;
+		that.latency = currentTime - lastSentTime / 2; // Latency is half rtt
 	});
 
 	var rttMeasure = setInterval(function () {

@@ -6,11 +6,12 @@ Q.Sprite.extend('Shuriken', {
 			asset: "shuriken.png",
 			scale: 0.075,
 			gravity: 0.30,
-			damage: 20,
 			lifetime: 5,
 			playerId: p.playerId,
 			collisionCount: 3
 		});
+
+		this.p.damage = 20;
 		
 		this.add('2d');
 		this.on('bump.left', this, 'collisionLeft');

@@ -1,20 +1,56 @@
-Q.Actor.extend("Player",{
+/*
+ * Player class: extends from Actor
+ * The ninja the player controlling throughout the game.
+ */
+Q.Actor.extend("Player", {
+
+	/* Constructor - Initialize properties of the player */
 	init: function (p) {
 		this._super(p, {
 			direction: "left"
 		});
 
+		var self = this;
+
+		// This player latency from server, and max latency among all clients
+		// These varible will be updated everytime server send 'player.updated'
+		// Note that if there is only this player in the room, no updated will
+		// be sent, hence latency is 0 (no point delaying anyway)
+		this.p.latency = 0;
+		this.p.maxLatency = 0;
+
+		// Player status whether he is on ladder
+		// Will be set to true by the checkLadder method
+		// and manually set back to false at the end of every 'step'
+		this.p.onLadder = false;
+
+		// Ammunition properties
+		this.p.ammoLeft = Constants.Ammo.Max;
+		this.p.refreshAmmoCooldown = 0;
+		PubSub.publish('updateAmmo', {
+			ammoLeft: this.p.ammoLeft
+		});
+
+		// Standing points
 		this.p.points = this.p.standingPoints;
 
+		// Add in pre-made components to get up and running quickly
+		// The `2d` component adds in default 2d collision detection
+		// and kinetics (velocity, gravity)
+		// The `platformerControls` makes the player controllable by the
+		// default input actions (left, right to move,  up or action to jump)
+		// It also checks to make sure the player is on a horizontal surface before
+		// letting them jump.
 		this.add('2d, platformerControls, ');
 		
-		this.on("sensor.tile","checkLadder");
+		// Set up callback functions
+		this.on('sensor.tile', 'checkLadder');
 		this.on('jump');
 		this.on('jumped');
-		this.add('platformerControls');
-
 		Q.input.on('e', this, 'toggleWeapon');
 
+		Q.el.addEventListener('touchend', this.touchEnd);
+		Q.el.addEventListener('mouseup', this.touchEnd);
 		Q.el.addEventListener('mousemove',function(e) {
 			var x = e.offsetX || e.layerX,
 			y = e.offsetY || e.layerY,
@@ -23,43 +59,57 @@ Q.Actor.extend("Player",{
 			var stageX = Q.canvasToStageX(x, stage),
 			stageY = Q.canvasToStageY(y, stage);
 		});
-
-		var self = this;
-
-		//this.touchstart = fucntion(e) {self.touchstart(e);};
-
-		Q.el.addEventListener('touchend', this.touchEnd);
-		Q.el.addEventListener('mouseup', this.touchEnd);
 	},
 
-	touchEnd: function(e)   {
-		var x = e.offsetX || e.layerX,
-		y = e.offsetY || e.layerY,
-		stage = Q.stage();
+	/* Callback method: triggered by canvas end touchEnd/mouseUp
+	 * Shoot whatever ammu the player is carrying
+	 * This is actually a canvas method and not a Quintus Sprite method
+	 */
+	touchEnd: function (e) {
+		// Check whether player still have ammu left
+		var player = GameState.player;
+		if (player.p.ammoLeft > 0) {
+			// 
+			player.p.ammoLeft -= 1;			
+			PubSub.publish('updateAmmo', {
+				ammoLeft: player.p.ammoLeft
+			});
+		} else {
+			return;
+		}
+		
+		// Shooting position
+		var x = e.offsetX || e.layerX;
+		var y = e.offsetY || e.layerY; 
+		var stage = Q.stage();
+		var stageX = Q.canvasToStageX(x, stage);
+		var stageY = Q.canvasToStageY(y, stage);
 
-		var stageX = Q.canvasToStageX(x, stage),
-		stageY = Q.canvasToStageY(y, stage);
-
-		// build the data package to be sent to the shoot function
+		// Build the data package to be sent to the shoot function
 		var shootingData = {
-			playerId: GameState.player.p.playerId,
-			startX: GameState.player.p.x,
-			startY: GameState.player.p.y,
+			playerId: player.p.playerId,
+			startX: player.p.x,
+			startY: player.p.y,
 			targetX: stageX,
 			targetY: stageY,
-			weaponType: GameState.player.p.weaponType
+			weaponType: player.p.weaponType
 		};
 
-		GameState.player.p.socket.emit('player.shoot', shootingData);
-		GameState.player.shootWithData(shootingData);
+		// Send to server
+		player.p.socket.emit('player.shoot', shootingData);
+
+		// Local lag - delay shooting to hopefully
+		// shoot only when the data reach server
+		var delay = player.p.latency + player.p.maxLatency;
+		setTimeout(function () {player.shootWithData(shootingData)}, delay);
 	},
 
+	/*
+	 * Callback method: trigger when player press "change weapon" key
+	 * Circle through the list of weapon
+	 */
 	toggleWeapon: function () {
 		this.p.weaponType = (this.p.weaponType + 1) % Object.keys(Constants.WeaponType).length;
-	},
-
-	shootWithData: function(data)   {
-		this._super(data);
 	},
 
 	jump: function(obj) {
@@ -74,6 +124,10 @@ Q.Actor.extend("Player",{
 		obj.p.playedJump = false;
 	},
 
+	/*
+	 * Callback method: trigger by the engine on 'sensor.tile' event
+	 * Set the player onLadder status to true
+	 */
 	checkLadder: function(collider) {
 		if(collider.p.ladder) { 
 			this.p.onLadder = true;
@@ -81,36 +135,9 @@ Q.Actor.extend("Player",{
 		}
 	},
 
-	resetLevel: function() {
-		Q.stageScene("level3");
-		this.p.strength = 100;
-		this.animate({opacity: 1});
-		Q.stageScene('hud', 3, this.p);
-	},
-
-	enemyHit: function(data) {
-		var col = data.col;
-		var enemy = data.enemy;
-		this.p.vy = -150;
-		if (col.normalX == 1) {
-			// Hit from left.
-			this.p.x -=15;
-			this.p.y -=15;
-		} else {
-			// Hit from right;
-			this.p.x +=15;
-			this.p.y -=15;
-		}
-		this.p.immune = true;
-		this.p.immuneTimer = 0;
-		this.p.immuneOpacity = 1;
-		this.p.strength -= 25;
-		Q.stageScene('hud', 3, this.p);
-		if (this.p.strength == 0) {
-			this.resetLevel();
-		}
-		console.log("player.enemyHit");
-	},
+	/*
+	 * 'step' method - trigger by engine at every frame
+	 */
 	step: function(dt) {
 		// Initial animation state
 		var animationState = 'walk_left';
@@ -120,6 +147,7 @@ Q.Actor.extend("Player",{
 			// Disable gravity
 			this.p.gravity = 0;
 
+			// Allow free moving up and down without gravity
 			if (Q.inputs['up']) {
 				this.p.vy = -this.p.speed;
 				this.p.x = this.p.ladderX;
@@ -129,6 +157,7 @@ Q.Actor.extend("Player",{
 				this.p.x = this.p.ladderX;
 				animationState = 'climb';
 			} else {
+				// Move left/right
 				this.p.vy = 0;
 				if (this.p.vx != 0) {
 					if (this.p.vx > 0) {
@@ -142,12 +171,13 @@ Q.Actor.extend("Player",{
 				}
 			}
 		} else {
-			// No ladder?
 
-			// Apply gravity
+			// No ladder - Apply gravity
 			this.p.gravity = 1;
 
+			// Duck!
 			if(Q.inputs['down']) {
+				// Ignore control when duck
 				this.p.ignoreControls = true;
 				animationState = "duck_" + this.p.direction;
 				if(this.p.landed > 0) {
@@ -155,6 +185,7 @@ Q.Actor.extend("Player",{
 				}
 				this.p.points = this.p.duckingPoints;
 			} else {
+				// Normal moving - set animation accordingly
 				this.p.ignoreControls = false;
 				this.p.points = this.p.standingPoints;
 
@@ -178,6 +209,7 @@ Q.Actor.extend("Player",{
 			}
 		}
 
+		// Play the animation based on state
 		this.play(animationState);
 
 		// Warp player around
@@ -192,7 +224,6 @@ Q.Actor.extend("Player",{
 		}
 
 		// Send update to other player at every frame
-		
 		// Creating payload
 		var data = { 
 			// Compulsory information - server will always send them
@@ -211,46 +242,58 @@ Q.Actor.extend("Player",{
 			ducked: animationState == "duck_" + this.p.direction,
 			weaponType: this.p.weaponType,
 			direction: this.p.direction,
-			name: this.p.name,
-			hp: this.p.hp,
-			// animationState: animationState,
 			currentPortalIsA: this.p.currentPortalIsA,
-			color: this.p.color
-			// Situational information
-			/*name: this.p.name_dirty ? this.p.name : undefined,
-			hp: this.p.hp_dirty ? this.p.hp : undefined,*/
 		};
 
-		if (this.p.name_dirty) { data.name = this.p.name; }
-		if (this.p.hp_dirty) { data.hp = this.p.hp; }
+		// Addition information - append to data payload only dirty
 
+		// data.important is to prevent server to attempt skip the package
+		if (this.p.name_dirty) {
+			data.name = this.p.name;
+			data.important = true;
+			name_dirty = false;
+		}
+		if (this.p.hp_dirty) {
+			data.hp = this.p.hp;
+			data.important = true;
+			hp_dirty = false;
+		}
+		if (this.p.color_dirty) {
+			data.color = this.p.color;
+			data.important = true;
+			color_dirty = false;	
+		}
+
+		// Send data to server
 		this.p.socket.emit('player.update', data);
 		PubSub.publish('updateSelf', data);
+
+		// Apply ammu regenation - only when ammu is not max
+		if (this.p.ammoLeft < Constants.Ammo.Max) {
+			this.p.refreshAmmoCooldown -= dt;
+
+			// Regen done! Reset the circle and increase ammu count by 1
+			if (this.p.refreshAmmoCooldown <= 0) {
+				this.p.refreshAmmoCooldown = Constants.Ammo.RegenRate;			
+				this.p.ammoLeft += 1;
+				PubSub.publish('updateAmmo', {
+					ammoLeft: this.p.ammoLeft
+				});
+			}
+		}
 
 		// Reset the onLadder flag!
 		this.p.onLadder = false;
 		this.p.ladderX = undefined;
 
-		//check if the player is killed
-		if(this.p.hp <= 0.0)
-		{
-			this.p.tombstone.p.px = this.p.x;
-			this.p.tombstone.p.py = this.p.y;
-			this.p.tombstone.p.x = this.p.x;
-			this.p.tombstone.p.y = this.p.y;
-			this.p.tombstone.p.lifetime = 2.0;
+		// Check if the player is killed
+		if (this.p.hp <= 0.0) {
+			this.p.socket.emit('player.death', {
+				x: this.p.x,
+				y: this.p.y,
+			});
 
-			this.p.socket.emit('player.tombstone', 
-			{
-				px: this.p.tombstone.p.px,
-				py: this.p.tombstone.p.py,
-				x: this.p.tombstone.p.px,
-				y: this.p.tombstone.p.py,
-				lifetime: this.p.tombstone.p.lifetime,
-				playerId: this.p.playerId
-			})
-			
-			//reset hp and move to a new spot
+			// Reset hp and move to a new spot
 			this.p.hp = 200;
 			this.p.x = Math.floor(Math.random() * (5000 - 500)) + 500;
 			this.p.y = 0;

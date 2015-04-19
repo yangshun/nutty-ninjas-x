@@ -5,7 +5,7 @@ Q.Sprite.extend('Actor', {
 			sprite: "player-" + p.color,
 			scale: 0.70, 
 			jumpSpeed: Config.player.jumpSpeed,
-			speed: 200,
+			speed: 400,
 			bulletSpeed: 1000,
 			type: Q.SPRITE_PLAYER,
 			collisionMask: Q.SPRITE_DEFAULT | Q.SPRITE_DOOR | Q.SPRITE_COLLECTABLE,
@@ -45,15 +45,6 @@ Q.Sprite.extend('Actor', {
 		this.p.nameIndicator = nameIndicator;
 		GameState.gameStage.insert(nameIndicator);
 
-		var tombstone = new Q.Tombstone({
-	      x: this.p.x,
-	      y: this.p.y,
-	      actor: this.p,
-	      lifetime: 0
-		});
-		this.p.tombstone = tombstone;
-		GameState.gameStage.insert(tombstone);
-
 		this.p.currentPortalIsA = true;
 		this.add(['2d', 'animation', 'tween']);
 	},
@@ -65,9 +56,11 @@ Q.Sprite.extend('Actor', {
 		this.p.y = data.y;
 		this.p.currentPortalIsA = data.currentPortalIsA;
 
+
 		// Update other information if existed
 		if (data.hp != undefined) { this.p.hp = data.hp; }
-		if (data.name != undefined) {  this.p.name = data.name; }
+		if (data.name != undefined) { this.p.name = data.name; }
+		if (data.color != undefined) { this.p.color = data.color; }
 		if (data.x != undefined) { this.p.x = data.x; }
 		if (data.y != undefined) { this.p.y = data.y; }
 		if (data.vx != undefined) { this.p.vx = data.vx; }
@@ -75,6 +68,7 @@ Q.Sprite.extend('Actor', {
 		if (data.landed != undefined) { this.p.landed = data.landed; }
 		if (data.onLadder != undefined) { this.p.onLadder = data.onLadder; }
 		if (data.ducked != undefined) { this.p.ducked = data.ducked; }		
+		if (data.weaponType != undefined) { this.p.weaponType = data.weaponType; }
 		
 		// Determine other information based on information given
 		this.p.direction = data.direction;
@@ -90,8 +84,6 @@ Q.Sprite.extend('Actor', {
 			this.p.animationState = 'jump_' + this.p.direction;
 		}
 
-		this.p.weaponType = data.weaponType;
-
 		// No gravity and velocity
 		this.p.gravity = 0;
 		this.p.vx = 0;
@@ -99,9 +91,6 @@ Q.Sprite.extend('Actor', {
 	},
 
 	shootWithData: function (data) {
-		//simulate latency
-		//data.latency = 500;
-
 		//find out which x-direction the bullet is traveling towards
 		var bulletXDirection = data.targetX - data.startX;
 		bulletXDirection = bulletXDirection / Math.abs(bulletXDirection);
@@ -195,7 +184,8 @@ Q.Sprite.extend('Actor', {
 					playerId: data.playerId,
 					targetX: data.targetX,
 					targetY: data.targetY,
-					portalType: (this.p.currentPortalIsA ? 'pink' : 'blue')
+					portalType: (this.p.currentPortalIsA ? 'A' : 'B'),
+					portalColor: this.p.color
 				});
 
 				this.p.currentPortalIsA = !this.p.currentPortalIsA;
@@ -220,6 +210,5 @@ Q.Sprite.extend('Actor', {
 		this.p.healthIndicator.destroy();
 		this.p.weaponIndicator.destroy();
 		this.p.nameIndicator.destroy();
-		this.p.tombstone.destroy();
 	}
 });
