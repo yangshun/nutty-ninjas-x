@@ -119,13 +119,11 @@ var GameState = {
 		this.gameStage.insert(ninjaGhost);
 	},
 
-	updateLatency: function (latency) {
-		// Update latency for all actors
+	updateLatency: function (latency. maxLatency) {
+		// Update latency for all actors (player included)
 		for (i in this.actors) {
 			this.actors[i].player.p.latency = latency;
+			this.actors[i].player.p.maxLatency = maxLatency;
 		}
-
-		// Player should already in the actor list, but add in case
-		this.player.p.latency;
 	}
 };

@@ -12,9 +12,12 @@ Q.Actor.extend("Player", {
 
 		var self = this;
 
-		// Latency from server
-		// This varible will be upated everything server send 'player.updated'
-		this.p.latency = undefined;
+		// This player latency from server, and max latency among all clients
+		// These varible will be updated everytime server send 'player.updated'
+		// Note that if there is only this player in the room, no updated will
+		// be sent, hence latency is 0 (no point delaying anyway)
+		this.p.latency = 0;
+		this.p.maxLatency = 0;
 
 		// Player status whether he is on ladder
 		// Will be set to true by the checkLadder method
@@ -97,9 +100,8 @@ Q.Actor.extend("Player", {
 
 		// Local lag - delay shooting to hopefully
 		// shoot only when the data reach server
-
-		// Assume that all other clients have the same latency
-		setTimeout(function () {player.shootWithData(shootingDat)}, this.p.latency * 2);
+		var delay = this.p.latency + this.p.maxLatency
+		setTimeout(function () {player.shootWithData(shootingDat)}, delay);
 	},
 
 	/*

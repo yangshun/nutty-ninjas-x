@@ -79,12 +79,12 @@ Q.scene("level", function (stage) {
 
 		socket.on('player.shoot', function (data) {
 			GameState.actorFire(data);
-			GameState.updateLatency(data.latency);
+			GameState.updateLatency(data.latency, data.maxLatency);
 		});
 
 		socket.on('player.death', function (data) {
 			GameState.addNinjaGhost(data);
-			GameState.updateLatency(data.latency);
+			GameState.updateLatency(data.latency, data.maxLatency);
 		});
 
 		socket.on('connection.rtt.toclient', function () {

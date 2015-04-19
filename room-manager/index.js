@@ -78,6 +78,10 @@ function RoomManager (server) {
 		socket.on('player.update', function (data) {
 			// Add latency to the data
 			data.latency = player.latency;
+			data.maxLatency = player.latency;
+			for (id in rooms[roomId]) {
+				data.maxLatency = Math.max (rooms[roomId][id].latency, data.maxLatency);
+			}
 
 			// Update the server game state
 			var room = rooms[roomId];
@@ -178,9 +182,29 @@ function RoomManager (server) {
 		socket.on('player.shoot', function (data) {
 			// Add latency to the data
 			data.latency = player.latency;
+			data.maxLatency = player.latency;
+			for (id in rooms[roomId]) {
+				data.maxLatency = Math.max (rooms[roomId][id].latency, data.maxLatency);
+			}
 
 			// Boardcast too all player except the sender
-			socket.broadcast.to(roomId).emit('player.shoot', data);
+			/*socket.broadcast.to(roomId).emit('player.shoot', data);*/
+			var room = rooms[roomId];
+			for (id in room) {
+				if (id != data.playerId) {
+					// Delay sending shoot to ensure the actor receive it at the same time
+					// with the Player shooting
+
+					// Player already delay by player.latency + maxLatency
+					// Packet costs player.latency to get to server
+					// Packet would cost room[id].latencty to get to the client
+					// Hence delay would be data.maxLatency - room[id].latency;
+					var delay = data.maxLatency - room[id].latency;
+
+					setTimeout (function () {sockets[id].emit ('player.shoot', data);}, delay);
+					
+				}
+			}
 		});
 
 		/* 'player.death' event - send every time the client dies
@@ -188,6 +212,10 @@ function RoomManager (server) {
 		socket.on('player.death', function (data) {
 			// Add latency to the data
 			data.latency = player.latency;
+			data.maxLatency = player.latency;
+			for (id in rooms[roomId]) {
+				data.maxLatency = Math.max (rooms[roomId][id].latency, data.maxLatency);
+			}
 
 			// Boardcast too all player except the sender
 			socket.broadcast.to(roomId).emit('player.death', data);
