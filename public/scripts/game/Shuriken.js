@@ -47,6 +47,7 @@ Q.Sprite.extend('Shuriken', {
 			this.destroy();
 		} else if (!col.obj.isA('Portal'))  {
 			this.p.collisionCount -= 1;
+			Q.audio.play('metal-clash.mp3');
 			if (this.p.collisionCount <= 0) {
 				this.destroy();
 				return;

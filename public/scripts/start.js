@@ -4,6 +4,7 @@ var assets = [
   'hit.mp3',
   'shooting-sound-1.mp3',
   'shooting-sound-2.mp3',
+  'metal-clash.mp3',
   'background-music.mp3',
   'player.json', 
   'player-red.png',
