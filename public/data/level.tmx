@@ -98,16 +98,6 @@
    </properties>
   </tile>
  </tileset>
- <tileset firstgid="268" name="doors" tilewidth="70" tileheight="110">
-  <image source="../images/doors.png" width="140" height="110"/>
-  <tile id="0">
-   <properties>
-    <property name="Class" value="Door"/>
-    <property name="open" value="true"/>
-    <property name="sprite" value="door_open"/>
-   </properties>
-  </tile>
- </tileset>
  <imagelayer name="Background" x="-6" y="-184">
   <image source="../images/bamboo-tile.jpg"/>
  </imagelayer>
@@ -10118,6 +10108,5 @@
    <tile gid="0"/>
   </data>
  </layer>
- <objectgroup name="Doors"/>
  <objectgroup name="Sprites"/>
 </map>

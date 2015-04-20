@@ -25,7 +25,6 @@ var assets = [
 
 Q.loadTMX(assets.join(','), function() {
 
-  Q.compileSheets("doors.png","doors.json");
   var animations = {
     walk_right: { frames: [0,1,2,3,4,5,6,7,8,9,10], rate: 1/15, flip: false, loop: true },
     walk_left: { frames:  [0,1,2,3,4,5,6,7,8,9,10], rate: 1/15, flip:"x", loop: true },
