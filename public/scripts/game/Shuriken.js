@@ -42,8 +42,12 @@ Q.Sprite.extend('Shuriken', {
 			col.obj.p.hp = Math.max(col.obj.p.hp - this.p.damage, 0);
 			col.obj.p.hp_dirty = true;	// Turn on flag to send boardcast update in next update step
 			Q.audio.play('hit.mp3');
+			if ('vibrate' in window.navigator) {
+	      window.navigator.vibrate(200); 
+	    }
 			this.destroy();
 		} else if (col.obj.isA('Actor')) {
+			Q.audio.play('hit.mp3');
 			this.destroy();
 		} else if (!col.obj.isA('Portal'))  {
 			this.p.collisionCount -= 1;
