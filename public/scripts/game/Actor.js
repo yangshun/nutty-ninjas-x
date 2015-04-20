@@ -17,6 +17,7 @@ Q.Sprite.extend('Actor', {
 			portalB: null
 		});
 
+		// Health Bar
 		var healthIndicator = new Q.HealthIndicator({
 			x: this.p.x,
 			y: this.p.y,
@@ -26,6 +27,7 @@ Q.Sprite.extend('Actor', {
 		this.p.healthIndicator = healthIndicator;
 		GameState.gameStage.insert(healthIndicator);
 
+		// Whether player is in Shuriken or Portal mode
     var weaponIndicator = new Q.WeaponIndicator({
       x: this.p.x,
       y: this.p.y,
@@ -36,6 +38,7 @@ Q.Sprite.extend('Actor', {
 		this.p.weaponIndicator = weaponIndicator;
 		GameState.gameStage.insert(weaponIndicator);
 
+		// Name of player
 		var nameIndicator = new Q.NameIndicator({
       x: this.p.x,
       y: this.p.y,
@@ -120,9 +123,14 @@ Q.Sprite.extend('Actor', {
 		var finalSpeedX = speedToDistanceRatio * (data.targetX - data.startX);
 		var finalSpeedY = speedToDistanceRatio * (data.targetY - data.startY);
 
-		//modify the speed if the shuriken is traveling towards 
-		//the local player
-		if (travelingToLocalPlayer && (data.playerId != GameState.player.p.playerId)) {
+		// Local Perception Filter - Not used in the end
+		var useLocalPerceptionFilter = false;
+		if 
+		// modify the speed if the shuriken is traveling towards 
+		// the local player
+		if (travelingToLocalPlayer && 
+				(data.playerId != GameState.player.p.playerId) && 
+				useLocalPerceptionFilter) {
 			
 			// here we modify the x distance by the distance to speed ratio.
 			// the logic here is that first we assume the distance from the 
