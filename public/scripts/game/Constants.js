@@ -30,7 +30,7 @@ var Constants = {
     },
     yellow: {
       Speed: 400,
-      Hp: 200,
+      Hp: 100,
       JumpSpeed: -750,
       BulletSpeed: 800,
     }

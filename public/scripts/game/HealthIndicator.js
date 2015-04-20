@@ -20,7 +20,7 @@ Q.Sprite.extend('HealthIndicator', {
     ctx.fillRect(-this.p.cx, 0, this.p.w, this.p.h);
 
     ctx.fillStyle = Constants.HexColors[this.p.actor.color];
-    var barWidth = parseInt(this.p.actor.hp / 200 * this.p.w);
+    var barWidth = parseInt(this.p.actor.hp / Constants.Ninjas[this.p.actor.color].Hp * this.p.w);
     ctx.fillRect(-this.p.cx, 0, barWidth, this.p.h);
   }
 });

@@ -4,6 +4,7 @@ Q.Sprite.extend('Actor', {
 			sheet: "player-" + p.color,  // Setting a sprite sheet sets sprite width and height
 			sprite: "player-" + p.color,
 			scale: 0.70,
+			hp: Constants.Ninjas[p.color].Hp,
 			jumpSpeed: Constants.Ninjas[p.color].JumpSpeed, 
 			speed: Constants.Ninjas[p.color].Speed,
 			bulletSpeed: Constants.Ninjas[p.color].BulletSpeed,

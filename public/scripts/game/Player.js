@@ -305,7 +305,7 @@ Q.Actor.extend("Player", {
 			});
 
 			// Reset hp and move to a new spot
-			this.p.hp = 200;
+			this.p.hp = Constants.Ninjas[this.p.color].Hp;
 			this.p.x = Math.floor(Math.random() * (3500)) + 500;
 			this.p.y = 10;
 		}
