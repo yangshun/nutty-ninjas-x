@@ -3,8 +3,8 @@ Q.Sprite.extend('Actor', {
 		this._super(p, {
 			sheet: "player-" + p.color,  // Setting a sprite sheet sets sprite width and height
 			sprite: "player-" + p.color,
-			scale: 0.70, 
-			jumpSpeed: Config.player.jumpSpeed,
+			scale: 0.70,
+			jumpSpeed: -750, 
 			speed: 400,
 			bulletSpeed: 1000,
 			type: Q.SPRITE_PLAYER,
@@ -119,7 +119,7 @@ Q.Sprite.extend('Actor', {
 		var distanceX = Math.abs(data.targetX - data.startX);
 		var distanceY = Math.abs(data.targetY - data.startY);
 		var diagonalDistance = Math.sqrt((distanceX * distanceX) + (distanceY * distanceY));
-		var speedToDistanceRatio = Config.bullet.speed / diagonalDistance;
+		var speedToDistanceRatio = 450 / diagonalDistance;
 		var finalSpeedX = speedToDistanceRatio * (data.targetX - data.startX);
 		var finalSpeedY = speedToDistanceRatio * (data.targetY - data.startY);
 
