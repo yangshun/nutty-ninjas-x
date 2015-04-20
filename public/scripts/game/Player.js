@@ -10,7 +10,7 @@ Q.Actor.extend("Player", {
 			direction: "left"
 		});
 
-		var self = this;
+		var that = this;
 
 		// This player latency from server, and max latency among all clients
 		// These varible will be updated everytime server send 'player.updated'
@@ -59,6 +59,14 @@ Q.Actor.extend("Player", {
 			var stageX = Q.canvasToStageX(x, stage),
 			stageY = Q.canvasToStageY(y, stage);
 		});
+
+		// Mobile only: Convenient way of toggling the weapon: Shake the device
+  	window.addEventListener('devicemotion', function (event) {
+	    var a = event.accelerationIncludingGravity;
+	    if (Math.abs(a.x) + Math.abs(a.y) + Math.abs(a.z) > 30) {
+	      that.toggleWeapon();
+	    }
+	  }, false);
 	},
 
 	/* Callback method: triggered by canvas end touchEnd/mouseUp
@@ -70,7 +78,7 @@ Q.Actor.extend("Player", {
 		var player = GameState.player;
 		if (player.p.ammoLeft > 0) {
 			// 
-			player.p.ammoLeft -= 1;			
+			// player.p.ammoLeft -= 1;			
 			PubSub.publish('updateAmmo', {
 				ammoLeft: player.p.ammoLeft
 			});
