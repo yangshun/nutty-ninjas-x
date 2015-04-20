@@ -120,7 +120,7 @@ Q.Sprite.extend('Actor', {
 		var distanceX = Math.abs(data.targetX - data.startX);
 		var distanceY = Math.abs(data.targetY - data.startY);
 		var diagonalDistance = Math.sqrt((distanceX * distanceX) + (distanceY * distanceY));
-		var speedToDistanceRatio = 450 / diagonalDistance;
+		var speedToDistanceRatio = this.p.bulletSpeed / diagonalDistance;
 		var finalSpeedX = speedToDistanceRatio * (data.targetX - data.startX);
 		var finalSpeedY = speedToDistanceRatio * (data.targetY - data.startY);
 
