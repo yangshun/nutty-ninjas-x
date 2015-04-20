@@ -125,14 +125,13 @@ Q.Sprite.extend('Actor', {
 
 		// Local Perception Filter - Not used in the end
 		var useLocalPerceptionFilter = false;
-		if 
-		// modify the speed if the shuriken is traveling towards 
-		// the local player
+
+		// Modify the speed if the shuriken is traveling towards the local player
 		if (travelingToLocalPlayer && 
 				(data.playerId != GameState.player.p.playerId) && 
 				useLocalPerceptionFilter) {
 			
-			// here we modify the x distance by the distance to speed ratio.
+			// Here we modify the x distance by the distance to speed ratio.
 			// the logic here is that first we assume the distance from the 
 			// starting xy coordinate to the target xy coordinate is covered 
 			// in one unit time. But we know that is unlikely, so by using 
