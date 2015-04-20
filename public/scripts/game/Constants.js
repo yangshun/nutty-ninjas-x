@@ -15,24 +15,28 @@ var Constants = {
       Hp: 200,
       JumpSpeed: -500,
       BulletSpeed: 1200,
+      BulletDamage: 20
     },
     blue: {
       Speed: 800,
       Hp: 200,
       JumpSpeed: -500,
       BulletSpeed: 800,
+      BulletDamage: 30
     },
     green: {
       Speed: 400,
       Hp: 200,
       JumpSpeed: -500,
-      BulletSpeed: 800,
+      BulletSpeed: 600,
+      BulletDamage: 40
     },
     yellow: {
       Speed: 400,
       Hp: 100,
       JumpSpeed: -750,
       BulletSpeed: 800,
+      BulletDamage: 30
     }
   },
   Ammo: {

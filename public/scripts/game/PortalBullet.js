@@ -7,7 +7,7 @@ Q.Sprite.extend('PortalBullet', {
 			asset: asset,
 			scale: 0.05,
 			gravity: 0.00,
-			damage: 20,
+			damage: 0,
 			lifetime: 5
 		});
 		

@@ -5,7 +5,6 @@ Q.Sprite.extend('WeaponIndicator', {
 			h: 0,
 			scale: 0.125,
 			gravity: 0.00,
-			damage: 20,
 			z: 5,
 			type: Q.SPRITE_UI,
 			collisionMask: Q.SPRITE_NONE

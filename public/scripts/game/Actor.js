@@ -178,7 +178,8 @@ Q.Sprite.extend('Actor', {
 					vy: finalSpeedY,
 					origVx: finalSpeedX,
 					origVy: finalSpeedY,
-					playerId: data.playerId
+					playerId: data.playerId,
+					damage: Constants.Ninjas[p.color].BulletDamage
 				});
 
 				this.stage.insert(shuriken);

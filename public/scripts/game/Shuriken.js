@@ -11,8 +11,6 @@ Q.Sprite.extend('Shuriken', {
 			collisionCount: 3
 		});
 
-		this.p.damage = 20;
-		
 		this.add('2d');
 		this.on('bump.left', this, 'collisionLeft');
 		this.on('bump.right', this, 'collisionRight');
