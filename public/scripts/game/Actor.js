@@ -4,9 +4,9 @@ Q.Sprite.extend('Actor', {
 			sheet: "player-" + p.color,  // Setting a sprite sheet sets sprite width and height
 			sprite: "player-" + p.color,
 			scale: 0.70,
-			jumpSpeed: -750, 
-			speed: 400,
-			bulletSpeed: 1000,
+			jumpSpeed: Constants.Ninjas[p.color].JumpSpeed, 
+			speed: Constants.Ninjas[p.color].Speed,
+			bulletSpeed: Constants.Ninjas[p.color].BulletSpeed,
 			type: Q.SPRITE_PLAYER,
 			collisionMask: Q.SPRITE_DEFAULT | Q.SPRITE_DOOR | Q.SPRITE_COLLECTABLE,
 			standingPoints: [ [ -16, 44], [ -23, 35 ], [-23,-48], [23,-48], [23, 35 ], [ 16, 44 ]],
