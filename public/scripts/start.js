@@ -1,10 +1,7 @@
 var assets = [
   'level.tmx',  
-  'fire.mp3', 
-  'jump.mp3', 
-  'heart.mp3', 
-  'hit.mp3', 
-  'coin.mp3',
+  'jump.mp3',  
+  'hit.mp3',
   'shooting-sound-1.mp3',
   'shooting-sound-2.mp3',
   'background-music.mp3',
