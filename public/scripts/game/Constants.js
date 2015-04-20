@@ -11,31 +11,31 @@ var Constants = {
   },
   Ninjas: {
     red: {
-      Speed: 400,
-      Hp: 200,
-      JumpSpeed: -500,
-      BulletSpeed: 1200,
-      BulletDamage: 20
-    },
-    blue: {
-      Speed: 800,
-      Hp: 200,
-      JumpSpeed: -500,
-      BulletSpeed: 800,
-      BulletDamage: 30
-    },
-    green: {
-      Speed: 400,
+      Speed: 300,
       Hp: 200,
       JumpSpeed: -500,
       BulletSpeed: 600,
+      BulletDamage: 20
+    },
+    blue: {
+      Speed: 500,
+      Hp: 200,
+      JumpSpeed: -500,
+      BulletSpeed: 600,
+      BulletDamage: 10
+    },
+    green: {
+      Speed: 300,
+      Hp: 300,
+      JumpSpeed: -500,
+      BulletSpeed: 300,
       BulletDamage: 40
     },
     yellow: {
-      Speed: 400,
+      Speed: 300,
       Hp: 100,
       JumpSpeed: -750,
-      BulletSpeed: 800,
+      BulletSpeed: 400,
       BulletDamage: 30
     }
   },
