@@ -213,7 +213,7 @@ Q.Actor.extend("Player", {
 		this.play(animationState);
 
 		// Warp player around
-		if(this.p.y > 2000) {
+		if(this.p.y > 7000) {
 			this.p.y = 10;
 		}
 		if(this.p.x < 0) {
