@@ -78,7 +78,7 @@ Q.Actor.extend("Player", {
 		var player = GameState.player;
 		if (player.p.ammoLeft > 0) {
 			// 
-			// player.p.ammoLeft -= 1;			
+			player.p.ammoLeft -= 1;			
 			PubSub.publish('updateAmmo', {
 				ammoLeft: player.p.ammoLeft
 			});
