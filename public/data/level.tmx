@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="70" tileheight="70" nextobjectid="28">
  <tileset firstgid="1" name="Tiles" tilewidth="70" tileheight="70" spacing="2">
-  <image source="../../../GitHub Repositories/silly-samurais/public/images/tiles.png" width="914" height="936"/>
+  <image source="../images/tiles.png" width="914" height="936"/>
   <tile id="8">
    <properties>
     <property name="points" value="0,0 1,1 0,1"/>
@@ -51,7 +51,7 @@
   </tile>
  </tileset>
  <tileset firstgid="157" name="player-red" tilewidth="72" tileheight="97">
-  <image source="../../../GitHub Repositories/silly-samurais/public/images/player-red.png" width="1296" height="98"/>
+  <image source="../images/player-red.png" width="1296" height="98"/>
   <tile id="0">
    <properties>
     <property name="Class" value="Player"/>
@@ -59,7 +59,7 @@
   </tile>
  </tileset>
  <tileset firstgid="175" name="player-blue" tilewidth="72" tileheight="97">
-  <image source="../../../GitHub Repositories/silly-samurais/public/images/player-blue.png" width="1296" height="98"/>
+  <image source="../images/player-blue.png" width="1296" height="98"/>
   <tile id="0">
    <properties>
     <property name="Class" value="Player"/>
@@ -67,7 +67,7 @@
   </tile>
  </tileset>
  <tileset firstgid="193" name="player-green" tilewidth="72" tileheight="97">
-  <image source="../../../GitHub Repositories/silly-samurais/public/images/player-green.png" width="1296" height="98"/>
+  <image source="../images/player-green.png" width="1296" height="98"/>
   <tile id="0">
    <properties>
     <property name="Class" value="Player"/>
@@ -75,7 +75,7 @@
   </tile>
  </tileset>
  <tileset firstgid="211" name="player-yellow" tilewidth="72" tileheight="97">
-  <image source="../../../GitHub Repositories/silly-samurais/public/images/player-yellow.png" width="1296" height="98"/>
+  <image source="../images/player-yellow.png" width="1296" height="98"/>
   <tile id="0">
    <properties>
     <property name="Class" value="Player"/>
@@ -83,7 +83,7 @@
   </tile>
  </tileset>
  <tileset firstgid="229" name="collectables" tilewidth="70" tileheight="70" spacing="2">
-  <image source="../../../GitHub Repositories/silly-samurais/public/images/collectables.png" width="936" height="216"/>
+  <image source="../images/collectables.png" width="936" height="216"/>
   <tile id="1">
    <properties>
     <property name="Class" value="Collectable"/>
@@ -99,7 +99,7 @@
   </tile>
  </tileset>
  <tileset firstgid="268" name="doors" tilewidth="70" tileheight="110">
-  <image source="../../../GitHub Repositories/silly-samurais/public/images/doors.png" width="140" height="110"/>
+  <image source="../images/doors.png" width="140" height="110"/>
   <tile id="0">
    <properties>
     <property name="Class" value="Door"/>
@@ -109,7 +109,7 @@
   </tile>
  </tileset>
  <imagelayer name="Background" x="-6" y="-184">
-  <image source="../../../GitHub Repositories/silly-samurais/public/images/bamboo-tile.jpg"/>
+  <image source="../images/bamboo-tile.jpg"/>
  </imagelayer>
  <layer name="Collision" width="100" height="100">
   <properties>
