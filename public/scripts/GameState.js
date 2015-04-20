@@ -12,16 +12,16 @@ var GameState = {
 			var newPlayer = new Q.Player({
 				playerId: data.playerId,
 				name: data.name,
-				name_dirty: true,		// Flag to indicate whether name need to be boardcast
+				name_dirty: true,		// Flag to indicate whether name need to be broadcast
 				x: xPos,
 				y: 10,
 				socket: socket,
 				hp: 200,
-				hp_dirty: true,			// Flag to indicate whether hp has changed and need to be boardcast
+				hp_dirty: true,			// Flag to indicate whether hp has changed and need to be broadcast
 				targetX: xPos,
 				targetY: 0,
 				color: data.color,
-				color_dirty: true,		// Flag to indicate whether color has changed and need to be boardcast
+				color_dirty: true,		// Flag to indicate whether color has changed and need to be broadcast
 			});
 			this.player = newPlayer;
 			this.gameStage.insert(this.player);

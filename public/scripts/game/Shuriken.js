@@ -40,7 +40,7 @@ Q.Sprite.extend('Shuriken', {
 		if (col.obj.isA('Player')) {
 			col.obj.p.vy = -100;
 			col.obj.p.hp = Math.max(col.obj.p.hp - this.p.damage, 0);
-			col.obj.p.hp_dirty = true;	// Turn on flag to send boardcast update in next update step
+			col.obj.p.hp_dirty = true;	// Turn on flag to send broadcast update in next update step
 			Q.audio.play('hit.mp3');
 			if ('vibrate' in window.navigator) {
 	      window.navigator.vibrate(200); 
