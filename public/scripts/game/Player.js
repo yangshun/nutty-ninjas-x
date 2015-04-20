@@ -213,14 +213,17 @@ Q.Actor.extend("Player", {
 		this.play(animationState);
 
 		// Warp player around
-		if(this.p.y > 7000) {
-			this.p.y = 10;
+		if(this.p.y > 2500) {
+			this.p.y = 20;
 		}
-		if(this.p.x < 0) {
-			this.p.x = 10;
+		if(this.p.y < 10) {
+			this.p.y = 20;
 		}
-		if(this.p.x > 7000) {
-			this.p.x = 6900;
+		if(this.p.x < 360) {
+			this.p.x = 370;
+		}
+		if(this.p.x > 4100) {
+			this.p.x = 4000;
 		}
 
 		// Send update to other player at every frame
@@ -295,8 +298,8 @@ Q.Actor.extend("Player", {
 
 			// Reset hp and move to a new spot
 			this.p.hp = 200;
-			this.p.x = Math.floor(Math.random() * (5000 - 500)) + 500;
-			this.p.y = 0;
+			this.p.x = Math.floor(Math.random() * (3500)) + 500;
+			this.p.y = 10;
 		}
 	}
 });

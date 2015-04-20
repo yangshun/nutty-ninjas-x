@@ -7,14 +7,14 @@ var GameState = {
 
 	addPlayer: function (data, socket) {
 		if (!this.player) {
-			var xPos = Math.floor(Math.random() * (5000 - 500)) + 500;
+			var xPos = Math.floor(Math.random() * (3500)) + 500;
 
 			var newPlayer = new Q.Player({
 				playerId: data.playerId,
 				name: data.name,
 				name_dirty: true,		// Flag to indicate whether name need to be boardcast
 				x: xPos,
-				y: 0,
+				y: 10,
 				socket: socket,
 				hp: 200,
 				hp_dirty: true,			// Flag to indicate whether hp has changed and need to be boardcast
