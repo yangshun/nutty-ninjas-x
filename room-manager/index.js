@@ -187,8 +187,7 @@ function RoomManager (server) {
 				data.maxLatency = Math.max (rooms[roomId][id].latency, data.maxLatency);
 			}
 
-			// Boardcast too all player except the sender
-			/*socket.broadcast.to(roomId).emit('player.shoot', data);*/
+			// Broadcast too all player except the sender
 			var room = rooms[roomId];
 			for (id in room) {
 				if (id != data.playerId) {
@@ -204,8 +203,9 @@ function RoomManager (server) {
 					//setTimeout (function () {sockets[id].emit ('player.shoot', data);}, delay);
 
 					// Need to rely on callback with parameters, might not work on old browsers
-					setTimeout (function (id) {sockets[id].emit ('player.shoot', data);}, delay, id);
-					
+					setTimeout(function (id) {
+						sockets[id].emit ('player.shoot', data);
+					}, delay, id);
 				}
 			}
 		});
@@ -217,7 +217,7 @@ function RoomManager (server) {
 			data.latency = player.latency;
 			data.maxLatency = player.latency;
 			for (id in rooms[roomId]) {
-				data.maxLatency = Math.max (rooms[roomId][id].latency, data.maxLatency);
+				data.maxLatency = Math.max(rooms[roomId][id].latency, data.maxLatency);
 			}
 
 			// Boardcast too all player except the sender
