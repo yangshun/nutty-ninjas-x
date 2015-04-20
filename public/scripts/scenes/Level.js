@@ -4,11 +4,11 @@ Q.scene("level", function (stage) {
 
 	// Initialize stage and play background music
 	GameState.gameStage = stage;
-	Q.stageTMX("level.tmx",stage);
-	// Q.audio.play('background-music.mp3',{ 
-	// 	loop: true 
-	// });
-	
+	Q.stageTMX('level.tmx', stage);
+
+	Q.audio.play('background-music.mp3',{ 
+		loop: true 
+	});
 
 	(function () {
 		// Get the variable from url query string
@@ -63,7 +63,6 @@ Q.scene("level", function (stage) {
 					GameState.addActor(room[id]);
 				}
 			}
-			
 		});
 
 		socket.on('player.disconnected', function (data) {
