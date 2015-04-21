@@ -94,10 +94,6 @@ Q.scene("level", function (stage) {
 			GameState.updateLatency(data.latency, data.maxLatency);
 		});
 
-		socket.on('connection.rtt.toclient', function () {
-			socket.emit('connection.rtt.fromclient');
-		});
-
 		socket.on('player.damage', function (data) {
 			GameState.addDamageIndicator(data);
 			GameState.updateLatency(data.latency, data.maxLatency);
@@ -105,6 +101,14 @@ Q.scene("level", function (stage) {
 
 		PubSub.subscribe('player.damage', function (event, data) {
 			socket.emit('player.damage', data);
+		});
+
+		socket.on('scoreboard.updated', function (data) {
+			PubSub.publish('updateScoreboard', data);
+		});
+
+		socket.on('connection.rtt.toclient', function () {
+			socket.emit('connection.rtt.fromclient');
 		});
 
 	})();

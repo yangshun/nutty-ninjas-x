@@ -57,8 +57,13 @@ Q.Sprite.extend('Shuriken', {
 
 			col.obj.p.vy = -100;
 			col.obj.p.hp = Math.max(col.obj.p.hp - damage, 0);
+			if (col.obj.p.hp <= 0) {
+				col.obj.die(this.p.playerId);
+			}
 			col.obj.p.hp_dirty = true;	// Turn on flag to send broadcast update in next update step
+			
 			Q.audio.play('hit.mp3');
+			
 			if ('vibrate' in window.navigator) {
 				window.navigator.vibrate(200); 
 			}

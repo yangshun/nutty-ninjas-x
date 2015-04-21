@@ -6,7 +6,8 @@ function Player (name, roomId, playerId, color, socket, socketId) {
 	this.color = color;
 	this.socket = socket;
 	this.socketId = socketId;
-
+	this.kills = 0;
+	this.deaths = 0;
 	this.startMeasuringLatency();
 }
 
@@ -35,7 +36,9 @@ Player.prototype.getState = function () {
 		name: this.name,
 		playerId: this.playerId,
 		socketId: this.socketId,
-		color: this.color
+		color: this.color,
+		kills: this.kills,
+		deaths: this.deaths
 	};
 }
 

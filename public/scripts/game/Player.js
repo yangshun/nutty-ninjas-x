@@ -111,7 +111,9 @@ Q.Actor.extend("Player", {
 		// Local lag - delay shooting to hopefully
 		// shoot only when the data reach server
 		var delay = player.p.latency + player.p.maxLatency;
-		setTimeout(function () {player.shootWithData(shootingData)}, delay);
+		setTimeout(function () {
+			player.shootWithData(shootingData)
+		}, delay);
 	},
 
 	/*
@@ -299,17 +301,20 @@ Q.Actor.extend("Player", {
 		this.p.onLadder = false;
 		this.p.ladderX = undefined;
 
-		// Check if the player is killed
-		if (this.p.hp <= 0.0) {
-			this.p.socket.emit('player.death', {
-				x: this.p.x,
-				y: this.p.y,
-			});
+	},
 
-			// Reset hp and move to a new spot
-			this.p.hp = Constants.Ninjas[this.p.color].Hp;
-			this.p.x = Math.floor(Math.random() * (3500)) + 500;
-			this.p.y = 10;
-		}
+	die: function (murdererId) {
+
+		this.p.socket.emit('player.death', {
+			x: this.p.x,
+			y: this.p.y,
+			victimId: this.p.playerId,
+			murdererId: murdererId
+		});
+
+		// Reset hp and move to a new spot
+		this.p.hp = Constants.Ninjas[this.p.color].Hp;
+		this.p.x = Math.floor(Math.random() * (3500)) + 500;
+		this.p.y = 10;
 	}
 });

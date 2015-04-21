@@ -28,7 +28,7 @@
         </div>
 
         <div ng-controller="AudioController" class="nn-audio">
-            <h3 ng-click="toggleMusic()">BGM {{{true: 'On', false: 'Off'}[musicPlaying]}}</h3>
+            <h3 ng-click="toggleMusic()">BGM {{ {true: 'On', false: 'Off'}[musicPlaying] }}</h3>
         </div>
 
         <div ng-controller="ScoreBoardController" class="nn-scoreboard">
@@ -37,12 +37,16 @@
               <tr>
                 <th>Name</th>
                 <th>HP</th>
+                <th>Kills</th>
+                <th>Deaths</th>
               </tr>
             </thead>
             <tbody>
               <tr ng-repeat="player in players">
                 <td>{{ player.name }}</td>
                 <td>{{ player.hp }}</td>
+                <td>{{ player.kills }}</td>
+                <td>{{ player.deaths }}</td>
               </tr>
             </tbody>
           </table>

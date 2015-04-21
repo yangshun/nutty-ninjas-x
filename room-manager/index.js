@@ -171,7 +171,7 @@ function RoomManager (server) {
 
 						// 'player.updated' is sent from server to client
 						// 'player.update' is sent from client to server 
-						sockets[playerId].emit ('player.updated', data);
+						sockets[playerId].emit('player.updated', data);
 					}
 				}
 			}
@@ -204,7 +204,7 @@ function RoomManager (server) {
 
 					// Need to rely on callback with parameters, might not work on old browsers
 					setTimeout(function (id) {
-						sockets[id].emit ('player.shoot', data);
+						sockets[id].emit('player.shoot', data);
 					}, delay, id);
 				}
 			}
@@ -216,11 +216,23 @@ function RoomManager (server) {
 			// Add latency to the data
 			data.latency = player.latency;
 			data.maxLatency = player.latency;
-			for (id in rooms[roomId]) {
-				data.maxLatency = Math.max(rooms[roomId][id].latency, data.maxLatency);
+			var room = rooms[roomId];
+			for (id in room) {
+				data.maxLatency = Math.max(room[id].latency, data.maxLatency);
+			}
+			socket.broadcast.to(roomId).emit('player.death', data);
+			
+			for (id in room) {
+				if (id == data.victimId) {
+					room[id].deaths += 1;
+				} else if (id == data.murdererId) {
+					room[id].kills += 1;
+				}
 			}
 
-			socket.broadcast.to(roomId).emit('player.death', data);
+			for (id in room) {
+				sockets[id].emit('scoreboard.updated', room);
+			}
 		});
 
 		/* 'player.damage' event - send every time the client dies
