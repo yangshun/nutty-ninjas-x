@@ -103,6 +103,8 @@ Q.Actor.extend("Player", {
 			weaponType: player.p.weaponType
 		};
 
+		player.p.direction = stageX < player.p.x ? 'left' : 'right';
+
 		// Send to server
 		player.p.socket.emit('player.shoot', shootingData);
 
