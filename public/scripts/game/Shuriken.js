@@ -36,20 +36,30 @@ Q.Sprite.extend('Shuriken', {
 
 	handleCollision: function (col, dir) {	
 		if (col.obj.isA('Player')) {
+
+			var variance = 15;
+			var damage = this.p.damage;
+			var to = damage + variance * damage / 100;
+			var from = damage - variance * damage / 100;
+
+			if (damage != 0) {
+				damage = Math.floor(Math.random() * (to - from + 1) + from);
+			}
+
 			var numberIndicator = new Q.NumberIndicator({
 				x: col.obj.p.x,
 				y: col.obj.p.y - 40,
-				damage: this.p.damage
+				damage: damage
 			});
 			GameState.gameStage.insert(numberIndicator);
 
 			col.obj.p.vy = -100;
-			col.obj.p.hp = Math.max(col.obj.p.hp - this.p.damage, 0);
+			col.obj.p.hp = Math.max(col.obj.p.hp - damage, 0);
 			col.obj.p.hp_dirty = true;	// Turn on flag to send broadcast update in next update step
 			Q.audio.play('hit.mp3');
 			if ('vibrate' in window.navigator) {
-	      window.navigator.vibrate(200); 
-	    }
+				window.navigator.vibrate(200); 
+			}
 			this.destroy();
 		} else if (col.obj.isA('Actor')) {
 			Q.audio.play('hit.mp3');
