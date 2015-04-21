@@ -36,6 +36,13 @@ Q.Sprite.extend('Shuriken', {
 
 	handleCollision: function (col, dir) {	
 		if (col.obj.isA('Player')) {
+			var numberIndicator = new Q.NumberIndicator({
+				x: col.obj.p.x,
+				y: col.obj.p.y - 40,
+				damage: this.p.damage
+			});
+			GameState.gameStage.insert(numberIndicator);
+
 			col.obj.p.vy = -100;
 			col.obj.p.hp = Math.max(col.obj.p.hp - this.p.damage, 0);
 			col.obj.p.hp_dirty = true;	// Turn on flag to send broadcast update in next update step
