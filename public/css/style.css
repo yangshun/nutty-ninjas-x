@@ -106,8 +106,8 @@ a:hover {
 }
 
 .nn-ammoboard {
-  top: 10px;
-  left: 10px;
+  top: 0;
+  left: 20px;
   position: absolute;
   z-index: 100;
   -webkit-user-select: none;  /* Chrome all / Safari all */
@@ -117,6 +117,21 @@ a:hover {
   /* No support for these yet, use at own risk */
   -o-user-select: none;
   user-select: none;  
+}
+
+.nn-audio {
+  cursor: pointer;
+  top: 0;
+  right: 20px;
+  position: absolute;
+  z-index: 100;
+  -webkit-user-select: none;  /* Chrome all / Safari all */
+  -moz-user-select: none;     /* Firefox all */
+  -ms-user-select: none;      /* IE 10+ */
+
+  /* No support for these yet, use at own risk */
+  -o-user-select: none;
+  user-select: none;
 }
 
 .nn-ammoboard .nn-ammo {

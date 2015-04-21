@@ -27,6 +27,10 @@
             <img class="nn-ammo" ng-repeat="a in range(ammoLeft) track by $index" src="/images/shuriken.png">
         </div>
 
+        <div ng-controller="AudioController" class="nn-audio">
+            <h3 ng-click="toggleMusic()">BGM {{{true: 'On', false: 'Off'}[musicPlaying]}}</h3>
+        </div>
+
         <div ng-controller="ScoreBoardController" class="nn-scoreboard">
           <table>
             <thead>
@@ -50,6 +54,7 @@
         <script src="/scripts/game/Constants.js"></script>
         <script src="/scripts/ScoreBoardController.js"></script>
         <script src="/scripts/AmmoBoardController.js"></script>
+        <script src="/scripts/AudioController.js"></script>
 
         <script src="/scripts/game/init.js"></script>
 

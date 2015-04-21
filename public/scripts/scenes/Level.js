@@ -6,9 +6,17 @@ Q.scene("level", function (stage) {
 	GameState.gameStage = stage;
 	Q.stageTMX('level.tmx', stage);
 
-	Q.audio.play('background-music.mp3',{ 
-		loop: true 
-	});
+	var backgroundMusic = 'background-music.mp3';
+	PubSub.subscribe('toggleMusic', function (event, data) {
+    var state = data.state;
+    if (state) {
+    	Q.audio.play(backgroundMusic, { 
+				loop: true 
+			});
+    } else {
+    	Q.audio.stop(backgroundMusic);
+    }
+  });
 
 	(function () {
 		// Get the variable from url query string
