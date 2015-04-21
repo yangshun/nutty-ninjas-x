@@ -35,6 +35,7 @@ Q.Sprite.extend('Portal', {
 		if (col.obj.isA('Player') || col.obj.isA('Shuriken')) {
 			var actor = this.p.belongsToPlayer;
 			var otherPortal = this.p.portalType === 'A' ? actor.portalB : actor.portalA;
+
 			if (otherPortal) {
 				if (col.obj.isA('Shuriken')) {
 					var delta = 0.2;
@@ -43,26 +44,29 @@ Q.Sprite.extend('Portal', {
 					col.obj.p.x = otherPortal.p.x + delta * col.obj.p.vx;
 					col.obj.p.y = otherPortal.p.y + delta * col.obj.p.vy;
 				} else {
+
+					Q.audio.play('portal.mp3');
+
 					var offset = 100;
 					switch (dir) {
 						case 'left':
-						col.obj.p.x = otherPortal.p.x + offset;
-						col.obj.p.y = otherPortal.p.y;
-						break;
+							col.obj.p.x = otherPortal.p.x + offset;
+							col.obj.p.y = otherPortal.p.y;
+							break;
 						case 'right':
-						col.obj.p.x = otherPortal.p.x - offset;
-						col.obj.p.y = otherPortal.p.y;
-						break;
+							col.obj.p.x = otherPortal.p.x - offset;
+							col.obj.p.y = otherPortal.p.y;
+							break;
 						case 'top':
-						col.obj.p.x = otherPortal.p.x;
-						col.obj.p.y = otherPortal.p.y + offset;
-						break;
+							col.obj.p.x = otherPortal.p.x;
+							col.obj.p.y = otherPortal.p.y + offset;
+							break;
 						case 'bottom':
-						col.obj.p.x = otherPortal.p.x + offset;
-						col.obj.p.y = otherPortal.p.y - offset;
-						break;
+							col.obj.p.x = otherPortal.p.x + offset;
+							col.obj.p.y = otherPortal.p.y - offset;
+							break;
 						default:
-						break;
+							break;
 					}
 				}
 			} else {
