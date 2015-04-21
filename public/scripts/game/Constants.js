@@ -41,6 +41,6 @@ var Constants = {
   },
   Ammo: {
     Max: 8,
-    RegenRate: 0.5  // Regen 1 ammo per x seconds
+    RegenRate: 0.75  // Regen 1 ammo per x seconds
   }
 }
