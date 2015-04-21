@@ -46,12 +46,14 @@ Q.Sprite.extend('Shuriken', {
 				damage = Math.floor(Math.random() * (to - from + 1) + from);
 			}
 
-			var numberIndicator = new Q.NumberIndicator({
+			var damageData = {
 				x: col.obj.p.x,
 				y: col.obj.p.y - 40,
 				damage: damage
-			});
-			GameState.gameStage.insert(numberIndicator);
+			};
+
+			PubSub.publish('player.damage', damageData);
+			GameState.addDamageIndicator(damageData);
 
 			col.obj.p.vy = -100;
 			col.obj.p.hp = Math.max(col.obj.p.hp - damage, 0);

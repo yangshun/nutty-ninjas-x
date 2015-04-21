@@ -97,6 +97,16 @@ Q.scene("level", function (stage) {
 		socket.on('connection.rtt.toclient', function () {
 			socket.emit('connection.rtt.fromclient');
 		});
+
+		socket.on('player.damage', function (data) {
+			GameState.addDamageIndicator(data);
+			GameState.updateLatency(data.latency, data.maxLatency);
+		});
+
+		PubSub.subscribe('player.damage', function (event, data) {
+			socket.emit('player.damage', data);
+		});
+
 	})();
 
 });

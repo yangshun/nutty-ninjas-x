@@ -220,8 +220,20 @@ function RoomManager (server) {
 				data.maxLatency = Math.max(rooms[roomId][id].latency, data.maxLatency);
 			}
 
-			// Boardcast too all player except the sender
 			socket.broadcast.to(roomId).emit('player.death', data);
+		});
+
+		/* 'player.damage' event - send every time the client dies
+		 */
+		socket.on('player.damage', function (data) {
+			// Add latency to the data
+			data.latency = player.latency;
+			data.maxLatency = player.latency;
+			for (id in rooms[roomId]) {
+				data.maxLatency = Math.max(rooms[roomId][id].latency, data.maxLatency);
+			}
+
+			socket.broadcast.to(roomId).emit('player.damage', data);
 		});
 	});
 }

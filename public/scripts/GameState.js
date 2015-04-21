@@ -118,6 +118,15 @@ var GameState = {
 		this.gameStage.insert(ninjaGhost);
 	},
 
+	addDamageIndicator: function (data) {
+		var numberIndicator = new Q.NumberIndicator({
+			x: data.x,
+			y: data.y,
+			damage: data.damage
+		});
+		this.gameStage.insert(numberIndicator);
+	},
+
 	updateLatency: function (latency, maxLatency) {
 		// Update latency for all actors (player included)
 		for (i in this.actors) {
