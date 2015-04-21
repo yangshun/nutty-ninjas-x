@@ -3,9 +3,9 @@ Q.Sprite.extend('Shuriken', {
 		this._super(p, { 
 			w: 0,
 			h: 0,
-			asset: "shuriken.png",
-			scale: 0.075,
-			gravity: 0.30,
+			asset: 'shuriken.png',
+			scale: 0.05,
+			gravity: 0.20,
 			lifetime: 5,
 			playerId: p.playerId,
 			collisionCount: 3
