@@ -1,5 +1,5 @@
 function AudioController ($scope) {
-  $scope.musicPlaying = true;
+  $scope.musicPlaying = false;
 
   function updateGameEngine() {
     PubSub.publish('toggleMusic', {
